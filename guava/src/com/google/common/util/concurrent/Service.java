@@ -17,6 +17,7 @@ package com.google.common.util.concurrent;
 import static com.google.common.util.concurrent.Internal.toNanosSaturated;
 
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.J2ktIncompatible;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.DoNotMock;
 import java.time.Duration;
@@ -55,8 +56,8 @@ import java.util.concurrent.TimeoutException;
  * @since 9.0 (in 1.0 as {@code com.google.common.base.Service})
  */
 @DoNotMock("Create an AbstractIdleService")
+@J2ktIncompatible
 @GwtIncompatible
-@ElementTypesAreNonnullByDefault
 public interface Service {
   /**
    * If the service state is {@link State#NEW}, this initiates service startup and returns
@@ -240,6 +241,9 @@ public interface Service {
    * @since 15.0 (present as an interface in 13.0)
    */
   abstract class Listener {
+    /** Constructor for use by subclasses. */
+    public Listener() {}
+
     /**
      * Called when the service transitions from {@linkplain State#NEW NEW} to {@linkplain
      * State#STARTING STARTING}. This occurs when {@link Service#startAsync} is called the first

@@ -18,7 +18,8 @@ package com.google.common.eventbus;
 
 import com.google.common.testing.AbstractPackageSanityTests;
 import java.lang.reflect.Method;
-import javax.annotation.CheckForNull;
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Basic sanity tests for the entire package.
@@ -26,6 +27,7 @@ import javax.annotation.CheckForNull;
  * @author Ben Yu
  */
 
+@NullUnmarked
 public class PackageSanityTests extends AbstractPackageSanityTests {
 
   public PackageSanityTests() throws Exception {
@@ -41,7 +43,7 @@ public class PackageSanityTests extends AbstractPackageSanityTests {
     private final EventBus eventBus = new EventBus();
 
     @Subscribe
-    public void handle(@CheckForNull Object anything) {}
+    public void handle(@Nullable Object unused) {}
 
     Subscriber toSubscriber() throws Exception {
       return Subscriber.create(eventBus, this, subscriberMethod());

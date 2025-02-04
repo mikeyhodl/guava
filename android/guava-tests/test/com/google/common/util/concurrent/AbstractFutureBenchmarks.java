@@ -25,9 +25,11 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
-import javax.annotation.CheckForNull;
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 
 /** Utilities for the AbstractFutureBenchmarks */
+@NullUnmarked
 final class AbstractFutureBenchmarks {
   private AbstractFutureBenchmarks() {}
 
@@ -85,6 +87,7 @@ final class AbstractFutureBenchmarks {
     abstract <T> Facade<T> newFacade();
   }
 
+  @SuppressWarnings("ThreadPriorityCheck") // TODO: b/175898629 - Consider onSpinWait.
   static void awaitWaiting(Thread t) {
     while (true) {
       Thread.State state = t.getState();
@@ -218,7 +221,7 @@ final class AbstractFutureBenchmarks {
      * @return true if the state was successfully changed.
      */
     @CanIgnoreReturnValue
-    protected boolean set(@CheckForNull V value) {
+    protected boolean set(@Nullable V value) {
       boolean result = sync.set(value);
       if (result) {
         executionList.execute();
@@ -360,7 +363,7 @@ final class AbstractFutureBenchmarks {
       }
 
       /** Transition to the COMPLETED state and set the value. */
-      boolean set(@CheckForNull V v) {
+      boolean set(@Nullable V v) {
         return complete(v, null, COMPLETED);
       }
 
@@ -384,7 +387,7 @@ final class AbstractFutureBenchmarks {
        * @param t the exception to set as the result of the computation.
        * @param finalState the state to transition to.
        */
-      private boolean complete(@CheckForNull V v, @CheckForNull Throwable t, int finalState) {
+      private boolean complete(@Nullable V v, @Nullable Throwable t, int finalState) {
         boolean doCompletion = compareAndSetState(RUNNING, COMPLETING);
         if (doCompletion) {
           // If this thread successfully transitioned to COMPLETING, set the value
@@ -405,8 +408,8 @@ final class AbstractFutureBenchmarks {
       }
     }
 
-    static final CancellationException cancellationExceptionWithCause(
-        @CheckForNull String message, @CheckForNull Throwable cause) {
+    static CancellationException cancellationExceptionWithCause(
+        @Nullable String message, @Nullable Throwable cause) {
       CancellationException exception = new CancellationException(message);
       exception.initCause(cause);
       return exception;

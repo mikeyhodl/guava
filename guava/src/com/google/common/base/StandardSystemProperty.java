@@ -15,7 +15,8 @@
 package com.google.common.base;
 
 import com.google.common.annotations.GwtIncompatible;
-import javax.annotation.CheckForNull;
+import com.google.common.annotations.J2ktIncompatible;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a {@linkplain System#getProperties() standard system property}.
@@ -23,8 +24,8 @@ import javax.annotation.CheckForNull;
  * @author Kurt Alfred Kluever
  * @since 15.0
  */
+@J2ktIncompatible
 @GwtIncompatible // java.lang.System#getProperty
-@ElementTypesAreNonnullByDefault
 public enum StandardSystemProperty {
 
   /** Java Runtime Environment version. */
@@ -153,8 +154,7 @@ public enum StandardSystemProperty {
    *   <li>{@code jdk.module.*} (added in Java 9, optional)
    * </ul>
    */
-  @CheckForNull
-  public String value() {
+  public @Nullable String value() {
     return System.getProperty(key);
   }
 

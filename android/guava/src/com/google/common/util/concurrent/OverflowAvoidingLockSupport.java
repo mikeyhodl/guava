@@ -16,21 +16,22 @@ package com.google.common.util.concurrent;
 
 import static java.lang.Math.min;
 
+import com.google.common.annotations.J2ktIncompatible;
 import java.util.concurrent.locks.LockSupport;
-import javax.annotation.CheckForNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Works around an android bug, where parking for more than INT_MAX seconds can produce an abort
  * signal on 32 bit devices running Android Q.
  */
-@ElementTypesAreNonnullByDefault
+@J2ktIncompatible
 final class OverflowAvoidingLockSupport {
   // Represents the max nanoseconds representable on a linux timespec with a 32 bit tv_sec
   static final long MAX_NANOSECONDS_THRESHOLD = (1L + Integer.MAX_VALUE) * 1_000_000_000L - 1L;
 
   private OverflowAvoidingLockSupport() {}
 
-  static void parkNanos(@CheckForNull Object blocker, long nanos) {
+  static void parkNanos(@Nullable Object blocker, long nanos) {
     // Even in the extremely unlikely event that a thread unblocks itself early after only 68 years,
     // this is indistinguishable from a spurious wakeup, which LockSupport allows.
     LockSupport.parkNanos(blocker, min(nanos, MAX_NANOSECONDS_THRESHOLD));

@@ -21,10 +21,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkPositionIndex;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.CollectPreconditions.checkRemove;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+import static java.lang.System.arraycopy;
 import static java.util.Objects.requireNonNull;
 
-import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.math.IntMath;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
@@ -42,8 +45,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import javax.annotation.CheckForNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A double-ended priority queue, which provides constant-time access to both its least element and
@@ -98,9 +100,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @author Torbjorn Gannholm
  * @since 8.0
  */
-@Beta
 @GwtCompatible
-@ElementTypesAreNonnullByDefault
 public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
 
   /**
@@ -108,7 +108,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
    * initial contents, and an initial expected size of 11.
    */
   public static <E extends Comparable<E>> MinMaxPriorityQueue<E> create() {
-    return new Builder<Comparable>(Ordering.natural()).create();
+    return new Builder<Comparable<E>>(Ordering.natural()).create();
   }
 
   /**
@@ -138,6 +138,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
    * Creates and returns a new builder, configured to build {@code MinMaxPriorityQueue} instances
    * sized appropriately to hold {@code expectedSize} elements.
    */
+  @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
   public static Builder<Comparable> expectedSize(int expectedSize) {
     return new Builder<Comparable>(Ordering.natural()).expectedSize(expectedSize);
   }
@@ -148,6 +149,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
    * immediately removes its greatest element (according to its comparator), which might be the
    * element that was just added.
    */
+  @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
   public static Builder<Comparable> maximumSize(int maximumSize) {
     return new Builder<Comparable>(Ordering.natural()).maximumSize(maximumSize);
   }
@@ -162,7 +164,6 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
    *     Queue<Integer>} but not a {@code Queue<Object>}).
    * @since 8.0
    */
-  @Beta
   public static final class Builder<B> {
     /*
      * TODO(kevinb): when the dust settles, see if we still need this or can
@@ -301,8 +302,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
 
   @CanIgnoreReturnValue
   @Override
-  @CheckForNull
-  public E poll() {
+  public @Nullable E poll() {
     return isEmpty() ? null : removeAndGet(0);
   }
 
@@ -316,8 +316,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
   }
 
   @Override
-  @CheckForNull
-  public E peek() {
+  public @Nullable E peek() {
     return isEmpty() ? null : elementData(0);
   }
 
@@ -340,8 +339,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
    * empty.
    */
   @CanIgnoreReturnValue
-  @CheckForNull
-  public E pollFirst() {
+  public @Nullable E pollFirst() {
     return poll();
   }
 
@@ -359,8 +357,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
    * Retrieves, but does not remove, the least element of this queue, or returns {@code null} if the
    * queue is empty.
    */
-  @CheckForNull
-  public E peekFirst() {
+  public @Nullable E peekFirst() {
     return peek();
   }
 
@@ -369,8 +366,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
    * empty.
    */
   @CanIgnoreReturnValue
-  @CheckForNull
-  public E pollLast() {
+  public @Nullable E pollLast() {
     return isEmpty() ? null : removeAndGet(getMaxElementIndex());
   }
 
@@ -391,8 +387,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
    * Retrieves, but does not remove, the greatest element of this queue, or returns {@code null} if
    * the queue is empty.
    */
-  @CheckForNull
-  public E peekLast() {
+  public @Nullable E peekLast() {
     return isEmpty() ? null : elementData(getMaxElementIndex());
   }
 
@@ -411,8 +406,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
    */
   @VisibleForTesting
   @CanIgnoreReturnValue
-  @CheckForNull
-  MoveDesc<E> removeAt(int index) {
+  @Nullable MoveDesc<E> removeAt(int index) {
     checkPositionIndex(index, size);
     modCount++;
     size--;
@@ -447,8 +441,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
     return changes;
   }
 
-  @CheckForNull
-  private MoveDesc<E> fillHole(int index, E toTrickle) {
+  private @Nullable MoveDesc<E> fillHole(int index, E toTrickle) {
     Heap heap = heapForIndex(index);
     // We consider elementData(index) a "hole", and we want to fill it
     // with the last element of the heap, toTrickle.
@@ -523,9 +516,12 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
    * sake they are stored interleaved on alternate heap levels in the same array (MMPQ.queue).
    */
   @WeakOuter
-  private class Heap {
+  class Heap {
     final Ordering<E> ordering;
-    @Weak Heap otherHeap; // always initialized immediately after construction
+
+    @SuppressWarnings("nullness:initialization.field.uninitialized")
+    @Weak
+    Heap otherHeap; // always initialized immediately after construction
 
     Heap(Ordering<E> ordering) {
       this.ordering = ordering;
@@ -539,8 +535,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
      * Tries to move {@code toTrickle} from a min to a max level and bubble up there. If it moved
      * before {@code removeIndex} this method returns a pair as described in {@link #removeAt}.
      */
-    @CheckForNull
-    MoveDesc<E> tryCrossOverAndBubbleUp(int removeIndex, int vacated, E toTrickle) {
+    @Nullable MoveDesc<E> tryCrossOverAndBubbleUp(int removeIndex, int vacated, E toTrickle) {
       int crossOver = crossOver(vacated, toTrickle);
       if (crossOver == vacated) {
         return null;
@@ -608,7 +603,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
         return -1;
       }
       checkState(index > 0);
-      int limit = Math.min(index, size - len) + len;
+      int limit = min(index, size - len) + len;
       int minIndex = index;
       for (int i = index + 1; i < limit; i++) {
         if (compareElements(i, minIndex) < 0) {
@@ -778,9 +773,9 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
     private int expectedModCount = modCount;
     // The same element is not allowed in both forgetMeNot and skipMe, but duplicates are allowed in
     // either of them, up to the same multiplicity as the queue.
-    @CheckForNull private Queue<E> forgetMeNot;
-    @CheckForNull private List<E> skipMe;
-    @CheckForNull private E lastFromForgetMeNot;
+    private @Nullable Queue<E> forgetMeNot;
+    private @Nullable List<E> skipMe;
+    private @Nullable E lastFromForgetMeNot;
     private boolean canRemove;
 
     @Override
@@ -916,9 +911,10 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
   }
 
   @Override
+  @J2ktIncompatible // Incompatible return type change. Use inherited (unoptimized) implementation
   public Object[] toArray() {
     Object[] copyTo = new Object[size];
-    System.arraycopy(queue, 0, copyTo, 0, size);
+    arraycopy(queue, 0, copyTo, 0, size);
     return copyTo;
   }
 
@@ -952,7 +948,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
     // Enlarge to contain initial contents
     if (initialContents instanceof Collection) {
       int initialSize = ((Collection<?>) initialContents).size();
-      result = Math.max(result, initialSize);
+      result = max(result, initialSize);
     }
 
     // Now cap it at maxSize + 1
@@ -963,7 +959,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
     if (size > queue.length) {
       int newCapacity = calculateNewCapacity();
       Object[] newQueue = new Object[newCapacity];
-      System.arraycopy(queue, 0, newQueue, 0, queue.length);
+      arraycopy(queue, 0, newQueue, 0, queue.length);
       queue = newQueue;
     }
   }
@@ -978,6 +974,6 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
 
   /** There's no reason for the queueSize to ever be more than maxSize + 1 */
   private static int capAtMaximumSize(int queueSize, int maximumSize) {
-    return Math.min(queueSize - 1, maximumSize) + 1; // don't overflow
+    return min(queueSize - 1, maximumSize) + 1; // don't overflow
   }
 }

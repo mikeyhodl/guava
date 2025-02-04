@@ -19,8 +19,8 @@ package com.google.common.collect;
 import static com.google.common.collect.CollectPreconditions.checkEntryNotNull;
 import static com.google.common.collect.CollectPreconditions.checkNonnegative;
 
-import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.J2ktIncompatible;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.DoNotCall;
 import java.io.InvalidObjectException;
@@ -29,7 +29,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
-import javax.annotation.CheckForNull;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A {@link BiMap} whose contents will never change, with many other important properties detailed
@@ -39,8 +43,28 @@ import javax.annotation.CheckForNull;
  * @since 2.0
  */
 @GwtCompatible(serializable = true, emulated = true)
-@ElementTypesAreNonnullByDefault
 public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements BiMap<K, V> {
+
+  /**
+   * Returns a {@link Collector} that accumulates elements into an {@code ImmutableBiMap} whose keys
+   * and values are the result of applying the provided mapping functions to the input elements.
+   * Entries appear in the result {@code ImmutableBiMap} in encounter order.
+   *
+   * <p>If the mapped keys or values contain duplicates (according to {@link
+   * Object#equals(Object)}), an {@code IllegalArgumentException} is thrown when the collection
+   * operation is performed. (This differs from the {@code Collector} returned by {@link
+   * Collectors#toMap(Function, Function)}, which throws an {@code IllegalStateException}.)
+   *
+   * @since 33.2.0 (available since 21.0 in guava-jre)
+   */
+  @SuppressWarnings("Java7ApiChecker")
+  @IgnoreJRERequirement // Users will use this only if they're already using streams.
+  public static <T extends @Nullable Object, K, V>
+      Collector<T, ?, ImmutableBiMap<K, V>> toImmutableBiMap(
+          Function<? super T, ? extends K> keyFunction,
+          Function<? super T, ? extends V> valueFunction) {
+    return CollectCollectors.toImmutableBiMap(keyFunction, valueFunction);
+  }
 
   /**
    * Returns the empty bimap.
@@ -128,6 +152,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
     return new RegularImmutableBiMap<K, V>(
         new Object[] {k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6}, 6);
   }
+
   /**
    * Returns an immutable map containing the given entries, in order.
    *
@@ -146,6 +171,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
     return new RegularImmutableBiMap<K, V>(
         new Object[] {k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7}, 7);
   }
+
   /**
    * Returns an immutable map containing the given entries, in order.
    *
@@ -180,6 +206,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
     return new RegularImmutableBiMap<K, V>(
         new Object[] {k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8}, 8);
   }
+
   /**
    * Returns an immutable map containing the given entries, in order.
    *
@@ -217,6 +244,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
     return new RegularImmutableBiMap<K, V>(
         new Object[] {k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9}, 9);
   }
+
   /**
    * Returns an immutable map containing the given entries, in order.
    *
@@ -296,7 +324,6 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
    *
    * @since 23.1
    */
-  @Beta
   public static <K, V> Builder<K, V> builderWithExpectedSize(int expectedSize) {
     checkNonnegative(expectedSize, "expectedSize");
     return new Builder<>(expectedSize);
@@ -388,7 +415,6 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
      * @since 19.0
      */
     @CanIgnoreReturnValue
-    @Beta
     @Override
     public Builder<K, V> putAll(Iterable<? extends Entry<? extends K, ? extends V>> entries) {
       super.putAll(entries);
@@ -406,7 +432,6 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
      * @since 19.0
      */
     @CanIgnoreReturnValue
-    @Beta
     @Override
     public Builder<K, V> orderEntriesByValue(Comparator<? super V> valueComparator) {
       super.orderEntriesByValue(valueComparator);
@@ -514,7 +539,6 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
    * @throws NullPointerException if any key, value, or entry is null
    * @since 19.0
    */
-  @Beta
   public static <K, V> ImmutableBiMap<K, V> copyOf(
       Iterable<? extends Entry<? extends K, ? extends V>> entries) {
     int estimatedSize =
@@ -558,8 +582,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  @CheckForNull
-  public final V forcePut(K key, V value) {
+  public final @Nullable V forcePut(K key, V value) {
     throw new UnsupportedOperationException();
   }
 
@@ -571,6 +594,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
    * <p>Since the bimap is immutable, ImmutableBiMap doesn't require special logic for keeping the
    * bimap and its inverse in sync during serialization, the way AbstractBiMap does.
    */
+  @J2ktIncompatible // serialization
   private static class SerializedForm<K, V> extends ImmutableMap.SerializedForm<K, V> {
     SerializedForm(ImmutableBiMap<K, V> bimap) {
       super(bimap);
@@ -585,11 +609,55 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
   }
 
   @Override
+  @J2ktIncompatible // serialization
   Object writeReplace() {
     return new SerializedForm<>(this);
   }
 
+  @J2ktIncompatible // serialization
   private void readObject(ObjectInputStream stream) throws InvalidObjectException {
     throw new InvalidObjectException("Use SerializedForm");
   }
+
+  /**
+   * Not supported. Use {@link #toImmutableBiMap} instead. This method exists only to hide {@link
+   * ImmutableMap#toImmutableMap(Function, Function)} from consumers of {@code ImmutableBiMap}.
+   *
+   * @throws UnsupportedOperationException always
+   * @deprecated Use {@link ImmutableBiMap#toImmutableBiMap}.
+   * @since 33.2.0 (available since 21.0 in guava-jre)
+   */
+  @Deprecated
+  @DoNotCall("Use toImmutableBiMap")
+  @SuppressWarnings("Java7ApiChecker")
+  @IgnoreJRERequirement // Users will use this only if they're already using streams.
+  public static <T extends @Nullable Object, K, V>
+      Collector<T, ?, ImmutableMap<K, V>> toImmutableMap(
+          Function<? super T, ? extends K> keyFunction,
+          Function<? super T, ? extends V> valueFunction) {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * Not supported. This method does not make sense for {@code BiMap}. This method exists only to
+   * hide {@link ImmutableMap#toImmutableMap(Function, Function, BinaryOperator)} from consumers of
+   * {@code ImmutableBiMap}.
+   *
+   * @throws UnsupportedOperationException always
+   * @deprecated
+   * @since 33.2.0 (available since 21.0 in guava-jre)
+   */
+  @Deprecated
+  @DoNotCall("Use toImmutableBiMap")
+  @SuppressWarnings("Java7ApiChecker")
+  @IgnoreJRERequirement // Users will use this only if they're already using streams.
+  public static <T extends @Nullable Object, K, V>
+      Collector<T, ?, ImmutableMap<K, V>> toImmutableMap(
+          Function<? super T, ? extends K> keyFunction,
+          Function<? super T, ? extends V> valueFunction,
+          BinaryOperator<V> mergeFunction) {
+    throw new UnsupportedOperationException();
+  }
+
+  private static final long serialVersionUID = 0xdecaf;
 }

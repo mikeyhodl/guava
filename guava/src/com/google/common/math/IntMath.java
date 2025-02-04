@@ -25,7 +25,6 @@ import static java.lang.Math.min;
 import static java.math.RoundingMode.HALF_EVEN;
 import static java.math.RoundingMode.HALF_UP;
 
-import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.VisibleForTesting;
@@ -48,10 +47,7 @@ import java.math.RoundingMode;
  * @since 11.0
  */
 @GwtCompatible(emulated = true)
-@ElementTypesAreNonnullByDefault
 public final class IntMath {
-  // NOTE: Whenever both tests are cheap and functional, it's faster to use &, | instead of &&, ||
-
   @VisibleForTesting static final int MAX_SIGNED_POWER_OF_TWO = 1 << (Integer.SIZE - 2);
 
   /**
@@ -63,7 +59,6 @@ public final class IntMath {
    *     int}, i.e. when {@code x > 2^30}
    * @since 20.0
    */
-  @Beta
   public static int ceilingPowerOfTwo(int x) {
     checkPositive("x", x);
     if (x > MAX_SIGNED_POWER_OF_TWO) {
@@ -79,7 +74,6 @@ public final class IntMath {
    * @throws IllegalArgumentException if {@code x <= 0}
    * @since 20.0
    */
-  @Beta
   public static int floorPowerOfTwo(int x) {
     checkPositive("x", x);
     return Integer.highestOneBit(x);
@@ -91,6 +85,8 @@ public final class IntMath {
    * <p>This differs from {@code Integer.bitCount(x) == 1}, because {@code
    * Integer.bitCount(Integer.MIN_VALUE) == 1}, but {@link Integer#MIN_VALUE} is not a power of two.
    */
+  // Whenever both tests are cheap and functional, it's faster to use &, | instead of &&, ||
+  @SuppressWarnings("ShortCircuitBoolean")
   public static boolean isPowerOfTwo(int x) {
     return x > 0 & (x & (x - 1)) == 0;
   }
@@ -121,7 +117,7 @@ public final class IntMath {
     switch (mode) {
       case UNNECESSARY:
         checkRoundingUnnecessary(isPowerOfTwo(x));
-        // fall through
+      // fall through
       case DOWN:
       case FLOOR:
         return (Integer.SIZE - 1) - Integer.numberOfLeadingZeros(x);
@@ -139,10 +135,8 @@ public final class IntMath {
         // floor(2^(logFloor + 0.5))
         int logFloor = (Integer.SIZE - 1) - leadingZeros;
         return logFloor + lessThanBranchFree(cmp, x);
-
-      default:
-        throw new AssertionError();
     }
+    throw new AssertionError();
   }
 
   /** The biggest half power of two that can fit in an unsigned int. */
@@ -164,7 +158,7 @@ public final class IntMath {
     switch (mode) {
       case UNNECESSARY:
         checkRoundingUnnecessary(x == floorPow);
-        // fall through
+      // fall through
       case FLOOR:
       case DOWN:
         return logFloor;
@@ -176,9 +170,8 @@ public final class IntMath {
       case HALF_EVEN:
         // sqrt(10) is irrational, so log10(x) - logFloor is never exactly 0.5
         return logFloor + lessThanBranchFree(halfPowersOf10[logFloor], x);
-      default:
-        throw new AssertionError();
     }
+    throw new AssertionError();
   }
 
   private static int log10Floor(int x) {
@@ -295,9 +288,8 @@ public final class IntMath {
          * signed int, so lessThanBranchFree is safe for use.
          */
         return sqrtFloor + lessThanBranchFree(halfSquare, x);
-      default:
-        throw new AssertionError();
     }
+    throw new AssertionError();
   }
 
   private static int sqrtFloor(int x) {
@@ -313,7 +305,8 @@ public final class IntMath {
    * @throws ArithmeticException if {@code q == 0}, or if {@code mode == UNNECESSARY} and {@code a}
    *     is not an integer multiple of {@code b}
    */
-  @SuppressWarnings("fallthrough")
+  // Whenever both tests are cheap and functional, it's faster to use &, | instead of &&, ||
+  @SuppressWarnings({"fallthrough", "ShortCircuitBoolean"})
   public static int divide(int p, int q, RoundingMode mode) {
     checkNotNull(mode);
     if (q == 0) {
@@ -338,7 +331,7 @@ public final class IntMath {
     switch (mode) {
       case UNNECESSARY:
         checkRoundingUnnecessary(rem == 0);
-        // fall through
+      // fall through
       case DOWN:
         increment = false;
         break;
@@ -488,6 +481,8 @@ public final class IntMath {
    * @throws ArithmeticException if {@code b} to the {@code k}th power overflows in signed {@code
    *     int} arithmetic
    */
+  // Whenever both tests are cheap and functional, it's faster to use &, | instead of &&, ||
+  @SuppressWarnings("ShortCircuitBoolean")
   public static int checkedPow(int b, int k) {
     checkNonNegative("exponent", k);
     switch (b) {
@@ -532,7 +527,6 @@ public final class IntMath {
    *
    * @since 20.0
    */
-  @Beta
   public static int saturatedAdd(int a, int b) {
     return Ints.saturatedCast((long) a + b);
   }
@@ -543,7 +537,6 @@ public final class IntMath {
    *
    * @since 20.0
    */
-  @Beta
   public static int saturatedSubtract(int a, int b) {
     return Ints.saturatedCast((long) a - b);
   }
@@ -554,7 +547,6 @@ public final class IntMath {
    *
    * @since 20.0
    */
-  @Beta
   public static int saturatedMultiply(int a, int b) {
     return Ints.saturatedCast((long) a * b);
   }
@@ -565,7 +557,8 @@ public final class IntMath {
    *
    * @since 20.0
    */
-  @Beta
+  // Whenever both tests are cheap and functional, it's faster to use &, | instead of &&, ||
+  @SuppressWarnings("ShortCircuitBoolean")
   public static int saturatedPow(int b, int k) {
     checkNonNegative("exponent", k);
     switch (b) {
@@ -720,7 +713,6 @@ public final class IntMath {
    * @since 20.0
    */
   @GwtIncompatible // TODO
-  @Beta
   public static boolean isPrime(int n) {
     return LongMath.isPrime(n);
   }

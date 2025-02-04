@@ -18,6 +18,7 @@ package com.google.common.collect;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.CollectPreconditions.checkNonnegative;
+import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 
 import com.google.caliper.BeforeExperiment;
 import com.google.caliper.Benchmark;
@@ -37,13 +38,15 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import javax.annotation.CheckForNull;
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Benchmarks for {@link ConcurrentHashMultiset}.
  *
  * @author mike nonemacher
  */
+@NullUnmarked
 public class ConcurrentHashMultisetBenchmark {
   @Param({"1", "2", "4", "8"})
   int threads;
@@ -192,7 +195,7 @@ public class ConcurrentHashMultisetBenchmark {
      * @return the nonnegative number of occurrences of the element
      */
     @Override
-    public int count(@CheckForNull Object element) {
+    public int count(@Nullable Object element) {
       try {
         return unbox(countMap.get(element));
       } catch (NullPointerException | ClassCastException e) {
@@ -235,7 +238,7 @@ public class ConcurrentHashMultisetBenchmark {
      * either of these would recurse back to us again!
      */
     private List<E> snapshot() {
-      List<E> list = Lists.newArrayListWithExpectedSize(size());
+      List<E> list = newArrayListWithExpectedSize(size());
       for (Multiset.Entry<E> entry : entrySet()) {
         E element = entry.getElement();
         for (int i = entry.getCount(); i > 0; i--) {
@@ -295,7 +298,7 @@ public class ConcurrentHashMultisetBenchmark {
      * @throws IllegalArgumentException if {@code occurrences} is negative
      */
     @Override
-    public int remove(@CheckForNull Object element, int occurrences) {
+    public int remove(@Nullable Object element, int occurrences) {
       if (occurrences == 0) {
         return count(element);
       }
@@ -330,7 +333,7 @@ public class ConcurrentHashMultisetBenchmark {
      * @param element the element whose occurrences should all be removed
      * @return the number of occurrences successfully removed, possibly zero
      */
-    private int removeAllOccurrences(@CheckForNull Object element) {
+    private int removeAllOccurrences(@Nullable Object element) {
       try {
         return unbox(countMap.remove(element));
       } catch (NullPointerException | ClassCastException e) {
@@ -349,7 +352,7 @@ public class ConcurrentHashMultisetBenchmark {
      * @param occurrences the number of occurrences of {@code element} to remove
      * @return {@code true} if the removal was possible (including if {@code occurrences} is zero)
      */
-    public boolean removeExactly(@CheckForNull Object element, int occurrences) {
+    public boolean removeExactly(@Nullable Object element, int occurrences) {
       if (occurrences == 0) {
         return true;
       }
@@ -518,7 +521,7 @@ public class ConcurrentHashMultisetBenchmark {
       }
 
       private List<Multiset.Entry<E>> snapshot() {
-        List<Multiset.Entry<E>> list = Lists.newArrayListWithExpectedSize(size());
+        List<Multiset.Entry<E>> list = newArrayListWithExpectedSize(size());
         // not Iterables.addAll(list, this), because that'll forward back here
         Iterators.addAll(list, iterator());
         return list;
@@ -543,7 +546,7 @@ public class ConcurrentHashMultisetBenchmark {
     }
 
     /** We use a special form of unboxing that treats null as zero. */
-    private static int unbox(@CheckForNull Integer i) {
+    private static int unbox(@Nullable Integer i) {
       return (i == null) ? 0 : i;
     }
   }

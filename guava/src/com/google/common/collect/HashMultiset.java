@@ -18,11 +18,12 @@ package com.google.common.collect;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.J2ktIncompatible;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Multiset implementation backed by a {@link HashMap}.
@@ -32,12 +33,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @since 2.0
  */
 @GwtCompatible(serializable = true, emulated = true)
-@ElementTypesAreNonnullByDefault
 public final class HashMultiset<E extends @Nullable Object> extends AbstractMapBasedMultiset<E> {
 
   /** Creates a new, empty {@code HashMultiset} using the default initial capacity. */
   public static <E extends @Nullable Object> HashMultiset<E> create() {
-    return new HashMultiset<E>();
+    return new HashMultiset<>();
   }
 
   /**
@@ -48,7 +48,7 @@ public final class HashMultiset<E extends @Nullable Object> extends AbstractMapB
    * @throws IllegalArgumentException if {@code distinctElements} is negative
    */
   public static <E extends @Nullable Object> HashMultiset<E> create(int distinctElements) {
-    return new HashMultiset<E>(distinctElements);
+    return new HashMultiset<>(distinctElements);
   }
 
   /**
@@ -78,12 +78,14 @@ public final class HashMultiset<E extends @Nullable Object> extends AbstractMapB
    *     its count, and so on
    */
   @GwtIncompatible // java.io.ObjectOutputStream
+  @J2ktIncompatible
   private void writeObject(ObjectOutputStream stream) throws IOException {
     stream.defaultWriteObject();
     Serialization.writeMultiset(this, stream);
   }
 
   @GwtIncompatible // java.io.ObjectInputStream
+  @J2ktIncompatible
   private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     int distinctElements = Serialization.readCount(stream);
@@ -92,5 +94,6 @@ public final class HashMultiset<E extends @Nullable Object> extends AbstractMapB
   }
 
   @GwtIncompatible // Not needed in emulated source.
+  @J2ktIncompatible
   private static final long serialVersionUID = 0;
 }

@@ -15,8 +15,9 @@
 package com.google.common.util.concurrent;
 
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.J2ktIncompatible;
 import java.util.concurrent.Callable;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A listening executor service which forwards all its method calls to another listening executor
@@ -31,8 +32,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @author Isaac Shum
  * @since 10.0
  */
+@J2ktIncompatible
 @GwtIncompatible
-@ElementTypesAreNonnullByDefault
 public abstract class ForwardingListeningExecutorService extends ForwardingExecutorService
     implements ListeningExecutorService {
   /** Constructor for use by subclasses. */

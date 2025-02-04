@@ -29,6 +29,8 @@ import java.util.Queue;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Tests for {@code ForwardingQueue}.
@@ -36,6 +38,7 @@ import junit.framework.TestSuite;
  * @author Robert Konigsberg
  * @author Louis Wasserman
  */
+@NullUnmarked
 public class ForwardingQueueTest extends TestCase {
 
   static final class StandardImplForwardingQueue<T> extends ForwardingQueue<T> {
@@ -106,16 +109,17 @@ public class ForwardingQueueTest extends TestCase {
     }
 
     @Override
-    public T peek() {
+    public @Nullable T peek() {
       return standardPeek();
     }
 
     @Override
-    public T poll() {
+    public @Nullable T poll() {
       return standardPoll();
     }
   }
 
+  @AndroidIncompatible // test-suite builders
   public static Test suite() {
     TestSuite suite = new TestSuite();
 

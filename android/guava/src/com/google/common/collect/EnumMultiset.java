@@ -18,9 +18,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.CollectPreconditions.checkNonnegative;
 import static com.google.common.collect.CollectPreconditions.checkRemove;
+import static java.util.Objects.requireNonNull;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.primitives.Ints;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.io.IOException;
@@ -30,7 +32,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import javax.annotation.CheckForNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Multiset implementation specialized for enum elements, supporting all single-element operations
@@ -43,12 +45,12 @@ import javax.annotation.CheckForNull;
  * @since 2.0
  */
 @GwtCompatible(emulated = true)
-@ElementTypesAreNonnullByDefault
+@J2ktIncompatible
 public final class EnumMultiset<E extends Enum<E>> extends AbstractMultiset<E>
     implements Serializable {
   /** Creates an empty {@code EnumMultiset}. */
   public static <E extends Enum<E>> EnumMultiset<E> create(Class<E> type) {
-    return new EnumMultiset<E>(type);
+    return new EnumMultiset<>(type);
   }
 
   /**
@@ -93,7 +95,7 @@ public final class EnumMultiset<E extends Enum<E>> extends AbstractMultiset<E>
     this.counts = new int[enumConstants.length];
   }
 
-  private boolean isActuallyE(@CheckForNull Object o) {
+  private boolean isActuallyE(@Nullable Object o) {
     if (o instanceof Enum) {
       Enum<?> e = (Enum<?>) o;
       int index = e.ordinal();
@@ -124,7 +126,7 @@ public final class EnumMultiset<E extends Enum<E>> extends AbstractMultiset<E>
   }
 
   @Override
-  public int count(@CheckForNull Object element) {
+  public int count(@Nullable Object element) {
     // isActuallyE checks for null, but we check explicitly to help nullness checkers.
     if (element == null || !isActuallyE(element)) {
       return 0;
@@ -157,7 +159,7 @@ public final class EnumMultiset<E extends Enum<E>> extends AbstractMultiset<E>
   // Modification Operations
   @CanIgnoreReturnValue
   @Override
-  public int remove(@CheckForNull Object element, int occurrences) {
+  public int remove(@Nullable Object element, int occurrences) {
     // isActuallyE checks for null, but we check explicitly to help nullness checkers.
     if (element == null || !isActuallyE(element)) {
       return 0;
@@ -296,7 +298,7 @@ public final class EnumMultiset<E extends Enum<E>> extends AbstractMultiset<E>
   private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     @SuppressWarnings("unchecked") // reading data stored by writeObject
-    Class<E> localType = (Class<E>) stream.readObject();
+    Class<E> localType = (Class<E>) requireNonNull(stream.readObject());
     type = localType;
     enumConstants = type.getEnumConstants();
     counts = new int[enumConstants.length];

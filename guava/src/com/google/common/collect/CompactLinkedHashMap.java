@@ -19,6 +19,7 @@ package com.google.common.collect;
 import static java.util.Objects.requireNonNull;
 
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.j2objc.annotations.WeakOuter;
@@ -29,8 +30,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.Spliterators;
-import javax.annotation.CheckForNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * CompactLinkedHashMap is an implementation of a Map with insertion or LRU iteration order,
@@ -52,8 +52,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author Louis Wasserman
  */
+@J2ktIncompatible // no support for access-order mode in LinkedHashMap delegate
 @GwtIncompatible // not worth using in GWT for now
-@ElementTypesAreNonnullByDefault
 class CompactLinkedHashMap<K extends @Nullable Object, V extends @Nullable Object>
     extends CompactHashMap<K, V> {
   // TODO(lowasser): implement removeEldestEntry so this can be used as a drop-in replacement
@@ -89,7 +89,7 @@ class CompactLinkedHashMap<K extends @Nullable Object, V extends @Nullable Objec
    * <p>A node with "prev" pointer equal to {@code ENDPOINT} is the first node in the linked list,
    * and a node with "next" pointer equal to {@code ENDPOINT} is the last node.
    */
-  @CheckForNull @VisibleForTesting transient long[] links;
+  @VisibleForTesting transient long @Nullable [] links;
 
   /** Pointer to the first node in the linked list, or {@code ENDPOINT} if there are no entries. */
   private transient int firstEntry;
@@ -128,7 +128,7 @@ class CompactLinkedHashMap<K extends @Nullable Object, V extends @Nullable Objec
 
   @Override
   Map<K, V> createHashFloodingResistantDelegate(int tableSize) {
-    return new LinkedHashMap<K, V>(tableSize, 1.0f, accessOrder);
+    return new LinkedHashMap<>(tableSize, 1.0f, accessOrder);
   }
 
   @Override

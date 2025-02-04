@@ -46,12 +46,14 @@ import java.util.function.Predicate;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Tests {@link MapTestSuiteBuilder} by using it against maps that have various negative behaviors.
  *
  * @author George van den Driessche
  */
+@AndroidIncompatible // test-suite builders
 public final class MapTestSuiteBuilderTests extends TestCase {
   private MapTestSuiteBuilderTests() {}
 
@@ -107,7 +109,7 @@ public final class MapTestSuiteBuilderTests extends TestCase {
               }
 
               @Override
-              public String put(String key, String value) {
+              public @Nullable String put(String key, String value) {
                 checkNotNull(key);
                 return map.put(key, value);
               }
@@ -139,7 +141,7 @@ public final class MapTestSuiteBuilderTests extends TestCase {
               }
 
               @Override
-              public boolean equals(Object o) {
+              public boolean equals(@Nullable Object o) {
                 return map.equals(o);
               }
 
@@ -149,7 +151,7 @@ public final class MapTestSuiteBuilderTests extends TestCase {
               }
 
               @Override
-              public String remove(Object key) {
+              public @Nullable String remove(Object key) {
                 return map.remove(key);
               }
 
@@ -200,7 +202,7 @@ public final class MapTestSuiteBuilderTests extends TestCase {
                         }
 
                         @Override
-                        public boolean equals(Object obj) {
+                        public boolean equals(@Nullable Object obj) {
                           return next.equals(obj);
                         }
 
@@ -249,7 +251,7 @@ public final class MapTestSuiteBuilderTests extends TestCase {
                 }
 
                 @Override
-                public boolean equals(Object o) {
+                public boolean equals(@Nullable Object o) {
                   return map.entrySet().equals(o);
                 }
 
@@ -260,7 +262,7 @@ public final class MapTestSuiteBuilderTests extends TestCase {
               }
 
               @Override
-              public String put(String key, String value) {
+              public @Nullable String put(String key, String value) {
                 checkNotNull(value);
                 return map.put(key, value);
               }

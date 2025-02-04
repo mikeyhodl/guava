@@ -23,6 +23,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Stopwatch;
 import com.google.common.util.concurrent.SmoothRateLimiter.SmoothBursty;
@@ -31,7 +32,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.time.Duration;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-import javax.annotation.CheckForNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A rate limiter. Conceptually, a rate limiter distributes permits at a configurable rate. Each
@@ -93,8 +94,8 @@ import javax.annotation.CheckForNull;
 // TODO(user): switch to nano precision. A natural unit of cost is "bytes", and a micro precision
 // would mean a maximum rate of "1MB/s", which might be small in some cases.
 @Beta
+@J2ktIncompatible
 @GwtIncompatible
-@ElementTypesAreNonnullByDefault
 public abstract class RateLimiter {
   /**
    * Creates a {@code RateLimiter} with the specified stable throughput, given as "permits per
@@ -159,7 +160,7 @@ public abstract class RateLimiter {
    *     before reaching its stable (maximum) rate
    * @throws IllegalArgumentException if {@code permitsPerSecond} is negative or zero or {@code
    *     warmupPeriod} is negative
-   * @since 28.0
+   * @since 28.0 (but only since 33.4.0 in the Android flavor)
    */
   public static RateLimiter create(double permitsPerSecond, Duration warmupPeriod) {
     return create(permitsPerSecond, toNanosSaturated(warmupPeriod), TimeUnit.NANOSECONDS);
@@ -215,7 +216,7 @@ public abstract class RateLimiter {
   private final SleepingStopwatch stopwatch;
 
   // Can't be initialized in the constructor because mocks don't call the constructor.
-  @CheckForNull private volatile Object mutexDoNotUseDirectly;
+  private volatile @Nullable Object mutexDoNotUseDirectly;
 
   private Object mutex() {
     Object mutex = mutexDoNotUseDirectly;
@@ -253,8 +254,7 @@ public abstract class RateLimiter {
    * @throws IllegalArgumentException if {@code permitsPerSecond} is negative or zero
    */
   public final void setRate(double permitsPerSecond) {
-    checkArgument(
-        permitsPerSecond > 0.0 && !Double.isNaN(permitsPerSecond), "rate must be positive");
+    checkArgument(permitsPerSecond > 0.0, "rate must be positive");
     synchronized (mutex()) {
       doSetRate(permitsPerSecond, stopwatch.readMicros());
     }
@@ -329,7 +329,7 @@ public abstract class RateLimiter {
    * @param timeout the maximum time to wait for the permit. Negative values are treated as zero.
    * @return {@code true} if the permit was acquired, {@code false} otherwise
    * @throws IllegalArgumentException if the requested number of permits is negative or zero
-   * @since 28.0
+   * @since 28.0 (but only since 33.4.0 in the Android flavor)
    */
   public boolean tryAcquire(Duration timeout) {
     return tryAcquire(1, toNanosSaturated(timeout), TimeUnit.NANOSECONDS);
@@ -388,7 +388,7 @@ public abstract class RateLimiter {
    * @param timeout the maximum time to wait for the permits. Negative values are treated as zero.
    * @return {@code true} if the permits were acquired, {@code false} otherwise
    * @throws IllegalArgumentException if the requested number of permits is negative or zero
-   * @since 28.0
+   * @since 28.0 (but only since 33.4.0 in the Android flavor)
    */
   public boolean tryAcquire(int permits, Duration timeout) {
     return tryAcquire(permits, toNanosSaturated(timeout), TimeUnit.NANOSECONDS);

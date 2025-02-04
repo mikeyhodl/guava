@@ -30,7 +30,8 @@ import java.util.Queue;
 import java.util.SortedSet;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
-import javax.annotation.CheckForNull;
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An unbounded {@linkplain BlockingQueue blocking queue} that uses the same ordering rules as class
@@ -76,6 +77,7 @@ import javax.annotation.CheckForNull;
  * @author Justin T. Sampson
  * @param <E> the type of elements held in this collection
  */
+@NullUnmarked
 public class MonitorBasedPriorityBlockingQueue<E> extends AbstractQueue<E>
     implements BlockingQueue<E> {
 
@@ -123,7 +125,7 @@ public class MonitorBasedPriorityBlockingQueue<E> extends AbstractQueue<E>
    * @throws IllegalArgumentException if {@code initialCapacity} is less than 1
    */
   public MonitorBasedPriorityBlockingQueue(
-      int initialCapacity, @CheckForNull Comparator<? super E> comparator) {
+      int initialCapacity, @Nullable Comparator<? super E> comparator) {
     q = new PriorityQueue<E>(initialCapacity, comparator);
   }
 
@@ -217,7 +219,7 @@ public class MonitorBasedPriorityBlockingQueue<E> extends AbstractQueue<E>
 
   @CanIgnoreReturnValue // pushed down from class to method
   @Override
-  public E poll() {
+  public @Nullable E poll() {
     final Monitor monitor = this.monitor;
     monitor.enter();
     try {
@@ -229,7 +231,7 @@ public class MonitorBasedPriorityBlockingQueue<E> extends AbstractQueue<E>
 
   @CanIgnoreReturnValue // pushed down from class to method
   @Override
-  public E poll(long timeout, TimeUnit unit) throws InterruptedException {
+  public @Nullable E poll(long timeout, TimeUnit unit) throws InterruptedException {
     final Monitor monitor = this.monitor;
     if (monitor.enterWhen(notEmpty, timeout, unit)) {
       try {
@@ -256,7 +258,7 @@ public class MonitorBasedPriorityBlockingQueue<E> extends AbstractQueue<E>
 
   @CanIgnoreReturnValue // pushed down from class to method
   @Override
-  public E peek() {
+  public @Nullable E peek() {
     final Monitor monitor = this.monitor;
     monitor.enter();
     try {
@@ -313,7 +315,7 @@ public class MonitorBasedPriorityBlockingQueue<E> extends AbstractQueue<E>
    */
   @CanIgnoreReturnValue // pushed down from class to method
   @Override
-  public boolean remove(@CheckForNull Object o) {
+  public boolean remove(@Nullable Object o) {
     final Monitor monitor = this.monitor;
     monitor.enter();
     try {
@@ -333,7 +335,7 @@ public class MonitorBasedPriorityBlockingQueue<E> extends AbstractQueue<E>
    */
   @CanIgnoreReturnValue // pushed down from class to method
   @Override
-  public boolean contains(@CheckForNull Object o) {
+  public boolean contains(@Nullable Object o) {
     final Monitor monitor = this.monitor;
     monitor.enter();
     try {
@@ -550,21 +552,6 @@ public class MonitorBasedPriorityBlockingQueue<E> extends AbstractQueue<E>
       } finally {
         monitor.leave();
       }
-    }
-  }
-
-  /**
-   * Saves the state to a stream (that is, serializes it). This merely wraps default serialization
-   * within the monitor. The serialization strategy for items is left to underlying Queue. Note that
-   * locking is not needed on deserialization, so readObject is not defined, just relying on
-   * default.
-   */
-  private void writeObject(java.io.ObjectOutputStream s) throws java.io.IOException {
-    monitor.enter();
-    try {
-      s.defaultWriteObject();
-    } finally {
-      monitor.leave();
     }
   }
 }

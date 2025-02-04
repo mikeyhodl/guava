@@ -17,8 +17,8 @@ package com.google.common.io;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkPositionIndexes;
 
-import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.J2ktIncompatible;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.io.Closeable;
 import java.io.EOFException;
@@ -28,8 +28,7 @@ import java.io.Writer;
 import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.CheckForNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Provides utility methods for working with character streams.
@@ -43,8 +42,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @author Colin Decker
  * @since 1.0
  */
+@J2ktIncompatible
 @GwtIncompatible
-@ElementTypesAreNonnullByDefault
 public final class CharStreams {
 
   // 2K chars (4K bytes)
@@ -193,7 +192,6 @@ public final class CharStreams {
    * @return a mutable {@link List} containing all the lines
    * @throws IOException if an I/O error occurs
    */
-  @Beta
   public static List<String> readLines(Readable r) throws IOException {
     List<String> result = new ArrayList<>();
     LineReader lineReader = new LineReader(r);
@@ -213,7 +211,6 @@ public final class CharStreams {
    * @throws IOException if an I/O error occurs
    * @since 14.0
    */
-  @Beta
   @CanIgnoreReturnValue // some processors won't return a useful result
   @ParametricNullness
   public static <T extends @Nullable Object> T readLines(
@@ -237,7 +234,6 @@ public final class CharStreams {
    *
    * @since 20.0
    */
-  @Beta
   @CanIgnoreReturnValue
   public static long exhaust(Readable readable) throws IOException {
     long total = 0;
@@ -259,7 +255,6 @@ public final class CharStreams {
    * @throws EOFException if this stream reaches the end before skipping all the characters
    * @throws IOException if an I/O error occurs
    */
-  @Beta
   public static void skipFully(Reader reader, long n) throws IOException {
     checkNotNull(reader);
     while (n > 0) {
@@ -276,7 +271,6 @@ public final class CharStreams {
    *
    * @since 15.0
    */
-  @Beta
   public static Writer nullWriter() {
     return NullWriter.INSTANCE;
   }
@@ -309,12 +303,12 @@ public final class CharStreams {
     }
 
     @Override
-    public Writer append(@CheckForNull CharSequence csq) {
+    public Writer append(@Nullable CharSequence csq) {
       return this;
     }
 
     @Override
-    public Writer append(@CheckForNull CharSequence csq, int start, int end) {
+    public Writer append(@Nullable CharSequence csq, int start, int end) {
       checkPositionIndexes(start, end, csq == null ? "null".length() : csq.length());
       return this;
     }
@@ -344,7 +338,6 @@ public final class CharStreams {
    * @param target the object to which output will be sent
    * @return a new Writer object, unless target is a Writer, in which case the target is returned
    */
-  @Beta
   public static Writer asWriter(Appendable target) {
     if (target instanceof Writer) {
       return (Writer) target;

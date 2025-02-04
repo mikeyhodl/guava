@@ -20,6 +20,7 @@ import static com.google.common.collect.CollectPreconditions.checkNonnegative;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -29,7 +30,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Implementation of {@code Multimap} that uses an {@code ArrayList} to store the values for a given
@@ -59,7 +60,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @since 2.0
  */
 @GwtCompatible(serializable = true, emulated = true)
-@ElementTypesAreNonnullByDefault
 public final class ArrayListMultimap<K extends @Nullable Object, V extends @Nullable Object>
     extends ArrayListMultimapGwtSerializationDependencies<K, V> {
   // Default from ArrayList
@@ -70,8 +70,9 @@ public final class ArrayListMultimap<K extends @Nullable Object, V extends @Null
   /**
    * Creates a new, empty {@code ArrayListMultimap} with the default initial capacities.
    *
-   * <p>This method will soon be deprecated in favor of {@code
-   * MultimapBuilder.hashKeys().arrayListValues().build()}.
+   * <p>You may also consider the equivalent {@code
+   * MultimapBuilder.hashKeys().arrayListValues().build()}, which provides more control over the
+   * underlying data structure.
    */
   public static <K extends @Nullable Object, V extends @Nullable Object>
       ArrayListMultimap<K, V> create() {
@@ -82,8 +83,9 @@ public final class ArrayListMultimap<K extends @Nullable Object, V extends @Null
    * Constructs an empty {@code ArrayListMultimap} with enough capacity to hold the specified
    * numbers of keys and values without resizing.
    *
-   * <p>This method will soon be deprecated in favor of {@code
-   * MultimapBuilder.hashKeys(expectedKeys).arrayListValues(expectedValuesPerKey).build()}.
+   * <p>You may also consider the equivalent {@code
+   * MultimapBuilder.hashKeys(expectedKeys).arrayListValues(expectedValuesPerKey).build()}, which
+   * provides more control over the underlying data structure.
    *
    * @param expectedKeys the expected number of distinct keys
    * @param expectedValuesPerKey the expected average number of values per key
@@ -98,8 +100,9 @@ public final class ArrayListMultimap<K extends @Nullable Object, V extends @Null
   /**
    * Constructs an {@code ArrayListMultimap} with the same mappings as the specified multimap.
    *
-   * <p>This method will soon be deprecated in favor of {@code
-   * MultimapBuilder.hashKeys().arrayListValues().build(multimap)}.
+   * <p>You may also consider the equivalent {@code
+   * MultimapBuilder.hashKeys().arrayListValues().build(multimap)}, which provides more control over
+   * the underlying data structure.
    *
    * @param multimap the multimap whose contents are copied to this multimap
    */
@@ -132,7 +135,7 @@ public final class ArrayListMultimap<K extends @Nullable Object, V extends @Null
    */
   @Override
   List<V> createCollection() {
-    return new ArrayList<V>(expectedValuesPerKey);
+    return new ArrayList<>(expectedValuesPerKey);
   }
 
   /**
@@ -155,12 +158,14 @@ public final class ArrayListMultimap<K extends @Nullable Object, V extends @Null
    *     key, number of values for that key, and the key's values
    */
   @GwtIncompatible // java.io.ObjectOutputStream
+  @J2ktIncompatible
   private void writeObject(ObjectOutputStream stream) throws IOException {
     stream.defaultWriteObject();
     Serialization.writeMultimap(this, stream);
   }
 
   @GwtIncompatible // java.io.ObjectOutputStream
+  @J2ktIncompatible
   private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     expectedValuesPerKey = DEFAULT_VALUES_PER_KEY;
@@ -171,5 +176,6 @@ public final class ArrayListMultimap<K extends @Nullable Object, V extends @Null
   }
 
   @GwtIncompatible // Not needed in emulated source.
+  @J2ktIncompatible
   private static final long serialVersionUID = 0;
 }

@@ -17,11 +17,12 @@ package com.google.common.io;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.J2ktIncompatible;
 import java.io.Closeable;
 import java.io.Flushable;
 import java.io.IOException;
 import java.io.Writer;
-import javax.annotation.CheckForNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Writer that places all output on an {@link Appendable} target. If the target is {@link Flushable}
@@ -31,8 +32,8 @@ import javax.annotation.CheckForNull;
  * @author Sebastian Kanthak
  * @since 1.0
  */
+@J2ktIncompatible
 @GwtIncompatible
-@ElementTypesAreNonnullByDefault
 class AppendableWriter extends Writer {
   private final Appendable target;
   private boolean closed;
@@ -107,14 +108,14 @@ class AppendableWriter extends Writer {
   }
 
   @Override
-  public Writer append(@CheckForNull CharSequence charSeq) throws IOException {
+  public Writer append(@Nullable CharSequence charSeq) throws IOException {
     checkNotClosed();
     target.append(charSeq);
     return this;
   }
 
   @Override
-  public Writer append(@CheckForNull CharSequence charSeq, int start, int end) throws IOException {
+  public Writer append(@Nullable CharSequence charSeq, int start, int end) throws IOException {
     checkNotClosed();
     target.append(charSeq, start, end);
     return this;

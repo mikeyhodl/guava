@@ -14,13 +14,14 @@
 
 package com.google.common.io;
 
-import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.io.BaseEncoding.base16;
 import static com.google.common.io.BaseEncoding.base32;
 import static com.google.common.io.BaseEncoding.base32Hex;
 import static com.google.common.io.BaseEncoding.base64;
 import static com.google.common.io.BaseEncoding.base64Url;
+import static com.google.common.io.ReflectionFreeAssertThrows.assertThrows;
 import static com.google.common.truth.Truth.assertThat;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
@@ -35,8 +36,9 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import javax.annotation.CheckForNull;
 import junit.framework.TestCase;
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Tests for {@code BaseEncoding}.
@@ -44,6 +46,7 @@ import junit.framework.TestCase;
  * @author Louis Wasserman
  */
 @GwtCompatible(emulated = true)
+@NullUnmarked
 public class BaseEncodingTest extends TestCase {
 
   public void testSeparatorsExplicitly() {
@@ -53,26 +56,15 @@ public class BaseEncodingTest extends TestCase {
   }
 
   public void testSeparatorSameAsPadChar() {
-    try {
-      base64().withSeparator("=", 3);
-      fail("Expected IllegalArgumentException");
-    } catch (IllegalArgumentException expected) {
-    }
+    assertThrows(IllegalArgumentException.class, () -> base64().withSeparator("=", 3));
 
-    try {
-      base64().withPadChar('#').withSeparator("!#!", 3);
-      fail("Expected IllegalArgumentException");
-    } catch (IllegalArgumentException expected) {
-    }
+    assertThrows(
+        IllegalArgumentException.class, () -> base64().withPadChar('#').withSeparator("!#!", 3));
   }
 
   public void testAtMostOneSeparator() {
     BaseEncoding separated = base64().withSeparator("\n", 3);
-    try {
-      separated.withSeparator("$", 4);
-      fail("Expected UnsupportedOperationException");
-    } catch (UnsupportedOperationException expected) {
-    }
+    assertThrows(UnsupportedOperationException.class, () -> separated.withSeparator("$", 4));
   }
 
   public void testBase64() {
@@ -121,27 +113,15 @@ public class BaseEncodingTest extends TestCase {
   }
 
   public void testBase64CannotUpperCase() {
-    try {
-      base64().upperCase();
-      fail();
-    } catch (IllegalStateException expected) {
-    }
+    assertThrows(IllegalStateException.class, () -> base64().upperCase());
   }
 
   public void testBase64CannotLowerCase() {
-    try {
-      base64().lowerCase();
-      fail();
-    } catch (IllegalStateException expected) {
-    }
+    assertThrows(IllegalStateException.class, () -> base64().lowerCase());
   }
 
   public void testBase64CannotIgnoreCase() {
-    try {
-      base64().ignoreCase();
-      fail();
-    } catch (IllegalStateException expected) {
-    }
+    assertThrows(IllegalStateException.class, () -> base64().ignoreCase());
   }
 
   public void testBase64AlternatePadding() {
@@ -462,7 +442,7 @@ public class BaseEncodingTest extends TestCase {
   }
 
   private static void assertFailsToDecode(
-      BaseEncoding encoding, String cannotDecode, @CheckForNull String expectedMessage) {
+      BaseEncoding encoding, String cannotDecode, @Nullable String expectedMessage) {
     // We use this somewhat weird pattern with an enum for each assertion we want to make as a way
     // of dealing with the fact that one of the assertions is @GwtIncompatible but we don't want to
     // have to have duplicate @GwtIncompatible test methods just to make that assertion.
@@ -472,11 +452,51 @@ public class BaseEncodingTest extends TestCase {
   }
 
   enum AssertFailsToDecodeStrategy {
+    CAN_DECODE {
+      @Override
+      void assertFailsToDecode(
+          BaseEncoding encoding, String cannotDecode, @Nullable String expectedMessage) {
+        assertThat(encoding.canDecode(cannotDecode)).isFalse();
+      }
+    },
+    DECODE {
+      @Override
+      void assertFailsToDecode(
+          BaseEncoding encoding, String cannotDecode, @Nullable String expectedMessage) {
+        try {
+          encoding.decode(cannotDecode);
+          fail("Expected IllegalArgumentException");
+        } catch (IllegalArgumentException expected) {
+          if (expectedMessage != null) {
+            assertThat(expected).hasCauseThat().hasMessageThat().isEqualTo(expectedMessage);
+          }
+        }
+      }
+    },
+    DECODE_CHECKED {
+      @Override
+      void assertFailsToDecode(
+          BaseEncoding encoding, String cannotDecode, @Nullable String expectedMessage) {
+        try {
+          encoding.decodeChecked(cannotDecode);
+          fail("Expected DecodingException");
+        } catch (DecodingException expected) {
+          if (expectedMessage != null) {
+            assertThat(expected).hasMessageThat().isEqualTo(expectedMessage);
+          }
+        }
+      }
+    },
+    /*
+     * This one comes last to work around b/367716565. (One *possible* alternative would be to not
+     * declare any methods in this enum, converting assertFailsToDecode into a static method that is
+     * implemented with a `switch`. I haven't tested that.)
+     */
     @GwtIncompatible // decodingStream(Reader)
     DECODING_STREAM {
       @Override
       void assertFailsToDecode(
-          BaseEncoding encoding, String cannotDecode, @CheckForNull String expectedMessage) {
+          BaseEncoding encoding, String cannotDecode, @Nullable String expectedMessage) {
         // Regression test for case where DecodingException was swallowed by default implementation
         // of
         // InputStream.read(byte[], int, int)
@@ -493,45 +513,10 @@ public class BaseEncodingTest extends TestCase {
           fail("Expected DecodingException but got: " + e);
         }
       }
-    },
-    CAN_DECODE {
-      @Override
-      void assertFailsToDecode(
-          BaseEncoding encoding, String cannotDecode, @CheckForNull String expectedMessage) {
-        assertThat(encoding.canDecode(cannotDecode)).isFalse();
-      }
-    },
-    DECODE {
-      @Override
-      void assertFailsToDecode(
-          BaseEncoding encoding, String cannotDecode, @CheckForNull String expectedMessage) {
-        try {
-          encoding.decode(cannotDecode);
-          fail("Expected IllegalArgumentException");
-        } catch (IllegalArgumentException expected) {
-          if (expectedMessage != null) {
-            assertThat(expected).hasCauseThat().hasMessageThat().isEqualTo(expectedMessage);
-          }
-        }
-      }
-    },
-    DECODE_CHECKED {
-      @Override
-      void assertFailsToDecode(
-          BaseEncoding encoding, String cannotDecode, @CheckForNull String expectedMessage) {
-        try {
-          encoding.decodeChecked(cannotDecode);
-          fail("Expected DecodingException");
-        } catch (DecodingException expected) {
-          if (expectedMessage != null) {
-            assertThat(expected).hasMessageThat().isEqualTo(expectedMessage);
-          }
-        }
-      }
     };
 
     abstract void assertFailsToDecode(
-        BaseEncoding encoding, String cannotDecode, @CheckForNull String expectedMessage);
+        BaseEncoding encoding, String cannotDecode, @Nullable String expectedMessage);
   }
 
   @GwtIncompatible // Reader/Writer

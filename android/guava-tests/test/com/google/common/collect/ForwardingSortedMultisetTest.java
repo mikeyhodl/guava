@@ -14,6 +14,8 @@
 
 package com.google.common.collect;
 
+import static java.util.Arrays.asList;
+
 import com.google.common.base.Function;
 import com.google.common.collect.Multiset.Entry;
 import com.google.common.collect.testing.features.CollectionFeature;
@@ -22,21 +24,22 @@ import com.google.common.collect.testing.google.SortedMultisetTestSuiteBuilder;
 import com.google.common.collect.testing.google.TestStringMultisetGenerator;
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.ForwardingWrapperTester;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NavigableSet;
-import javax.annotation.CheckForNull;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Tests for {@link ForwardingSortedMultiset}.
  *
  * @author Louis Wasserman
  */
+@NullUnmarked
 public class ForwardingSortedMultisetTest extends TestCase {
   static class StandardImplForwardingSortedMultiset<E> extends ForwardingSortedMultiset<E> {
     private final SortedMultiset<E> backingMultiset;
@@ -93,12 +96,12 @@ public class ForwardingSortedMultisetTest extends TestCase {
     }
 
     @Override
-    public int count(@CheckForNull Object element) {
+    public int count(@Nullable Object element) {
       return standardCount(element);
     }
 
     @Override
-    public boolean equals(@CheckForNull Object object) {
+    public boolean equals(@Nullable Object object) {
       return standardEquals(object);
     }
 
@@ -123,7 +126,7 @@ public class ForwardingSortedMultisetTest extends TestCase {
     }
 
     @Override
-    public boolean contains(@CheckForNull Object object) {
+    public boolean contains(@Nullable Object object) {
       return standardContains(object);
     }
 
@@ -143,7 +146,7 @@ public class ForwardingSortedMultisetTest extends TestCase {
     }
 
     @Override
-    public boolean remove(@CheckForNull Object object) {
+    public boolean remove(@Nullable Object object) {
       return standardRemove(object);
     }
 
@@ -173,6 +176,7 @@ public class ForwardingSortedMultisetTest extends TestCase {
     }
   }
 
+  @AndroidIncompatible // test-suite builders
   public static Test suite() {
     TestSuite suite = new TestSuite();
 
@@ -183,7 +187,7 @@ public class ForwardingSortedMultisetTest extends TestCase {
                   @Override
                   protected Multiset<String> create(String[] elements) {
                     return new StandardImplForwardingSortedMultiset<>(
-                        TreeMultiset.create(Arrays.asList(elements)));
+                        TreeMultiset.create(asList(elements)));
                   }
 
                   @Override

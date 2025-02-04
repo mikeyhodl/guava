@@ -19,6 +19,7 @@ import static com.google.common.base.Throwables.throwIfUnchecked;
 import static com.google.common.util.concurrent.Platform.restoreInterruptIfIsInterruptedException;
 
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.Collection;
@@ -30,7 +31,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An abstract {@code ExecutorService} that allows subclasses to {@linkplain #wrapTask(Callable)
@@ -42,8 +43,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author Chris Nokleberg
  */
+@J2ktIncompatible
 @GwtIncompatible
-@ElementTypesAreNonnullByDefault
 abstract class WrappingExecutorService implements ExecutorService {
   private final ExecutorService delegate;
 
