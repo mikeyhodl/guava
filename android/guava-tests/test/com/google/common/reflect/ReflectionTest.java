@@ -23,6 +23,7 @@ import com.google.common.testing.NullPointerTester;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import junit.framework.TestCase;
 import org.jspecify.annotations.NullUnmarked;
 
@@ -56,36 +57,37 @@ public class ReflectionTest extends TestCase {
         }
       };
 
-  private static int classesInitialized = 0;
+  private static final AtomicInteger classesInitialized = new AtomicInteger(0);
 
   private static class A {
     static {
-      ++classesInitialized;
+      classesInitialized.incrementAndGet();
     }
   }
 
   private static class B {
     static {
-      ++classesInitialized;
+      classesInitialized.incrementAndGet();
     }
   }
 
   private static class C {
     static {
-      ++classesInitialized;
+      classesInitialized.incrementAndGet();
     }
   }
 
   public void testInitialize() {
-    assertEquals("This test can't be included twice in the same suite.", 0, classesInitialized);
+    assertEquals(
+        "This test can't be included twice in the same suite.", 0, classesInitialized.get());
 
     Reflection.initialize(A.class);
-    assertEquals(1, classesInitialized);
+    assertEquals(1, classesInitialized.get());
 
     Reflection.initialize(
         A.class, // Already initialized (above)
         B.class, C.class);
-    assertEquals(3, classesInitialized);
+    assertEquals(3, classesInitialized.get());
   }
 
   public void testNullPointers() {
