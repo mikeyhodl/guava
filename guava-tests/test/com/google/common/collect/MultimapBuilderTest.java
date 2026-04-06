@@ -16,6 +16,8 @@
 
 package com.google.common.collect;
 
+import static com.google.common.truth.Truth.assertThat;
+
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
@@ -123,7 +125,7 @@ public class MultimapBuilderTest extends TestCase {
     private static void reserializeAndAssert(Object object) throws Exception {
     Object copy = reserialize(object);
     assertEquals(object, copy);
-    assertEquals(object.getClass(), copy.getClass());
+    assertThat(copy.getClass()).isEqualTo(object.getClass());
   }
 
   @GwtIncompatible

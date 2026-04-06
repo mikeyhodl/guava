@@ -67,37 +67,37 @@ public class TypeTokenResolutionTest extends TestCase {
 
   public void testSimpleTypeToken() {
     Foo<String, Integer> foo = new Foo<String, Integer>() {};
-    assertEquals(String.class, foo.getClassA());
-    assertEquals(Integer.class, foo.getClassB());
-    assertEquals(String[].class, foo.getArrayClassA());
-    assertEquals(Integer[].class, foo.getArrayClassB());
+    assertThat(foo.getClassA()).isEqualTo(String.class);
+    assertThat(foo.getClassB()).isEqualTo(Integer.class);
+    assertThat(foo.getArrayClassA()).isEqualTo(String[].class);
+    assertThat(foo.getArrayClassB()).isEqualTo(Integer[].class);
   }
 
   public void testCompositeTypeToken() {
     Foo<String[], List<int[]>> foo = new Foo<String[], List<int[]>>() {};
-    assertEquals(String[].class, foo.getClassA());
-    assertEquals(List.class, foo.getClassB());
-    assertEquals(String[][].class, foo.getArrayClassA());
-    assertEquals(List[].class, foo.getArrayClassB());
+    assertThat(foo.getClassA()).isEqualTo(String[].class);
+    assertThat(foo.getClassB()).isEqualTo(List.class);
+    assertThat(foo.getArrayClassA()).isEqualTo(String[][].class);
+    assertThat(foo.getArrayClassB()).isEqualTo(List[].class);
   }
 
   private static class StringFoo<T> extends Foo<String, T> {}
 
   public void testPartialSpecialization() {
     StringFoo<Integer> foo = new StringFoo<Integer>() {};
-    assertEquals(String.class, foo.getClassA());
-    assertEquals(Integer.class, foo.getClassB());
-    assertEquals(String[].class, foo.getArrayClassA());
-    assertEquals(Integer[].class, foo.getArrayClassB());
+    assertThat(foo.getClassA()).isEqualTo(String.class);
+    assertThat(foo.getClassB()).isEqualTo(Integer.class);
+    assertThat(foo.getArrayClassA()).isEqualTo(String[].class);
+    assertThat(foo.getArrayClassB()).isEqualTo(Integer[].class);
     assertEquals(new TypeToken<String[]>() {}.getType(), foo.getArrayTypeA());
   }
 
   public void testTypeArgNotFound() {
     StringFoo<Integer> foo = new StringFoo<>();
-    assertEquals(String.class, foo.getClassA());
-    assertEquals(String[].class, foo.getArrayClassA());
-    assertEquals(Object.class, foo.getClassB());
-    assertEquals(Object[].class, foo.getArrayClassB());
+    assertThat(foo.getClassA()).isEqualTo(String.class);
+    assertThat(foo.getArrayClassA()).isEqualTo(String[].class);
+    assertThat(foo.getClassB()).isEqualTo(Object.class);
+    assertThat(foo.getArrayClassB()).isEqualTo(Object[].class);
   }
 
   private abstract static class Bar<T> {}
@@ -147,8 +147,8 @@ public class TypeTokenResolutionTest extends TestCase {
   public void testGenericInterface() {
     // test the 1st generic interface on the class
     Type fType = Supplier.class.getTypeParameters()[0];
-    assertEquals(
-        Integer.class, TypeToken.of(IntegerStringFunction.class).resolveType(fType).getRawType());
+    assertThat(TypeToken.of(IntegerStringFunction.class).resolveType(fType).getRawType())
+        .isEqualTo(Integer.class);
 
     // test the 2nd generic interface on the class
     Type predicateParameterType = Predicate.class.getTypeParameters()[0];
@@ -160,8 +160,8 @@ public class TypeTokenResolutionTest extends TestCase {
   private abstract static class StringIntegerFoo extends Foo<String, Integer> {}
 
   public void testConstructor_typeArgsResolvedFromAncestorClass() {
-    assertEquals(String.class, new StringIntegerFoo() {}.getClassA());
-    assertEquals(Integer.class, new StringIntegerFoo() {}.getClassB());
+    assertThat(new StringIntegerFoo() {}.getClassA()).isEqualTo(String.class);
+    assertThat(new StringIntegerFoo() {}.getClassB()).isEqualTo(Integer.class);
   }
 
   private static class Owner<T> {
@@ -179,17 +179,16 @@ public class TypeTokenResolutionTest extends TestCase {
   }
 
   public void testResolveNestedClass() {
-    assertEquals(String.class, new Owner.Nested<String>() {}.getTypeArgument());
+    assertThat(new Owner.Nested<String>() {}.getTypeArgument()).isEqualTo(String.class);
   }
 
-  @SuppressWarnings("RestrictedApiChecker") // crashes under JDK8, which EP no longer supports
   public void testResolveInnerClass() {
-    assertEquals(String.class, new Owner<Integer>().new Inner<String>() {}.getTypeArgument());
+    assertThat(new Owner<Integer>().new Inner<String>() {}.getTypeArgument())
+        .isEqualTo(String.class);
   }
 
-  @SuppressWarnings("RestrictedApiChecker") // crashes under JDK8, which EP no longer supports
   public void testResolveOwnerClass() {
-    assertEquals(Integer.class, new Owner<Integer>().new Inner<String>() {}.getOwnerType());
+    assertThat(new Owner<Integer>().new Inner<String>() {}.getOwnerType()).isEqualTo(Integer.class);
   }
 
   private static class Mapping<F, T> {
@@ -288,7 +287,7 @@ public class TypeTokenResolutionTest extends TestCase {
   public void testClassWrapper() {
     TypeToken<String> typeExpression = TypeToken.of(String.class);
     assertEquals(String.class, typeExpression.getType());
-    assertEquals(String.class, typeExpression.getRawType());
+    assertThat(typeExpression.getRawType()).isEqualTo(String.class);
   }
 
   private static class Red<A> {
@@ -332,22 +331,22 @@ public class TypeTokenResolutionTest extends TestCase {
   public void test1() {
     Red<String> redString = new Red<String>() {};
     Red<Integer> redInteger = new Red<Integer>() {};
-    assertEquals(String.class, redString.getClassDirect());
-    assertEquals(Integer.class, redInteger.getClassDirect());
+    assertThat(redString.getClassDirect()).isEqualTo(String.class);
+    assertThat(redInteger.getClassDirect()).isEqualTo(Integer.class);
 
     Red<String>.Yellow<Integer> yellowInteger = redString.new Yellow<Integer>(redInteger) {};
-    assertEquals(Integer.class, yellowInteger.getClassA());
-    assertEquals(Integer.class, yellowInteger.getClassB());
-    assertEquals(String.class, yellowInteger.getA().getClassDirect());
-    assertEquals(Integer.class, yellowInteger.getB().getClassDirect());
+    assertThat(yellowInteger.getClassA()).isEqualTo(Integer.class);
+    assertThat(yellowInteger.getClassB()).isEqualTo(Integer.class);
+    assertThat(yellowInteger.getA().getClassDirect()).isEqualTo(String.class);
+    assertThat(yellowInteger.getB().getClassDirect()).isEqualTo(Integer.class);
   }
 
   public void test2() {
     Red<String> redString = new Red<>();
     Red<Integer> redInteger = new Red<>();
     Red<String>.Yellow<Integer> yellowInteger = redString.new Yellow<Integer>(redInteger) {};
-    assertEquals(Integer.class, yellowInteger.getClassA());
-    assertEquals(Integer.class, yellowInteger.getClassB());
+    assertThat(yellowInteger.getClassA()).isEqualTo(Integer.class);
+    assertThat(yellowInteger.getClassB()).isEqualTo(Integer.class);
   }
 
   private static <T> Type staticMethodWithLocalClass() {
@@ -395,7 +394,7 @@ public class TypeTokenResolutionTest extends TestCase {
   }
 
   public void testStaticContext() {
-    assertEquals(Map.class, mapType().getRawType());
+    assertThat(mapType().getRawType()).isEqualTo(Map.class);
   }
 
   private abstract static class Holder<T> {

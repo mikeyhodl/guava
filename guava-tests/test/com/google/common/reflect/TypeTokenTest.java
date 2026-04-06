@@ -85,7 +85,7 @@ public class TypeTokenTest extends TestCase {
 
   public void testRawTypeIsCorrect() {
     TypeToken<List<String>> token = new TypeToken<List<String>>() {};
-    assertEquals(List.class, token.getRawType());
+    assertThat(token.getRawType()).isEqualTo(List.class);
   }
 
   public void testTypeIsCorrect() {
@@ -124,13 +124,13 @@ public class TypeTokenTest extends TestCase {
 
   public void testGenericArrayType() {
     TypeToken<List<String>[]> token = new TypeToken<List<String>[]>() {};
-    assertEquals(List[].class, token.getRawType());
+    assertThat(token.getRawType()).isEqualTo(List[].class);
     assertThat(token.getType()).isInstanceOf(GenericArrayType.class);
   }
 
   public void testMultiDimensionalGenericArrayType() {
     TypeToken<List<Long>[][][]> token = new TypeToken<List<Long>[][][]>() {};
-    assertEquals(List[][][].class, token.getRawType());
+    assertThat(token.getRawType()).isEqualTo(List[][][].class);
     assertThat(token.getType()).isInstanceOf(GenericArrayType.class);
   }
 
@@ -399,7 +399,7 @@ public class TypeTokenTest extends TestCase {
   public void testGetGenericSuperclass_withSuperclass() {
     TypeToken<? super ArrayList<String>> superToken =
         new TypeToken<ArrayList<String>>() {}.getGenericSuperclass();
-    assertEquals(ArrayList.class.getSuperclass(), superToken.getRawType());
+    assertThat(superToken.getRawType()).isEqualTo(ArrayList.class.getSuperclass());
     assertEquals(
         String.class, ((ParameterizedType) superToken.getType()).getActualTypeArguments()[0]);
     assertEquals(TypeToken.of(Base.class), TypeToken.of(Sub.class).getGenericSuperclass());
@@ -1052,7 +1052,7 @@ public class TypeTokenTest extends TestCase {
     assertEquals(new TypeToken<int[]>() {}, TypeToken.toGenericType(int[].class));
     @SuppressWarnings("rawtypes") // Iterable.class
     TypeToken<? extends Iterable> genericType = TypeToken.toGenericType(Iterable.class);
-    assertEquals(Iterable.class, genericType.getRawType());
+    assertThat(genericType.getRawType()).isEqualTo(Iterable.class);
     assertEquals(
         Types.newParameterizedType(Iterable.class, Iterable.class.getTypeParameters()[0]),
         genericType.getType());
@@ -1391,7 +1391,7 @@ public class TypeTokenTest extends TestCase {
     TypeToken<MySpecialList> subtype = new TypeToken<MySpecialList>() {};
     assertTrue(subtype.isSubtypeOf(supertype));
     Class<?> actualSubtype = (Class<?>) supertype.getSubtype(subtype.getRawType()).getType();
-    assertEquals(MySpecialList.class, actualSubtype);
+    assertThat(actualSubtype).isEqualTo(MySpecialList.class);
     assertTrue(TypeToken.of(actualSubtype).isSubtypeOf(supertype));
   }
 
@@ -1473,7 +1473,7 @@ public class TypeTokenTest extends TestCase {
     // Type inference is doomed here: int.class is the same as Integer.class, so this is comparing
     // TypeToken<int[]> and TypeToken<Integer[]>.
     assertEquals(new TypeToken<int[]>() {}, arrayOf(int.class));
-    assertEquals(int[].class, arrayOf(int.class).getRawType());
+    assertThat(arrayOf(int.class).getRawType()).isEqualTo(int[].class);
   }
 
   @Keep
@@ -1489,7 +1489,7 @@ public class TypeTokenTest extends TestCase {
         type.method(Holder.class.getDeclaredMethod("setList", List.class)).getParameters();
     assertThat(parameters).hasSize(1);
     TypeToken<?> parameterType = parameters.get(0).getType();
-    assertEquals(List.class, parameterType.getRawType());
+    assertThat(parameterType.getRawType()).isEqualTo(List.class);
     assertFalse(
         parameterType.getType().toString(),
         parameterType.isSupertypeOf(new TypeToken<List<Integer>>() {}));
@@ -1499,7 +1499,7 @@ public class TypeTokenTest extends TestCase {
     TypeToken<Holder<?>> type = new TypeToken<Holder<?>>() {};
     TypeToken<?> matrixType =
         type.resolveType(Holder.class.getDeclaredField("matrix").getGenericType());
-    assertEquals(List[].class, matrixType.getRawType());
+    assertThat(matrixType.getRawType()).isEqualTo(List[].class);
     assertThat(matrixType.getType()).isNotEqualTo(new TypeToken<List<?>[]>() {}.getType());
   }
 
@@ -1796,12 +1796,11 @@ public class TypeTokenTest extends TestCase {
 
     static void verifyConsistentRawType() {
       for (Method method : RawTypeConsistencyTester.class.getDeclaredMethods()) {
-        assertEquals(
-            method.getReturnType(), TypeToken.of(method.getGenericReturnType()).getRawType());
+        assertThat(TypeToken.of(method.getGenericReturnType()).getRawType())
+            .isEqualTo(method.getReturnType());
         for (int i = 0; i < method.getParameterTypes().length; i++) {
-          assertEquals(
-              method.getParameterTypes()[i],
-              TypeToken.of(method.getGenericParameterTypes()[i]).getRawType());
+          assertThat(TypeToken.of(method.getGenericParameterTypes()[i]).getRawType())
+              .isEqualTo(method.getParameterTypes()[i]);
         }
       }
     }
@@ -1809,10 +1808,11 @@ public class TypeTokenTest extends TestCase {
 
   public void testRawTypes() {
     RawTypeConsistencyTester.verifyConsistentRawType();
-    assertEquals(Object.class, TypeToken.of(Types.subtypeOf(Object.class)).getRawType());
-    assertEquals(
-        CharSequence.class, TypeToken.of(Types.subtypeOf(CharSequence.class)).getRawType());
-    assertEquals(Object.class, TypeToken.of(Types.supertypeOf(CharSequence.class)).getRawType());
+    assertThat(TypeToken.of(Types.subtypeOf(Object.class)).getRawType()).isEqualTo(Object.class);
+    assertThat(TypeToken.of(Types.subtypeOf(CharSequence.class)).getRawType())
+        .isEqualTo(CharSequence.class);
+    assertThat(TypeToken.of(Types.supertypeOf(CharSequence.class)).getRawType())
+        .isEqualTo(Object.class);
   }
 
   private abstract static class IKnowMyType<T> {

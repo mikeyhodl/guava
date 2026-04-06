@@ -539,6 +539,6 @@ public class FreshValueGeneratorTest extends TestCase {
 
   private static void assertValueAndTypeEquals(Object expected, Object actual) {
     assertEquals(expected, actual);
-    assertEquals(expected.getClass(), actual.getClass());
+    assertThat(actual.getClass()).isEqualTo(expected.getClass());
   }
 }

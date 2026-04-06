@@ -133,7 +133,7 @@ public class ObjectArraysTest extends TestCase {
   private void doTestToArrayImpl1(List<Integer> list) {
     Object[] reference = list.toArray();
     Object[] target = ObjectArrays.toArrayImpl(list);
-    assertEquals(reference.getClass(), target.getClass());
+    assertThat(target.getClass()).isEqualTo(reference.getClass());
     assertThat(target).isEqualTo(reference);
   }
 
@@ -157,7 +157,7 @@ public class ObjectArraysTest extends TestCase {
 
     Object[] target = ObjectArrays.toArrayImpl(list, array2);
 
-    assertEquals(reference.getClass(), target.getClass());
+    assertThat(target.getClass()).isEqualTo(reference.getClass());
     assertThat(target).isEqualTo(reference);
 
     Object[] expectedArray1 = expectModify ? reference : starting;

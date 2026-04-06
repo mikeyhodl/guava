@@ -209,7 +209,7 @@ public class EnumHashBiMapTest extends TestCase {
   @GwtIncompatible // keyType
   public void testKeyType() {
     EnumHashBiMap<Currency, String> bimap = EnumHashBiMap.create(Currency.class);
-    assertEquals(Currency.class, bimap.keyType());
+    assertThat(bimap.keyType()).isEqualTo(Currency.class);
   }
 
   public void testEntrySet() {

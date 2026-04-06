@@ -1189,7 +1189,7 @@ public class NullPointerTesterTest extends TestCase {
     void check() {
       runTester();
       Class<?> defaultClass = (Class<?>) getDefaultParameterValue(0);
-      assertEquals(List.class, defaultClass);
+      assertThat(defaultClass).isEqualTo(List.class);
     }
   }
 
@@ -1208,7 +1208,7 @@ public class NullPointerTesterTest extends TestCase {
     void check() {
       runTester();
       Class<?> defaultClass = (Class<?>) getDefaultParameterValue(0);
-      assertEquals(Object.class, defaultClass);
+      assertThat(defaultClass).isEqualTo(Object.class);
     }
   }
 

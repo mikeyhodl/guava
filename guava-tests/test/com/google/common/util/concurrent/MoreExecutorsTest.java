@@ -580,7 +580,7 @@ public class MoreExecutorsTest extends JSR166TestCase {
     ThreadFactory factory = MoreExecutors.platformThreadFactory();
     assertThat(factory).isNotNull();
     // Executors#defaultThreadFactory() may return a new instance each time.
-    assertEquals(factory.getClass(), Executors.defaultThreadFactory().getClass());
+    assertThat(factory.getClass()).isEqualTo(Executors.defaultThreadFactory().getClass());
   }
 
   public void testThreadRenaming() {

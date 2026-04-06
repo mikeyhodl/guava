@@ -203,7 +203,7 @@ public class InvokableTest extends TestCase {
       Constructor<A> constructor = A.class.getDeclaredConstructor(Object.class);
       Invokable<A, A> invokable = Invokable.from(constructor);
       assertThat(invokable.getName()).isEqualTo(constructor.getName());
-      assertEquals(A.class, invokable.getDeclaringClass());
+      assertThat(invokable.getDeclaringClass()).isEqualTo(A.class);
       return invokable;
     }
 
@@ -211,7 +211,7 @@ public class InvokableTest extends TestCase {
       Invokable<?, Object> invokable =
           Invokable.from(A.class.getDeclaredMethod(name, parameterTypes));
       assertThat(invokable.getName()).isEqualTo(name);
-      assertEquals(A.class, invokable.getDeclaringClass());
+      assertThat(invokable.getDeclaringClass()).isEqualTo(A.class);
       return invokable;
     }
 

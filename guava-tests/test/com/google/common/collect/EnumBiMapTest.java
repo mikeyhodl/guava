@@ -190,13 +190,13 @@ public class EnumBiMapTest extends TestCase {
   @GwtIncompatible // keyType
   public void testKeyType() {
     EnumBiMap<Currency, Country> bimap = EnumBiMap.create(Currency.class, Country.class);
-    assertEquals(Currency.class, bimap.keyType());
+    assertThat(bimap.keyType()).isEqualTo(Currency.class);
   }
 
   @GwtIncompatible // valueType
   public void testValueType() {
     EnumBiMap<Currency, Country> bimap = EnumBiMap.create(Currency.class, Country.class);
-    assertEquals(Country.class, bimap.valueType());
+    assertThat(bimap.valueType()).isEqualTo(Country.class);
   }
 
   public void testIterationOrder() {

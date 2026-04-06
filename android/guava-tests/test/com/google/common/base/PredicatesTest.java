@@ -953,7 +953,7 @@ public class PredicatesTest extends TestCase {
     assertThat(actualResult).isEqualTo(expectedResult);
     if (expectedRuntimeException != null) {
       assertThat(actualRuntimeException).isNotNull();
-      assertEquals(expectedRuntimeException.getClass(), actualRuntimeException.getClass());
+      assertThat(actualRuntimeException.getClass()).isEqualTo(expectedRuntimeException.getClass());
     }
   }
 
