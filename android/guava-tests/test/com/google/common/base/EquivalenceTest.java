@@ -144,24 +144,24 @@ public class EquivalenceTest extends TestCase {
   }
 
   /*
-   * We use large numbers to avoid the integer cache. Normally, we'd accomplish that merely by using
-   * `new Integer` (as we do) instead of `Integer.valueOf`. However, under J2KT, `new Integer`
-   * gets translated back to `Integer.valueOf` because that is the only thing J2KT can support. And
-   * anyway, it's nice to avoid `Integer.valueOf` because the Android toolchain optimizes multiple
-   * `Integer.valueOf` calls into one! So we stick with the deprecated `Integer` constructor.
+   * We use MyInteger to avoid the integer cache. Normally, we'd accomplish that merely by using
+   * `new Integer` instead of `Integer.valueOf`. However, under J2KT, `new Integer` gets translated
+   * back to `Integer.valueOf` because that is the only thing J2KT can support. And anyway, it's
+   * nice to avoid `Integer.valueOf` because the Android toolchain optimizes multiple
+   * `Integer.valueOf` calls into one! So we use a custom class.
    */
 
   public void testEqualsEquivalent() {
     EquivalenceTester.of(Equivalence.equals())
-        .addEquivalenceGroup(new Integer(42_000_000), 42_000_000)
+        .addEquivalenceGroup(new MyInteger(42_000_000), new MyInteger(42_000_000))
         .addEquivalenceGroup("a")
         .test();
   }
 
   public void testIdentityEquivalent() {
     EquivalenceTester.of(Equivalence.identity())
-        .addEquivalenceGroup(new Integer(42_000_000))
-        .addEquivalenceGroup(new Integer(42_000_000))
+        .addEquivalenceGroup(new MyInteger(42_000_000))
+        .addEquivalenceGroup(new MyInteger(42_000_000))
         .addEquivalenceGroup("a")
         .test();
   }
@@ -184,5 +184,26 @@ public class EquivalenceTest extends TestCase {
     tester.testAllPublicStaticMethods(Equivalence.class);
     tester.testAllPublicInstanceMethods(Equivalence.equals());
     tester.testAllPublicInstanceMethods(Equivalence.identity());
+  }
+
+  private static final class MyInteger {
+    final int value;
+
+    MyInteger(int value) {
+      this.value = value;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+      if (obj instanceof MyInteger) {
+        return value == ((MyInteger) obj).value;
+      }
+      return false;
+    }
+
+    @Override
+    public int hashCode() {
+      return value;
+    }
   }
 }

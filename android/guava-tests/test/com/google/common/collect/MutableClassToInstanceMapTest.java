@@ -87,25 +87,25 @@ public class MutableClassToInstanceMapTest extends TestCase {
      * because we know that newClassMap() is implemented using ConstrainedMap which is itself
      * well-tested. A purist would object to this, but what can I say, we're dirty cheaters.
      */
-    map.put(Integer.class, new Integer(5));
-    assertThrows(ClassCastException.class, () -> map.put(Double.class, new Long(42)));
+    map.put(Integer.class, 5);
+    assertThrows(ClassCastException.class, () -> map.put(Double.class, 42L));
     // Won't compile: map.put(String.class, "x");
   }
 
   public void testPutAndGetInstance() {
-    assertThat(map.putInstance(Integer.class, new Integer(5))).isNull();
+    assertThat(map.putInstance(Integer.class, 5)).isNull();
 
-    Integer oldValue = map.putInstance(Integer.class, new Integer(7));
+    Integer oldValue = map.putInstance(Integer.class, 7);
     assertEquals(5, (int) oldValue);
 
     Integer newValue = map.getInstance(Integer.class);
     assertEquals(7, (int) newValue);
 
-    // Won't compile: map.putInstance(Double.class, new Long(42));
+    // Won't compile: map.putInstance(Double.class, 42L);
   }
 
   public void testNull() {
-    assertThrows(NullPointerException.class, () -> map.put(null, new Integer(1)));
+    assertThrows(NullPointerException.class, () -> map.put(null, 1));
     map.putInstance(Integer.class, null);
     assertThat(map.get(Integer.class)).isNull();
     assertThat(map.getInstance(Integer.class)).isNull();

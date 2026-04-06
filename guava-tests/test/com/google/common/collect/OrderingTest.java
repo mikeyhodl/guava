@@ -662,27 +662,27 @@ public class OrderingTest extends TestCase {
   }
 
   public void testLeastOfIterable_ties() {
-    Integer foo = new Integer(Integer.MAX_VALUE - 10);
-    Integer bar = new Integer(Integer.MAX_VALUE - 10);
+    MyInteger foo = new MyInteger(Integer.MAX_VALUE - 10);
+    MyInteger bar = new MyInteger(Integer.MAX_VALUE - 10);
 
     assertThat(foo).isNotSameInstanceAs(bar);
     assertThat(foo).isEqualTo(bar);
 
-    List<Integer> list = asList(3, foo, bar, -1);
-    List<Integer> result = numberOrdering.leastOf(list, list.size());
-    assertEquals(ImmutableList.of(-1, 3, foo, bar), result);
+    List<MyInteger> list = asList(new MyInteger(3), foo, bar, new MyInteger(-1));
+    List<MyInteger> result = numberOrdering.leastOf(list, list.size());
+    assertEquals(ImmutableList.of(new MyInteger(-1), new MyInteger(3), foo, bar), result);
   }
 
   public void testLeastOfIterator_ties() {
-    Integer foo = new Integer(Integer.MAX_VALUE - 10);
-    Integer bar = new Integer(Integer.MAX_VALUE - 10);
+    MyInteger foo = new MyInteger(Integer.MAX_VALUE - 10);
+    MyInteger bar = new MyInteger(Integer.MAX_VALUE - 10);
 
     assertThat(foo).isNotSameInstanceAs(bar);
     assertThat(foo).isEqualTo(bar);
 
-    List<Integer> list = asList(3, foo, bar, -1);
-    List<Integer> result = numberOrdering.leastOf(list.iterator(), list.size());
-    assertEquals(ImmutableList.of(-1, 3, foo, bar), result);
+    List<MyInteger> list = asList(new MyInteger(3), foo, bar, new MyInteger(-1));
+    List<MyInteger> result = numberOrdering.leastOf(list.iterator(), list.size());
+    assertEquals(ImmutableList.of(new MyInteger(-1), new MyInteger(3), foo, bar), result);
   }
 
   @GwtIncompatible // slow
@@ -759,11 +759,11 @@ public class OrderingTest extends TestCase {
     assertEquals(0, (int) numberOrdering.min(ints.iterator()));
 
     // when the values are the same, the first argument should be returned
-    Integer a = new Integer(4);
-    Integer b = new Integer(4);
-    ints = Lists.newArrayList(a, b, b);
-    assertThat(numberOrdering.max(ints.iterator())).isSameInstanceAs(a);
-    assertThat(numberOrdering.min(ints.iterator())).isSameInstanceAs(a);
+    MyInteger a = new MyInteger(4);
+    MyInteger b = new MyInteger(4);
+    List<MyInteger> myInts = Lists.newArrayList(a, b, b);
+    assertThat(numberOrdering.max(myInts.iterator())).isSameInstanceAs(a);
+    assertThat(numberOrdering.min(myInts.iterator())).isSameInstanceAs(a);
   }
 
   public void testIteratorMinExhaustsIterator() {
@@ -786,11 +786,11 @@ public class OrderingTest extends TestCase {
     assertEquals(0, (int) numberOrdering.min(ints));
 
     // when the values are the same, the first argument should be returned
-    Integer a = new Integer(4);
-    Integer b = new Integer(4);
-    ints = Lists.newArrayList(a, b, b);
-    assertThat(numberOrdering.max(ints)).isSameInstanceAs(a);
-    assertThat(numberOrdering.min(ints)).isSameInstanceAs(a);
+    MyInteger a = new MyInteger(4);
+    MyInteger b = new MyInteger(4);
+    List<MyInteger> myInts = Lists.newArrayList(a, b, b);
+    assertThat(numberOrdering.max(myInts)).isSameInstanceAs(a);
+    assertThat(numberOrdering.min(myInts)).isSameInstanceAs(a);
   }
 
   public void testVarargsMinAndMax() {
@@ -808,8 +808,8 @@ public class OrderingTest extends TestCase {
     assertEquals(0, (int) numberOrdering.min(5, 3, 0, 9, 0));
 
     // when the values are the same, the first argument should be returned
-    Integer a = new Integer(4);
-    Integer b = new Integer(4);
+    MyInteger a = new MyInteger(4);
+    MyInteger b = new MyInteger(4);
     assertThat(numberOrdering.max(a, b, b)).isSameInstanceAs(a);
     assertThat(numberOrdering.min(a, b, b)).isSameInstanceAs(a);
   }
@@ -821,8 +821,8 @@ public class OrderingTest extends TestCase {
     assertEquals(3, (int) numberOrdering.min(5, 3));
 
     // when the values are the same, the first argument should be returned
-    Integer a = new Integer(4);
-    Integer b = new Integer(4);
+    MyInteger a = new MyInteger(4);
+    MyInteger b = new MyInteger(4);
     assertThat(numberOrdering.max(a, b)).isSameInstanceAs(a);
     assertThat(numberOrdering.min(a, b)).isSameInstanceAs(a);
   }

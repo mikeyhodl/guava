@@ -83,35 +83,17 @@ public class InternersTest extends TestCase {
 
 
   public void testWeak_afterGC() throws InterruptedException {
-    MyInt canonical = new MyInt(5);
-    MyInt not = new MyInt(5);
+    MyInteger canonical = new MyInteger(5);
+    MyInteger not = new MyInteger(5);
 
-    Interner<MyInt> pool = Interners.newWeakInterner();
+    Interner<MyInteger> pool = Interners.newWeakInterner();
     assertThat(pool.intern(canonical)).isSameInstanceAs(canonical);
 
-    WeakReference<MyInt> signal = new WeakReference<>(canonical);
+    WeakReference<MyInteger> signal = new WeakReference<>(canonical);
     canonical = null; // Hint to the JIT that canonical is unreachable
 
     GcFinalization.awaitClear(signal);
     assertThat(pool.intern(not)).isSameInstanceAs(not);
-  }
-
-  private static final class MyInt {
-    private final int i;
-
-    MyInt(int i) {
-      this.i = i;
-    }
-
-    @Override
-    public int hashCode() {
-      return i;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      return o instanceof MyInt && ((MyInt) o).i == i;
-    }
   }
 
   public void testAsFunction_simplistic() {

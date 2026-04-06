@@ -50,11 +50,6 @@ public class FunctionsTest extends TestCase {
     assertThat(identity.apply("foo")).isSameInstanceAs("foo");
   }
 
-  public void testIdentity_notSame() {
-    Function<Long, Long> identity = Functions.identity();
-    assertThat(identity.apply(new Long(135135L))).isNotSameInstanceAs(new Long(135135L));
-  }
-
   @J2ktIncompatible
   @GwtIncompatible // SerializableTester
   public void testIdentitySerializable() {
