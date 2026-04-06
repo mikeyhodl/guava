@@ -39,7 +39,6 @@ import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
-import java.security.AccessControlException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map.Entry;
@@ -350,7 +349,6 @@ final class Types {
    * href="https://issuetracker.google.com/issues/115932459">Android supports {@code
    * AnnotatedType}</a>.
    */
-  @SuppressWarnings("removal") // b/318391980
   private static final class TypeVariableInvocationHandler implements InvocationHandler {
     private static final ImmutableMap<String, Method> typeVariableMethods;
 
@@ -360,7 +358,10 @@ final class Types {
         if (method.getDeclaringClass().equals(TypeVariableImpl.class)) {
           try {
             method.setAccessible(true);
-          } catch (AccessControlException e) {
+          } catch (RuntimeException e) {
+            if (!e.getClass().getName().equals("java.security.AccessControlException")) {
+              throw e;
+            }
             // OK: the method is accessible to us anyway. The setAccessible call is only for
             // unusual execution environments where that might not be true.
           }
