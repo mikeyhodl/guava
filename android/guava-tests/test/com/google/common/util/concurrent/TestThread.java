@@ -252,24 +252,30 @@ public final class TestThread<L> extends Thread implements TearDown {
         Object result;
         try {
           result = invokeMethod(request.methodName, request.arguments);
-        } catch (ThreadDeath death) {
-          return;
         } catch (InvocationTargetException exception) {
           responseQueue.put(new Response(request.methodName, null, exception.getTargetException()));
           continue;
         } catch (Throwable throwable) {
+          if (isThreadDeath(throwable)) {
+            return;
+          }
           responseQueue.put(new Response(request.methodName, null, throwable));
           continue;
         }
         responseQueue.put(new Response(request.methodName, result, null));
       }
-    } catch (ThreadDeath death) {
-      return;
     } catch (InterruptedException ignored) {
       // SynchronousQueue sometimes throws InterruptedException while the threads are stopping.
     } catch (Throwable uncaught) {
+      if (isThreadDeath(uncaught)) {
+        return;
+      }
       this.uncaughtThrowable = uncaught;
     }
+  }
+
+  private static boolean isThreadDeath(Throwable t) {
+    return t.getClass().getName().equals("java.lang.ThreadDeath");
   }
 
   private static class Request {

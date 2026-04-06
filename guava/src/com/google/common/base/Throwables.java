@@ -476,7 +476,6 @@ public final class Throwables {
    * Returns the JavaLangAccess class that is present in all Sun JDKs. It is not allowed in
    * AppEngine, and not present in non-Sun JDKs.
    */
-  @SuppressWarnings("removal") // b/318391980
   @J2ktIncompatible
   @GwtIncompatible // java.lang.reflect
   private static @Nullable Object getJla() {
@@ -488,9 +487,8 @@ public final class Throwables {
       Class<?> sharedSecrets = Class.forName(SHARED_SECRETS_CLASSNAME, false, null);
       Method langAccess = sharedSecrets.getMethod("getJavaLangAccess");
       return langAccess.invoke(null);
-    } catch (ThreadDeath death) {
-      throw death;
     } catch (Throwable t) {
+      throwIfThreadDeath(t);
       /*
        * This is not one of AppEngine's allowed classes, so even in Sun JDKs, this can fail with
        * a NoClassDefFoundError. Other apps might deny access to sun.misc packages.
@@ -533,21 +531,26 @@ public final class Throwables {
     }
   }
 
-  @SuppressWarnings("removal") // b/318391980
   @J2ktIncompatible
   @GwtIncompatible // java.lang.reflect
-  private static @Nullable Method getJlaMethod(String name, Class<?>... parameterTypes)
-      throws ThreadDeath {
+  private static @Nullable Method getJlaMethod(String name, Class<?>... parameterTypes) {
     try {
       return Class.forName(JAVA_LANG_ACCESS_CLASSNAME, false, null).getMethod(name, parameterTypes);
-    } catch (ThreadDeath death) {
-      throw death;
     } catch (Throwable t) {
+      throwIfThreadDeath(t);
       /*
        * Either the JavaLangAccess class itself is not found, or the method is not supported on the
        * JVM.
        */
       return null;
+    }
+  }
+
+  @J2ktIncompatible
+  @GwtIncompatible
+  private static void throwIfThreadDeath(Throwable t) {
+    if (t.getClass().getName().equals("java.lang.ThreadDeath")) {
+      throw (Error) t;
     }
   }
 }
