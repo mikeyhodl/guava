@@ -76,12 +76,12 @@ abstract class AbstractAbstractFutureTest extends TestCase {
   }
 
   public void testCanceled() throws Exception {
-    assertThat(future.cancel(false /* mayInterruptIfRunning */)).isTrue();
+    assertThat(future.cancel(/* mayInterruptIfRunning= */ false)).isTrue();
     assertCancelled(future, false);
   }
 
   public void testInterrupted() throws Exception {
-    assertThat(future.cancel(true /* mayInterruptIfRunning */)).isTrue();
+    assertThat(future.cancel(/* mayInterruptIfRunning= */ true)).isTrue();
     assertCancelled(future, true);
   }
 
@@ -92,14 +92,14 @@ abstract class AbstractAbstractFutureTest extends TestCase {
 
   public void testSetFutureThenCancel() throws Exception {
     assertThat(future.setFuture(delegate)).isTrue();
-    assertThat(future.cancel(false /* mayInterruptIfRunning */)).isTrue();
+    assertThat(future.cancel(/* mayInterruptIfRunning= */ false)).isTrue();
     assertCancelled(future, false);
     assertCancelled(delegate, false);
   }
 
   public void testSetFutureThenInterrupt() throws Exception {
     assertThat(future.setFuture(delegate)).isTrue();
-    assertThat(future.cancel(true /* mayInterruptIfRunning */)).isTrue();
+    assertThat(future.cancel(/* mayInterruptIfRunning= */ true)).isTrue();
     assertCancelled(future, true);
     assertCancelled(delegate, true);
   }

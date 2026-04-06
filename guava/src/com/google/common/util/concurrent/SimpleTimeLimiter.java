@@ -125,7 +125,7 @@ public final class SimpleTimeLimiter implements TimeLimiter {
       future.cancel(true);
       throw e;
     } catch (ExecutionException e) {
-      throw throwCause(e, true /* combineStackTraces */);
+      throw throwCause(e, /* combineStackTraces= */ true);
     } catch (TimeoutException e) {
       future.cancel(true);
       throw new UncheckedTimeoutException(e);
@@ -147,7 +147,7 @@ public final class SimpleTimeLimiter implements TimeLimiter {
     try {
       return future.get(timeoutDuration, timeoutUnit);
     } catch (InterruptedException | TimeoutException e) {
-      future.cancel(true /* mayInterruptIfRunning */);
+      future.cancel(/* mayInterruptIfRunning= */ true);
       throw e;
     } catch (ExecutionException e) {
       wrapAndThrowExecutionExceptionOrError(e.getCause());
@@ -170,7 +170,7 @@ public final class SimpleTimeLimiter implements TimeLimiter {
     try {
       return getUninterruptibly(future, timeoutDuration, timeoutUnit);
     } catch (TimeoutException e) {
-      future.cancel(true /* mayInterruptIfRunning */);
+      future.cancel(/* mayInterruptIfRunning= */ true);
       throw e;
     } catch (ExecutionException e) {
       wrapAndThrowExecutionExceptionOrError(e.getCause());
@@ -190,7 +190,7 @@ public final class SimpleTimeLimiter implements TimeLimiter {
     try {
       future.get(timeoutDuration, timeoutUnit);
     } catch (InterruptedException | TimeoutException e) {
-      future.cancel(true /* mayInterruptIfRunning */);
+      future.cancel(/* mayInterruptIfRunning= */ true);
       throw e;
     } catch (ExecutionException e) {
       wrapAndThrowRuntimeExecutionExceptionOrError(e.getCause());
@@ -210,7 +210,7 @@ public final class SimpleTimeLimiter implements TimeLimiter {
     try {
       getUninterruptibly(future, timeoutDuration, timeoutUnit);
     } catch (TimeoutException e) {
-      future.cancel(true /* mayInterruptIfRunning */);
+      future.cancel(/* mayInterruptIfRunning= */ true);
       throw e;
     } catch (ExecutionException e) {
       wrapAndThrowRuntimeExecutionExceptionOrError(e.getCause());

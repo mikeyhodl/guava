@@ -134,7 +134,7 @@ public abstract class RateLimiter {
 
   @VisibleForTesting
   static RateLimiter create(double permitsPerSecond, SleepingStopwatch stopwatch) {
-    RateLimiter rateLimiter = new SmoothBursty(stopwatch, 1.0 /* maxBurstSeconds */);
+    RateLimiter rateLimiter = new SmoothBursty(stopwatch, /* maxBurstSeconds= */ 1.0);
     rateLimiter.setRate(permitsPerSecond);
     return rateLimiter;
   }
