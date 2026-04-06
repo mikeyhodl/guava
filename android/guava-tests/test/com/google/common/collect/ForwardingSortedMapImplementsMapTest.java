@@ -66,12 +66,12 @@ public class ForwardingSortedMapImplementsMapTest extends SortedMapInterfaceTest
   }
 
   @Override
-  protected String getKeyNotInPopulatedMap() throws UnsupportedOperationException {
+  protected String getKeyNotInPopulatedMap() {
     return "minus one";
   }
 
   @Override
-  protected Integer getValueNotInPopulatedMap() throws UnsupportedOperationException {
+  protected Integer getValueNotInPopulatedMap() {
     return -1;
   }
 

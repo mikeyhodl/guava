@@ -225,7 +225,7 @@ public class InvokableTest extends TestCase {
   }
 
   private static class WithConstructorAndTypeParameter<T> {
-    @SuppressWarnings("unused") // by reflection
+    @SuppressWarnings({"unused", "UnusedTypeParameter"}) // by reflection
     <X> WithConstructorAndTypeParameter() {}
   }
 
@@ -731,6 +731,8 @@ public class InvokableTest extends TestCase {
     private final String prefix;
     private final int times;
 
+    // We are testing reflective access to an unnecessary `throws` clause.
+    @SuppressWarnings("ThrowsUncheckedException")
     Prepender(@NotBlank @Nullable String prefix, int times) throws NullPointerException {
       this.prefix = prefix;
       this.times = times;
@@ -741,14 +743,18 @@ public class InvokableTest extends TestCase {
     }
 
     // just for testing
+    @SuppressWarnings("UnusedTypeParameter") // examined with reflection
     private <T> Prepender() {
       this(null, 0);
     }
 
+    @SuppressWarnings("UnusedTypeParameter") // examined with reflection
     static <T> Iterable<String> prepend(@NotBlank String first, Iterable<String> tail) {
       return Iterables.concat(ImmutableList.of(first), tail);
     }
 
+    // We are testing reflective access to an unnecessary `throws` clause.
+    @SuppressWarnings("ThrowsUncheckedException")
     Iterable<String> prepend(Iterable<String> tail)
         throws IllegalArgumentException, NullPointerException {
       return Iterables.concat(Collections.nCopies(times, prefix), tail);
@@ -784,7 +790,7 @@ public class InvokableTest extends TestCase {
 
   private static class SubPrepender extends Prepender {
     @SuppressWarnings("unused") // needed to satisfy compiler, never called
-    SubPrepender() throws NullPointerException {
+    SubPrepender() {
       throw new AssertionError();
     }
   }

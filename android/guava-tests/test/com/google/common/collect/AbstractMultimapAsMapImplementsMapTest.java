@@ -50,12 +50,12 @@ public abstract class AbstractMultimapAsMapImplementsMapTest
   }
 
   @Override
-  protected String getKeyNotInPopulatedMap() throws UnsupportedOperationException {
+  protected String getKeyNotInPopulatedMap() {
     return "zero";
   }
 
   @Override
-  protected Collection<Integer> getValueNotInPopulatedMap() throws UnsupportedOperationException {
+  protected Collection<Integer> getValueNotInPopulatedMap() {
     return Lists.newArrayList(0);
   }
 

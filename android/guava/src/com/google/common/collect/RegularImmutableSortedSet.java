@@ -142,7 +142,7 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
     }
   }
 
-  private int unsafeBinarySearch(Object key) throws ClassCastException {
+  private int unsafeBinarySearch(Object key) {
     return Collections.binarySearch(elements, key, unsafeComparator());
   }
 

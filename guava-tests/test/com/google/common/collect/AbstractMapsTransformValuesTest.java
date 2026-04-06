@@ -48,12 +48,12 @@ abstract class AbstractMapsTransformValuesTest extends MapInterfaceTest<String, 
   }
 
   @Override
-  protected String getKeyNotInPopulatedMap() throws UnsupportedOperationException {
+  protected String getKeyNotInPopulatedMap() {
     return "z";
   }
 
   @Override
-  protected String getValueNotInPopulatedMap() throws UnsupportedOperationException {
+  protected String getValueNotInPopulatedMap() {
     return "26";
   }
 

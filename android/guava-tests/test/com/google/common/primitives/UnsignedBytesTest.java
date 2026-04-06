@@ -162,7 +162,7 @@ public class UnsignedBytesTest extends TestCase {
         .isGreaterThan(0);
   }
 
-  public void testParseUnsignedByteWithRadix() throws NumberFormatException {
+  public void testParseUnsignedByteWithRadix() {
     // We can easily afford to test this exhaustively.
     for (int radix = Character.MIN_RADIX; radix <= Character.MAX_RADIX; radix++) {
       for (int i = 0; i <= 0xff; i++) {

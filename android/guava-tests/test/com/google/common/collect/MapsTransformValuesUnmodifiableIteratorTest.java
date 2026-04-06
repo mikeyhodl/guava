@@ -48,7 +48,7 @@ public class MapsTransformValuesUnmodifiableIteratorTest extends MapInterfaceTes
   // to a superclass.
 
   public MapsTransformValuesUnmodifiableIteratorTest() {
-    super(true, true, false /*supportsPut*/, true, true, false);
+    super(true, true, /* supportsPut= */ false, true, true, false);
   }
 
   private static class UnmodifiableIteratorMap<K, V> extends ForwardingMap<K, V> {
@@ -157,12 +157,12 @@ public class MapsTransformValuesUnmodifiableIteratorTest extends MapInterfaceTes
   }
 
   @Override
-  protected String getKeyNotInPopulatedMap() throws UnsupportedOperationException {
+  protected String getKeyNotInPopulatedMap() {
     return "z";
   }
 
   @Override
-  protected String getValueNotInPopulatedMap() throws UnsupportedOperationException {
+  protected String getValueNotInPopulatedMap() {
     return "26";
   }
 

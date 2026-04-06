@@ -38,7 +38,7 @@ public class ReserializedSafeTreeMapMapInterfaceTest
   }
 
   @Override
-  protected SortedMap<String, Integer> makeEmptyMap() throws UnsupportedOperationException {
+  protected SortedMap<String, Integer> makeEmptyMap() {
     NavigableMap<String, Integer> map = new SafeTreeMap<>();
     return SerializableTester.reserialize(map);
   }

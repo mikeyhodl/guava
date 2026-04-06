@@ -43,10 +43,10 @@ public abstract class SortedMapInterfaceTest<K, V> extends MapInterfaceTest<K, V
   }
 
   @Override
-  protected abstract SortedMap<K, V> makeEmptyMap() throws UnsupportedOperationException;
+  protected abstract SortedMap<K, V> makeEmptyMap();
 
   @Override
-  protected abstract SortedMap<K, V> makePopulatedMap() throws UnsupportedOperationException;
+  protected abstract SortedMap<K, V> makePopulatedMap();
 
   @Override
   protected SortedMap<K, V> makeEitherMap() {

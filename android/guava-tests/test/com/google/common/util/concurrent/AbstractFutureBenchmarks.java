@@ -304,8 +304,7 @@ final class AbstractFutureBenchmarks {
        * Blocks until the task is complete or the timeout expires. Throws a {@link TimeoutException}
        * if the timer expires, otherwise behaves like {@link #get()}.
        */
-      V get(long nanos)
-          throws TimeoutException, CancellationException, ExecutionException, InterruptedException {
+      V get(long nanos) throws TimeoutException, ExecutionException, InterruptedException {
 
         // Attempt to acquire the shared lock with a timeout.
         if (!tryAcquireSharedNanos(-1, nanos)) {
@@ -320,7 +319,7 @@ final class AbstractFutureBenchmarks {
        * a {@link CancellationException} if the task was cancelled, or a {@link ExecutionException}
        * if the task completed with an error.
        */
-      V get() throws CancellationException, ExecutionException, InterruptedException {
+      V get() throws ExecutionException, InterruptedException {
 
         // Acquire the shared lock allowing interruption.
         acquireSharedInterruptibly(-1);
@@ -332,7 +331,7 @@ final class AbstractFutureBenchmarks {
        * exception on failure, a cancellation on cancellation, or an illegal state if the
        * synchronizer is in an invalid state.
        */
-      private V getValue() throws CancellationException, ExecutionException {
+      private V getValue() throws ExecutionException {
         int state = getState();
         switch (state) {
           case COMPLETED:
