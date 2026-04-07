@@ -22,7 +22,7 @@ import static com.google.common.collect.testing.features.CollectionFeature.FAILS
 import static com.google.common.collect.testing.features.CollectionFeature.RESTRICTS_ELEMENTS;
 import static com.google.common.collect.testing.features.CollectionFeature.SUPPORTS_ADD;
 import static com.google.common.collect.testing.features.CollectionSize.ZERO;
-import static com.google.common.collect.testing.testers.ReflectionFreeAssertThrows.assertThrows;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
@@ -88,13 +88,9 @@ public class CollectionAddTester<E> extends AbstractCollectionTester<E> {
   @CollectionFeature.Require({SUPPORTS_ADD, FAILS_FAST_ON_CONCURRENT_MODIFICATION})
   @CollectionSize.Require(absent = ZERO)
   public void testAddConcurrentWithIteration() {
-    assertThrows(
-        ConcurrentModificationException.class,
-        () -> {
-          Iterator<E> iterator = collection.iterator();
-          assertTrue(collection.add(e3()));
-          iterator.next();
-        });
+    Iterator<E> iterator = collection.iterator();
+    assertTrue(collection.add(e3()));
+    assertThrows(ConcurrentModificationException.class, iterator::next);
   }
 
   /**

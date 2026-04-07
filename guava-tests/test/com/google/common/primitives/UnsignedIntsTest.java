@@ -14,10 +14,10 @@
 
 package com.google.common.primitives;
 
-import static com.google.common.primitives.ReflectionFreeAssertThrows.assertThrows;
 import static com.google.common.primitives.UnsignedInts.max;
 import static com.google.common.primitives.UnsignedInts.min;
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
@@ -287,13 +287,11 @@ public class UnsignedIntsTest extends TestCase {
       String maxAsString = Long.toString((1L << 32) - 1, radix);
       assertThat(UnsignedInts.parseUnsignedInt(maxAsString, radix)).isEqualTo(-1);
 
+      long overflow = 1L << 32;
+      String overflowAsString = Long.toString(overflow, radix);
       assertThrows(
           NumberFormatException.class,
-          () -> {
-            long overflow = 1L << 32;
-            String overflowAsString = Long.toString(overflow, radix);
-            UnsignedInts.parseUnsignedInt(overflowAsString, radix);
-          });
+          () -> UnsignedInts.parseUnsignedInt(overflowAsString, radix));
     }
   }
 

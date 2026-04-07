@@ -20,7 +20,7 @@ import static com.google.common.collect.testing.features.CollectionSize.SEVERAL;
 import static com.google.common.collect.testing.features.CollectionSize.ZERO;
 import static com.google.common.collect.testing.features.MapFeature.FAILS_FAST_ON_CONCURRENT_MODIFICATION;
 import static com.google.common.collect.testing.features.MapFeature.SUPPORTS_REMOVE;
-import static com.google.common.collect.testing.testers.ReflectionFreeAssertThrows.assertThrows;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.testing.AbstractMapTester;
@@ -54,37 +54,25 @@ public class MapClearTester<K, V> extends AbstractMapTester<K, V> {
   @MapFeature.Require({FAILS_FAST_ON_CONCURRENT_MODIFICATION, SUPPORTS_REMOVE})
   @CollectionSize.Require(SEVERAL)
   public void testClearConcurrentWithEntrySetIteration() {
-    assertThrows(
-        ConcurrentModificationException.class,
-        () -> {
-          Iterator<Entry<K, V>> iterator = getMap().entrySet().iterator();
-          getMap().clear();
-          iterator.next();
-        });
+    Iterator<Entry<K, V>> iterator = getMap().entrySet().iterator();
+    getMap().clear();
+    assertThrows(ConcurrentModificationException.class, iterator::next);
   }
 
   @MapFeature.Require({FAILS_FAST_ON_CONCURRENT_MODIFICATION, SUPPORTS_REMOVE})
   @CollectionSize.Require(SEVERAL)
   public void testClearConcurrentWithKeySetIteration() {
-    assertThrows(
-        ConcurrentModificationException.class,
-        () -> {
-          Iterator<K> iterator = getMap().keySet().iterator();
-          getMap().clear();
-          iterator.next();
-        });
+    Iterator<K> iterator = getMap().keySet().iterator();
+    getMap().clear();
+    assertThrows(ConcurrentModificationException.class, iterator::next);
   }
 
   @MapFeature.Require({FAILS_FAST_ON_CONCURRENT_MODIFICATION, SUPPORTS_REMOVE})
   @CollectionSize.Require(SEVERAL)
   public void testClearConcurrentWithValuesIteration() {
-    assertThrows(
-        ConcurrentModificationException.class,
-        () -> {
-          Iterator<V> iterator = getMap().values().iterator();
-          getMap().clear();
-          iterator.next();
-        });
+    Iterator<V> iterator = getMap().values().iterator();
+    getMap().clear();
+    assertThrows(ConcurrentModificationException.class, iterator::next);
   }
 
   @MapFeature.Require(absent = SUPPORTS_REMOVE)

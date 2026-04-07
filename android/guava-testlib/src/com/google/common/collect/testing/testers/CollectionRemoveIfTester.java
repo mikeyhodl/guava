@@ -21,7 +21,7 @@ import static com.google.common.collect.testing.features.CollectionFeature.SUPPO
 import static com.google.common.collect.testing.features.CollectionFeature.SUPPORTS_REMOVE;
 import static com.google.common.collect.testing.features.CollectionSize.SEVERAL;
 import static com.google.common.collect.testing.features.CollectionSize.ZERO;
-import static com.google.common.collect.testing.testers.ReflectionFreeAssertThrows.assertThrows;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.testing.AbstractCollectionTester;
@@ -70,13 +70,9 @@ public class CollectionRemoveIfTester<E> extends AbstractCollectionTester<E> {
   @CollectionFeature.Require({SUPPORTS_ITERATOR_REMOVE, FAILS_FAST_ON_CONCURRENT_MODIFICATION})
   @CollectionSize.Require(SEVERAL)
   public void testRemoveIfSomeMatchesConcurrentWithIteration() {
-    assertThrows(
-        ConcurrentModificationException.class,
-        () -> {
-          Iterator<E> iterator = collection.iterator();
-          assertTrue(collection.removeIf(Predicate.isEqual(samples.e0())));
-          iterator.next();
-        });
+    Iterator<E> iterator = collection.iterator();
+    assertTrue(collection.removeIf(Predicate.isEqual(samples.e0())));
+    assertThrows(ConcurrentModificationException.class, iterator::next);
   }
 
   @CollectionFeature.Require(absent = SUPPORTS_REMOVE)

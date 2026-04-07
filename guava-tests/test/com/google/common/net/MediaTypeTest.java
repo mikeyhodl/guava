@@ -25,7 +25,6 @@ import static com.google.common.net.MediaType.ANY_VIDEO_TYPE;
 import static com.google.common.net.MediaType.HTML_UTF_8;
 import static com.google.common.net.MediaType.JPEG;
 import static com.google.common.net.MediaType.PLAIN_TEXT_UTF_8;
-import static com.google.common.net.ReflectionFreeAssertThrows.assertThrows;
 import static com.google.common.truth.Truth.assertThat;
 import static java.lang.reflect.Modifier.isFinal;
 import static java.lang.reflect.Modifier.isPublic;
@@ -33,6 +32,7 @@ import static java.lang.reflect.Modifier.isStatic;
 import static java.nio.charset.StandardCharsets.UTF_16;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;

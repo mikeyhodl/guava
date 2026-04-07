@@ -14,11 +14,11 @@
 
 package com.google.common.primitives;
 
-import static com.google.common.primitives.ReflectionFreeAssertThrows.assertThrows;
 import static com.google.common.primitives.UnsignedLongs.max;
 import static com.google.common.primitives.UnsignedLongs.min;
 import static com.google.common.truth.Truth.assertThat;
 import static java.math.BigInteger.ONE;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
@@ -262,11 +262,11 @@ public class UnsignedLongsTest extends TestCase {
       String maxAsString = max.toString(radix);
       assertThat(UnsignedLongs.parseUnsignedLong(maxAsString, radix)).isEqualTo(max.longValue());
 
+      BigInteger overflow = max.add(ONE);
+      String overflowAsString = overflow.toString(radix);
       assertThrows(
           NumberFormatException.class,
           () -> {
-            BigInteger overflow = max.add(ONE);
-            String overflowAsString = overflow.toString(radix);
             UnsignedLongs.parseUnsignedLong(overflowAsString, radix);
           });
     }

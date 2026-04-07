@@ -16,8 +16,8 @@
 
 package com.google.common.net;
 
-import static com.google.common.net.ReflectionFreeAssertThrows.assertThrows;
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.testing.EqualsTester;

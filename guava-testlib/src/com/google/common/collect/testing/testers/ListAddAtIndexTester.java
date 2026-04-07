@@ -22,7 +22,7 @@ import static com.google.common.collect.testing.features.CollectionFeature.FAILS
 import static com.google.common.collect.testing.features.CollectionSize.ONE;
 import static com.google.common.collect.testing.features.CollectionSize.ZERO;
 import static com.google.common.collect.testing.features.ListFeature.SUPPORTS_ADD_WITH_INDEX;
-import static com.google.common.collect.testing.testers.ReflectionFreeAssertThrows.assertThrows;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
@@ -73,13 +73,9 @@ public class ListAddAtIndexTester<E> extends AbstractListTester<E> {
   @CollectionFeature.Require(FAILS_FAST_ON_CONCURRENT_MODIFICATION)
   @ListFeature.Require(SUPPORTS_ADD_WITH_INDEX)
   public void testAddAtIndexConcurrentWithIteration() {
-    assertThrows(
-        ConcurrentModificationException.class,
-        () -> {
-          Iterator<E> iterator = collection.iterator();
-          getList().add(0, e3());
-          iterator.next();
-        });
+    Iterator<E> iterator = collection.iterator();
+    getList().add(0, e3());
+    assertThrows(ConcurrentModificationException.class, iterator::next);
   }
 
   @ListFeature.Require(absent = SUPPORTS_ADD_WITH_INDEX)

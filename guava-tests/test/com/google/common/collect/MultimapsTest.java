@@ -25,7 +25,6 @@ import static com.google.common.collect.Multimaps.synchronizedMultimap;
 import static com.google.common.collect.Multimaps.synchronizedSetMultimap;
 import static com.google.common.collect.Multimaps.synchronizedSortedSetMultimap;
 import static com.google.common.collect.Multimaps.toMultimap;
-import static com.google.common.collect.ReflectionFreeAssertThrows.assertThrows;
 import static com.google.common.collect.Sets.newHashSet;
 import static com.google.common.collect.testing.Helpers.mapEntry;
 import static com.google.common.collect.testing.Helpers.nefariousMapEntry;
@@ -36,6 +35,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;

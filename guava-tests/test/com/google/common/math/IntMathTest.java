@@ -23,13 +23,13 @@ import static com.google.common.math.MathTesting.EXPONENTS;
 import static com.google.common.math.MathTesting.NEGATIVE_INTEGER_CANDIDATES;
 import static com.google.common.math.MathTesting.NONZERO_INTEGER_CANDIDATES;
 import static com.google.common.math.MathTesting.POSITIVE_INTEGER_CANDIDATES;
-import static com.google.common.math.ReflectionFreeAssertThrows.assertThrows;
 import static com.google.common.math.TestPlatform.intsCanGoOutOfRange;
 import static java.lang.Math.min;
 import static java.math.BigInteger.valueOf;
 import static java.math.RoundingMode.DOWN;
 import static java.math.RoundingMode.FLOOR;
 import static java.math.RoundingMode.UNNECESSARY;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;

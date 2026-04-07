@@ -21,7 +21,7 @@ import static com.google.common.collect.testing.features.CollectionFeature.FAILS
 import static com.google.common.collect.testing.features.CollectionSize.ONE;
 import static com.google.common.collect.testing.features.CollectionSize.ZERO;
 import static com.google.common.collect.testing.features.ListFeature.SUPPORTS_REMOVE_WITH_INDEX;
-import static com.google.common.collect.testing.testers.ReflectionFreeAssertThrows.assertThrows;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.testing.features.CollectionFeature;
@@ -78,13 +78,9 @@ public class ListRemoveAtIndexTester<E> extends AbstractListTester<E> {
   @ListFeature.Require(SUPPORTS_REMOVE_WITH_INDEX)
   @CollectionSize.Require(absent = ZERO)
   public void testRemoveAtIndexConcurrentWithIteration() {
-    assertThrows(
-        ConcurrentModificationException.class,
-        () -> {
-          Iterator<E> iterator = collection.iterator();
-          getList().remove(getNumElements() / 2);
-          iterator.next();
-        });
+    Iterator<E> iterator = collection.iterator();
+    getList().remove(getNumElements() / 2);
+    assertThrows(ConcurrentModificationException.class, iterator::next);
   }
 
   @ListFeature.Require(SUPPORTS_REMOVE_WITH_INDEX)

@@ -22,8 +22,8 @@ import static com.google.common.collect.testing.features.CollectionFeature.FAILS
 import static com.google.common.collect.testing.features.CollectionFeature.SUPPORTS_REMOVE;
 import static com.google.common.collect.testing.features.CollectionSize.SEVERAL;
 import static com.google.common.collect.testing.features.CollectionSize.ZERO;
-import static com.google.common.collect.testing.testers.ReflectionFreeAssertThrows.assertThrows;
 import static java.util.Collections.singleton;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.testing.AbstractCollectionTester;
@@ -85,13 +85,9 @@ public class CollectionRemoveAllTester<E> extends AbstractCollectionTester<E> {
   @CollectionFeature.Require({SUPPORTS_REMOVE, FAILS_FAST_ON_CONCURRENT_MODIFICATION})
   @CollectionSize.Require(SEVERAL)
   public void testRemoveAllSomePresentConcurrentWithIteration() {
-    assertThrows(
-        ConcurrentModificationException.class,
-        () -> {
-          Iterator<E> iterator = collection.iterator();
-          assertTrue(collection.removeAll(MinimalCollection.of(e0(), e3())));
-          iterator.next();
-        });
+    Iterator<E> iterator = collection.iterator();
+    assertTrue(collection.removeAll(MinimalCollection.of(e0(), e3())));
+    assertThrows(ConcurrentModificationException.class, iterator::next);
   }
 
   /** Trigger the {@code other.size() >= this.size()} case in {@link AbstractSet#removeAll}. */

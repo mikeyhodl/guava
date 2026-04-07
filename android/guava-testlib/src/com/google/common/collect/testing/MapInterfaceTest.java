@@ -17,12 +17,12 @@
 package com.google.common.collect.testing;
 
 import static com.google.common.collect.testing.Helpers.mapEntry;
-import static com.google.common.collect.testing.ReflectionFreeAssertThrows.assertThrows;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonMap;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.J2ktIncompatible;

@@ -16,8 +16,8 @@
 
 package com.google.common.math;
 
-import static com.google.common.math.ReflectionFreeAssertThrows.assertThrows;
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import java.math.BigInteger;

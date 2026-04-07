@@ -17,13 +17,13 @@
 package com.google.common.collect;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ReflectionFreeAssertThrows.assertThrows;
 import static com.google.common.collect.Tables.immutableCell;
 import static com.google.common.collect.Tables.transformValues;
 import static com.google.common.collect.Tables.transpose;
 import static com.google.common.collect.Tables.unmodifiableRowSortedTable;
 import static com.google.common.collect.Tables.unmodifiableTable;
 import static java.util.Collections.sort;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;

@@ -22,7 +22,7 @@ import static com.google.common.collect.testing.features.MapFeature.ALLOWS_NULL_
 import static com.google.common.collect.testing.features.MapFeature.ALLOWS_NULL_VALUES;
 import static com.google.common.collect.testing.features.MapFeature.FAILS_FAST_ON_CONCURRENT_MODIFICATION;
 import static com.google.common.collect.testing.features.MapFeature.SUPPORTS_PUT;
-import static com.google.common.collect.testing.testers.ReflectionFreeAssertThrows.assertThrows;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
@@ -79,37 +79,25 @@ public class MapPutTester<K, V> extends AbstractMapTester<K, V> {
   @MapFeature.Require({FAILS_FAST_ON_CONCURRENT_MODIFICATION, SUPPORTS_PUT})
   @CollectionSize.Require(absent = ZERO)
   public void testPutAbsentConcurrentWithEntrySetIteration() {
-    assertThrows(
-        ConcurrentModificationException.class,
-        () -> {
-          Iterator<Entry<K, V>> iterator = getMap().entrySet().iterator();
-          put(e3());
-          iterator.next();
-        });
+    Iterator<Entry<K, V>> iterator = getMap().entrySet().iterator();
+    put(e3());
+    assertThrows(ConcurrentModificationException.class, iterator::next);
   }
 
   @MapFeature.Require({FAILS_FAST_ON_CONCURRENT_MODIFICATION, SUPPORTS_PUT})
   @CollectionSize.Require(absent = ZERO)
   public void testPutAbsentConcurrentWithKeySetIteration() {
-    assertThrows(
-        ConcurrentModificationException.class,
-        () -> {
-          Iterator<K> iterator = getMap().keySet().iterator();
-          put(e3());
-          iterator.next();
-        });
+    Iterator<K> iterator = getMap().keySet().iterator();
+    put(e3());
+    assertThrows(ConcurrentModificationException.class, iterator::next);
   }
 
   @MapFeature.Require({FAILS_FAST_ON_CONCURRENT_MODIFICATION, SUPPORTS_PUT})
   @CollectionSize.Require(absent = ZERO)
   public void testPutAbsentConcurrentWithValueIteration() {
-    assertThrows(
-        ConcurrentModificationException.class,
-        () -> {
-          Iterator<V> iterator = getMap().values().iterator();
-          put(e3());
-          iterator.next();
-        });
+    Iterator<V> iterator = getMap().values().iterator();
+    put(e3());
+    assertThrows(ConcurrentModificationException.class, iterator::next);
   }
 
   @MapFeature.Require(absent = SUPPORTS_PUT)

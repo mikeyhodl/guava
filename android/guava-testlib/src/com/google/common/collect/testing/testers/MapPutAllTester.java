@@ -22,9 +22,9 @@ import static com.google.common.collect.testing.features.MapFeature.ALLOWS_NULL_
 import static com.google.common.collect.testing.features.MapFeature.ALLOWS_NULL_VALUES;
 import static com.google.common.collect.testing.features.MapFeature.FAILS_FAST_ON_CONCURRENT_MODIFICATION;
 import static com.google.common.collect.testing.features.MapFeature.SUPPORTS_PUT;
-import static com.google.common.collect.testing.testers.ReflectionFreeAssertThrows.assertThrows;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
@@ -106,13 +106,9 @@ public class MapPutAllTester<K extends @Nullable Object, V extends @Nullable Obj
   @MapFeature.Require({FAILS_FAST_ON_CONCURRENT_MODIFICATION, SUPPORTS_PUT})
   @CollectionSize.Require(absent = ZERO)
   public void testPutAllSomePresentConcurrentWithEntrySetIteration() {
-    assertThrows(
-        ConcurrentModificationException.class,
-        () -> {
-          Iterator<Entry<K, V>> iterator = getMap().entrySet().iterator();
-          putAll(MinimalCollection.of(e3(), e0()));
-          iterator.next();
-        });
+    Iterator<Entry<K, V>> iterator = getMap().entrySet().iterator();
+    putAll(MinimalCollection.of(e3(), e0()));
+    assertThrows(ConcurrentModificationException.class, iterator::next);
   }
 
   @MapFeature.Require(absent = SUPPORTS_PUT)

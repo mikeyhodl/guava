@@ -28,7 +28,6 @@ import static com.google.common.math.MathTesting.INFINITIES;
 import static com.google.common.math.MathTesting.INTEGRAL_DOUBLE_CANDIDATES;
 import static com.google.common.math.MathTesting.NEGATIVE_INTEGER_CANDIDATES;
 import static com.google.common.math.MathTesting.POSITIVE_FINITE_DOUBLE_CANDIDATES;
-import static com.google.common.math.ReflectionFreeAssertThrows.assertThrows;
 import static com.google.common.truth.Truth.assertThat;
 import static java.math.RoundingMode.CEILING;
 import static java.math.RoundingMode.DOWN;
@@ -39,6 +38,7 @@ import static java.math.RoundingMode.HALF_UP;
 import static java.math.RoundingMode.UNNECESSARY;
 import static java.math.RoundingMode.UP;
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;

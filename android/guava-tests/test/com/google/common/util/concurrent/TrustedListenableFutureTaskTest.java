@@ -20,9 +20,9 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.util.concurrent.Callables.returning;
 import static com.google.common.util.concurrent.Futures.getDone;
 import static com.google.common.util.concurrent.Futures.immediateFuture;
-import static com.google.common.util.concurrent.ReflectionFreeAssertThrows.assertThrows;
 import static com.google.common.util.concurrent.TestPlatform.verifyThreadWasNotInterrupted;
 import static java.util.concurrent.Executors.newFixedThreadPool;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;

@@ -17,7 +17,6 @@
 package com.google.common.collect;
 
 import static com.google.common.collect.Iterables.unmodifiableIterable;
-import static com.google.common.collect.ReflectionFreeAssertThrows.assertThrows;
 import static com.google.common.collect.Sets.cartesianProduct;
 import static com.google.common.collect.Sets.newEnumSet;
 import static com.google.common.collect.Sets.newHashSet;
@@ -33,6 +32,7 @@ import static java.lang.System.arraycopy;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;

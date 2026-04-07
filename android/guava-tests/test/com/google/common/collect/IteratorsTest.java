@@ -33,7 +33,6 @@ import static com.google.common.collect.Iterators.peekingIterator;
 import static com.google.common.collect.Iterators.singletonIterator;
 import static com.google.common.collect.Iterators.tryFind;
 import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.ReflectionFreeAssertThrows.assertThrows;
 import static com.google.common.collect.testing.IteratorFeature.MODIFIABLE;
 import static com.google.common.collect.testing.IteratorFeature.UNMODIFIABLE;
 import static com.google.common.truth.Truth.assertThat;
@@ -42,6 +41,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;

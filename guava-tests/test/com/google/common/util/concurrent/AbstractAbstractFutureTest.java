@@ -20,13 +20,13 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.util.concurrent.Futures.getDone;
 import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
-import static com.google.common.util.concurrent.ReflectionFreeAssertThrows.assertThrows;
 import static com.google.common.util.concurrent.Runnables.doNothing;
 import static com.google.common.util.concurrent.TestPlatform.getDoneFromTimeoutOverload;
 import static com.google.common.util.concurrent.TestPlatform.verifyGetOnPendingFuture;
 import static com.google.common.util.concurrent.TestPlatform.verifyTimedGetOnPendingFuture;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;

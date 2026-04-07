@@ -16,7 +16,6 @@
 
 package com.google.common.base;
 
-import static com.google.common.base.ReflectionFreeAssertThrows.assertThrows;
 import static com.google.common.base.StandardSystemProperty.JAVA_SPECIFICATION_VERSION;
 import static com.google.common.base.Throwables.getCausalChain;
 import static com.google.common.base.Throwables.getCauseAs;
@@ -31,6 +30,7 @@ import static com.google.common.base.Throwables.throwIfInstanceOf;
 import static com.google.common.base.Throwables.throwIfUnchecked;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.regex.Pattern.quote;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;

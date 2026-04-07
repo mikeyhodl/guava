@@ -29,7 +29,6 @@ import static com.google.common.collect.Iterables.removeIf;
 import static com.google.common.collect.Iterables.skip;
 import static com.google.common.collect.Iterables.tryFind;
 import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.ReflectionFreeAssertThrows.assertThrows;
 import static com.google.common.collect.Sets.newHashSet;
 import static com.google.common.collect.testing.IteratorFeature.MODIFIABLE;
 import static com.google.common.collect.testing.IteratorFeature.UNMODIFIABLE;
@@ -40,6 +39,7 @@ import static java.util.Collections.emptySet;
 import static java.util.Collections.nCopies;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;

@@ -22,8 +22,8 @@ import static com.google.common.collect.testing.features.CollectionFeature.FAILS
 import static com.google.common.collect.testing.features.CollectionFeature.RESTRICTS_ELEMENTS;
 import static com.google.common.collect.testing.features.CollectionFeature.SUPPORTS_ADD;
 import static com.google.common.collect.testing.features.CollectionSize.ZERO;
-import static com.google.common.collect.testing.testers.ReflectionFreeAssertThrows.assertThrows;
 import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
@@ -105,13 +105,9 @@ public class CollectionAddAllTester<E extends @Nullable Object>
   @CollectionFeature.Require({SUPPORTS_ADD, FAILS_FAST_ON_CONCURRENT_MODIFICATION})
   @CollectionSize.Require(absent = ZERO)
   public void testAddAllConcurrentWithIteration() {
-    assertThrows(
-        ConcurrentModificationException.class,
-        () -> {
-          Iterator<E> iterator = collection.iterator();
-          assertTrue(collection.addAll(MinimalCollection.of(e3(), e0())));
-          iterator.next();
-        });
+    Iterator<E> iterator = collection.iterator();
+    assertTrue(collection.addAll(MinimalCollection.of(e3(), e0())));
+    assertThrows(ConcurrentModificationException.class, iterator::next);
   }
 
   @CollectionFeature.Require(absent = SUPPORTS_ADD)

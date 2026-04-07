@@ -16,8 +16,8 @@
 
 package com.google.common.collect.testing;
 
-import static com.google.common.collect.testing.ReflectionFreeAssertThrows.assertThrows;
 import static java.util.Collections.singleton;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import java.util.Collections;

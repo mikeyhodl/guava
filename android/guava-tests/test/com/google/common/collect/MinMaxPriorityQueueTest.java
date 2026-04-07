@@ -18,11 +18,11 @@ package com.google.common.collect;
 
 import static com.google.common.collect.Platform.reduceExponentIfGwt;
 import static com.google.common.collect.Platform.reduceIterationsIfGwt;
-import static com.google.common.collect.ReflectionFreeAssertThrows.assertThrows;
 import static com.google.common.collect.Sets.newHashSet;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static java.util.Collections.shuffle;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;

@@ -20,8 +20,8 @@ import static com.google.common.collect.testing.Helpers.assertEqualIgnoringOrder
 import static com.google.common.collect.testing.Helpers.getMethod;
 import static com.google.common.collect.testing.features.CollectionFeature.KNOWN_ORDER;
 import static com.google.common.collect.testing.features.CollectionSize.ZERO;
-import static com.google.common.collect.testing.testers.ReflectionFreeAssertThrows.assertThrows;
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
@@ -169,12 +169,8 @@ public class CollectionToArrayTester<E> extends AbstractCollectionTester<E> {
 
   @CollectionSize.Require(absent = ZERO)
   public void testToArray_emptyArrayOfWrongTypeForNonEmptyCollection() {
-    assertThrows(
-        ArrayStoreException.class,
-        () -> {
-          WrongType[] array = new WrongType[0];
-          collection.toArray(array);
-        });
+    WrongType[] array = new WrongType[0];
+    assertThrows(ArrayStoreException.class, () -> collection.toArray(array));
   }
 
   @CollectionSize.Require(ZERO)

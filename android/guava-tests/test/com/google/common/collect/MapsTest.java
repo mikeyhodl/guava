@@ -20,7 +20,6 @@ import static com.google.common.collect.Maps.immutableEntry;
 import static com.google.common.collect.Maps.transformEntries;
 import static com.google.common.collect.Maps.transformValues;
 import static com.google.common.collect.Maps.unmodifiableNavigableMap;
-import static com.google.common.collect.ReflectionFreeAssertThrows.assertThrows;
 import static com.google.common.collect.testing.Helpers.mapEntry;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
@@ -28,6 +27,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonMap;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
@@ -1400,21 +1400,21 @@ public class MapsTest extends TestCase {
     assertThrows(UnsupportedOperationException.class, () -> values.remove("four"));
     assertThrows(UnsupportedOperationException.class, () -> values.removeAll(singleton("four")));
     assertThrows(UnsupportedOperationException.class, () -> values.retainAll(singleton("four")));
+    Iterator<String> valuesIterator = values.iterator();
+    valuesIterator.next();
     assertThrows(
         UnsupportedOperationException.class,
         () -> {
-          Iterator<String> iterator = values.iterator();
-          iterator.next();
-          iterator.remove();
+          valuesIterator.remove();
         });
 
     Set<Entry<Integer, String>> entries = unmod.entrySet();
+    Iterator<Entry<Integer, String>> entriesIterator = entries.iterator();
+    entriesIterator.next();
     assertThrows(
         UnsupportedOperationException.class,
         () -> {
-          Iterator<Entry<Integer, String>> iterator = entries.iterator();
-          iterator.next();
-          iterator.remove();
+          entriesIterator.remove();
         });
     {
       Entry<Integer, String> entry = entries.iterator().next();

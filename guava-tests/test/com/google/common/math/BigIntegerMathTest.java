@@ -22,7 +22,6 @@ import static com.google.common.math.MathTesting.ALL_SAFE_ROUNDING_MODES;
 import static com.google.common.math.MathTesting.NEGATIVE_BIGINTEGER_CANDIDATES;
 import static com.google.common.math.MathTesting.NONZERO_BIGINTEGER_CANDIDATES;
 import static com.google.common.math.MathTesting.POSITIVE_BIGINTEGER_CANDIDATES;
-import static com.google.common.math.ReflectionFreeAssertThrows.assertThrows;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static java.lang.Math.nextDown;
@@ -39,6 +38,7 @@ import static java.math.RoundingMode.HALF_UP;
 import static java.math.RoundingMode.UNNECESSARY;
 import static java.math.RoundingMode.UP;
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;

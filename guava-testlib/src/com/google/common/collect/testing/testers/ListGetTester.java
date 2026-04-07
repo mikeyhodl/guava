@@ -16,7 +16,7 @@
 
 package com.google.common.collect.testing.testers;
 
-import static com.google.common.collect.testing.testers.ReflectionFreeAssertThrows.assertThrows;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import org.junit.Ignore;
