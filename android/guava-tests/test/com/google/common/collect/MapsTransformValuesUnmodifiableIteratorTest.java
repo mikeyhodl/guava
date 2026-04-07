@@ -368,7 +368,7 @@ public class MapsTransformValuesUnmodifiableIteratorTest extends MapInterfaceTes
     try {
       super.testKeySetRemoveAllNullFromEmpty();
     } catch (RuntimeException tolerated) {
-      // GWT's HashMap.keySet().removeAll(null) doesn't throws NPE.
+      // GWT's HashMap.keySet().removeAll(null) doesn't throw NPE.
     }
   }
 
@@ -377,7 +377,7 @@ public class MapsTransformValuesUnmodifiableIteratorTest extends MapInterfaceTes
     try {
       super.testEntrySetRemoveAllNullFromEmpty();
     } catch (RuntimeException tolerated) {
-      // GWT's HashMap.entrySet().removeAll(null) doesn't throws NPE.
+      // GWT's HashMap.entrySet().removeAll(null) doesn't throw NPE.
     }
   }
 }

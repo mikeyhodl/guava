@@ -259,7 +259,7 @@ abstract class AbstractMapsTransformValuesTest extends MapInterfaceTest<String, 
     try {
       super.testKeySetRemoveAllNullFromEmpty();
     } catch (RuntimeException tolerated) {
-      // GWT's HashMap.keySet().removeAll(null) doesn't throws NPE.
+      // GWT's HashMap.keySet().removeAll(null) doesn't throw NPE.
     }
   }
 
@@ -268,7 +268,7 @@ abstract class AbstractMapsTransformValuesTest extends MapInterfaceTest<String, 
     try {
       super.testEntrySetRemoveAllNullFromEmpty();
     } catch (RuntimeException tolerated) {
-      // GWT's HashMap.entrySet().removeAll(null) doesn't throws NPE.
+      // GWT's HashMap.entrySet().removeAll(null) doesn't throw NPE.
     }
   }
 }

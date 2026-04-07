@@ -98,7 +98,7 @@ public class ForwardingSortedMapImplementsMapTest extends SortedMapInterfaceTest
     try {
       super.testEntrySetRemoveAllNullFromEmpty();
     } catch (RuntimeException tolerated) {
-      // GWT's TreeMap.entrySet().removeAll(null) doesn't throws NPE.
+      // GWT's TreeMap.entrySet().removeAll(null) doesn't throw NPE.
     }
   }
 
@@ -107,7 +107,7 @@ public class ForwardingSortedMapImplementsMapTest extends SortedMapInterfaceTest
     try {
       super.testEntrySetRetainAllNullFromEmpty();
     } catch (RuntimeException tolerated) {
-      // GWT's TreeMap.entrySet().retainAll(null) doesn't throws NPE.
+      // GWT's TreeMap.entrySet().retainAll(null) doesn't throw NPE.
     }
   }
 
@@ -116,7 +116,7 @@ public class ForwardingSortedMapImplementsMapTest extends SortedMapInterfaceTest
     try {
       super.testKeySetRemoveAllNullFromEmpty();
     } catch (RuntimeException tolerated) {
-      // GWT's TreeMap.keySet().removeAll(null) doesn't throws NPE.
+      // GWT's TreeMap.keySet().removeAll(null) doesn't throw NPE.
     }
   }
 
@@ -125,7 +125,7 @@ public class ForwardingSortedMapImplementsMapTest extends SortedMapInterfaceTest
     try {
       super.testKeySetRetainAllNullFromEmpty();
     } catch (RuntimeException tolerated) {
-      // GWT's TreeMap.keySet().retainAll(null) doesn't throws NPE.
+      // GWT's TreeMap.keySet().retainAll(null) doesn't throw NPE.
     }
   }
 
@@ -134,7 +134,7 @@ public class ForwardingSortedMapImplementsMapTest extends SortedMapInterfaceTest
     try {
       super.testValuesRemoveAllNullFromEmpty();
     } catch (RuntimeException tolerated) {
-      // GWT's TreeMap.values().removeAll(null) doesn't throws NPE.
+      // GWT's TreeMap.values().removeAll(null) doesn't throw NPE.
     }
   }
 
@@ -143,7 +143,7 @@ public class ForwardingSortedMapImplementsMapTest extends SortedMapInterfaceTest
     try {
       super.testValuesRemoveAllNullFromEmpty();
     } catch (RuntimeException tolerated) {
-      // GWT's TreeMap.values().retainAll(null) doesn't throws NPE.
+      // GWT's TreeMap.values().retainAll(null) doesn't throw NPE.
     }
   }
 }
