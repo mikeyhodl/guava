@@ -417,13 +417,8 @@ public class ByteSourceTest extends IoTestCase {
    * @return the number of exceptions that were suppressed on the expected thrown exception
    */
   private static int runSuppressionFailureTest(ByteSource in, ByteSink out) {
-    try {
-      in.copyTo(out);
-      fail();
-    } catch (IOException expected) {
-      return expected.getSuppressed().length;
-    }
-    throw new AssertionError(); // can't happen
+    IOException expected = assertThrows(IOException.class, () -> in.copyTo(out));
+    return expected.getSuppressed().length;
   }
 
   private static ByteSource newNormalByteSource() {

@@ -607,13 +607,10 @@ public class FuturesTest extends TestCase {
       Future<Integer> transformedFuture, Class<? extends Throwable> expectedExceptionClass)
       throws Throwable {
     for (int i = 0; i < 5; i++) {
-      try {
-        getDone(transformedFuture);
-        fail();
-      } catch (ExecutionException expected) {
-        if (!expectedExceptionClass.isInstance(expected.getCause())) {
-          throw expected.getCause();
-        }
+      ExecutionException expected =
+          assertThrows(ExecutionException.class, () -> getDone(transformedFuture));
+      if (!expectedExceptionClass.isInstance(expected.getCause())) {
+        throw expected.getCause();
       }
     }
   }
@@ -879,12 +876,9 @@ public class FuturesTest extends TestCase {
 
     ListenableFuture<Integer> faultTolerantFuture =
         catchingAsync(failingFuture, Throwable.class, fallback, directExecutor());
-    try {
-      getDone(faultTolerantFuture);
-      fail();
-    } catch (ExecutionException expected) {
-      assertThat(expected.getCause()).isEqualTo(expectedException);
-    }
+    ExecutionException expected =
+        assertThrows(ExecutionException.class, () -> getDone(faultTolerantFuture));
+    assertThat(expected.getCause()).isEqualTo(expectedException);
     fallback.verifyCallCount(1);
   }
 
@@ -1108,12 +1102,9 @@ public class FuturesTest extends TestCase {
 
     ListenableFuture<Integer> faultTolerantFuture =
         catching(failingFuture, Throwable.class, fallback, directExecutor());
-    try {
-      getDone(faultTolerantFuture);
-      fail();
-    } catch (ExecutionException expected) {
-      assertThat(expected.getCause()).isEqualTo(expectedException);
-    }
+    ExecutionException expected =
+        assertThrows(ExecutionException.class, () -> getDone(faultTolerantFuture));
+    assertThat(expected.getCause()).isEqualTo(expectedException);
     fallback.verifyCallCount(1);
   }
 
@@ -3034,11 +3025,7 @@ public class FuturesTest extends TestCase {
     assertTrue(future1.isCancelled());
     assertFalse(future2.isCancelled());
 
-    try {
-      getDone(compound);
-      fail();
-    } catch (CancellationException expected) {
-    }
+    assertThrows(CancellationException.class, () -> getDone(compound));
   }
 
   public void testSuccessfulAsList_resultInterrupted() throws Exception {

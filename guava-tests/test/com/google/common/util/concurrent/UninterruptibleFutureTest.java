@@ -88,13 +88,7 @@ public class UninterruptibleFutureTest extends TestCase {
     InterruptionUtil.requestInterruptIn(200, MILLISECONDS);
 
     assertFalse(Thread.interrupted());
-    try {
-      delayedFuture.get(20000, MILLISECONDS);
-      fail("expected to be interrupted");
-    } catch (InterruptedException expected) {
-    } catch (TimeoutException e) {
-      throw new RuntimeException(e);
-    }
+    assertThrows(InterruptedException.class, () -> delayedFuture.get(20000, MILLISECONDS));
 
     // we were interrupted, but it's been cleared now
     assertFalse(Thread.interrupted());

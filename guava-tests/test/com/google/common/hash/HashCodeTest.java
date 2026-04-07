@@ -325,11 +325,7 @@ public class HashCodeTest extends TestCase {
     assertThat(bb).isEqualTo(expectedHashCode.bytes);
     assertEquals(expectedHashCode.asInt, hash.asInt());
     if (expectedHashCode.asLong == null) {
-      try {
-        hash.asLong();
-        fail();
-      } catch (IllegalStateException expected) {
-      }
+      assertThrows(IllegalStateException.class, () -> hash.asLong());
     } else {
       assertEquals(expectedHashCode.asLong.longValue(), hash.asLong());
     }

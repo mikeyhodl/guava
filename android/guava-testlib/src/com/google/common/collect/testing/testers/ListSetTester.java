@@ -101,10 +101,10 @@ public class ListSetTester<E> extends AbstractListTester<E> {
   @CollectionSize.Require(ZERO)
   @ListFeature.Require(absent = SUPPORTS_SET)
   public void testSet_unsupportedByEmptyList() {
-    try {
-      getList().set(0, e3());
-      fail("set() should throw UnsupportedOperationException or IndexOutOfBoundsException");
-    } catch (UnsupportedOperationException | IndexOutOfBoundsException expected) {
+    RuntimeException expected = assertThrows(RuntimeException.class, () -> getList().set(0, e3()));
+    if (!(expected instanceof UnsupportedOperationException
+        || expected instanceof IndexOutOfBoundsException)) {
+      throw expected;
     }
     expectUnchanged();
   }

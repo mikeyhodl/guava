@@ -796,15 +796,12 @@ public class AbstractServiceTest extends TestCase {
       assertEquals(from, Iterables.getLast(stateHistory));
       stateHistory.add(State.STOPPING);
       if (from == State.STARTING) {
-        try {
-          service.awaitRunning();
-          fail();
-        } catch (IllegalStateException expected) {
-          assertThat(expected).hasCauseThat().isNull();
-          assertThat(expected)
-              .hasMessageThat()
-              .isEqualTo("Expected the service " + service + " to be RUNNING, but was STOPPING");
-        }
+        IllegalStateException expected =
+            assertThrows(IllegalStateException.class, () -> service.awaitRunning());
+        assertThat(expected).hasCauseThat().isNull();
+        assertThat(expected)
+            .hasMessageThat()
+            .isEqualTo("Expected the service " + service + " to be RUNNING, but was STOPPING");
       }
       assertThat(service.state()).isNotEqualTo(from);
     }
@@ -815,15 +812,12 @@ public class AbstractServiceTest extends TestCase {
       stateHistory.add(State.TERMINATED);
       assertEquals(State.TERMINATED, service.state());
       if (from == State.NEW) {
-        try {
-          service.awaitRunning();
-          fail();
-        } catch (IllegalStateException expected) {
-          assertThat(expected).hasCauseThat().isNull();
-          assertThat(expected)
-              .hasMessageThat()
-              .isEqualTo("Expected the service " + service + " to be RUNNING, but was TERMINATED");
-        }
+        IllegalStateException expected =
+            assertThrows(IllegalStateException.class, () -> service.awaitRunning());
+        assertThat(expected).hasCauseThat().isNull();
+        assertThat(expected)
+            .hasMessageThat()
+            .isEqualTo("Expected the service " + service + " to be RUNNING, but was TERMINATED");
       }
       completionLatch.countDown();
     }
@@ -835,19 +829,13 @@ public class AbstractServiceTest extends TestCase {
       assertEquals(State.FAILED, service.state());
       assertEquals(failure, service.failureCause());
       if (from == State.STARTING) {
-        try {
-          service.awaitRunning();
-          fail();
-        } catch (IllegalStateException e) {
-          assertThat(e).hasCauseThat().isEqualTo(failure);
-        }
-      }
-      try {
-        service.awaitTerminated();
-        fail();
-      } catch (IllegalStateException e) {
+        IllegalStateException e =
+            assertThrows(IllegalStateException.class, () -> service.awaitRunning());
         assertThat(e).hasCauseThat().isEqualTo(failure);
       }
+      IllegalStateException e =
+          assertThrows(IllegalStateException.class, () -> service.awaitTerminated());
+      assertThat(e).hasCauseThat().isEqualTo(failure);
       completionLatch.countDown();
     }
   }
@@ -864,14 +852,16 @@ public class AbstractServiceTest extends TestCase {
 
   public void testNotifyFailedWhenNotStarted() {
     AbstractService service = new DefaultService();
-    assertThrows(IllegalStateException.class, () -> service.notifyFailed(new Exception()));
+    Exception cause = new Exception();
+    assertThrows(IllegalStateException.class, () -> service.notifyFailed(cause));
   }
 
   public void testNotifyFailedWhenTerminated() {
     NoOpService service = new NoOpService();
     service.startAsync().awaitRunning();
     service.stopAsync().awaitTerminated();
-    assertThrows(IllegalStateException.class, () -> service.notifyFailed(new Exception()));
+    Exception cause = new Exception();
+    assertThrows(IllegalStateException.class, () -> service.notifyFailed(cause));
   }
 
   private static class DefaultService extends AbstractService {

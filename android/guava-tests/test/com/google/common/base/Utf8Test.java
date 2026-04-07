@@ -25,6 +25,7 @@ import static java.lang.Character.MIN_LOW_SURROGATE;
 import static java.lang.Character.MIN_SUPPLEMENTARY_CODE_POINT;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
@@ -123,14 +124,11 @@ public class Utf8Test extends TestCase {
   }
 
   private static void testEncodedLengthFails(String invalidString, int invalidCodePointIndex) {
-    try {
-      Utf8.encodedLength(invalidString);
-      fail();
-    } catch (IllegalArgumentException expected) {
-      assertThat(expected)
-          .hasMessageThat()
-          .isEqualTo("Unpaired surrogate at index " + invalidCodePointIndex);
-    }
+    IllegalArgumentException expected =
+        assertThrows(IllegalArgumentException.class, () -> Utf8.encodedLength(invalidString));
+    assertThat(expected)
+        .hasMessageThat()
+        .isEqualTo("Unpaired surrogate at index " + invalidCodePointIndex);
   }
 
   // 128 - [chars 0x0000 to 0x007f]

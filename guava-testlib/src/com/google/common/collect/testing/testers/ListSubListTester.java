@@ -61,17 +61,14 @@ public class ListSubListTester<E> extends AbstractListTester<E> {
   }
 
   public void testSubList_startGreaterThanEnd() {
-    try {
-      getList().subList(1, 0);
-      fail("subList(1, 0) should throw");
-    } catch (IndexOutOfBoundsException expected) {
-    } catch (IllegalArgumentException expected) {
-      /*
-       * The subList() docs claim that this should be an
-       * IndexOutOfBoundsException, but many JDK implementations throw
-       * IllegalArgumentException:
-       * https://bugs.openjdk.org/browse/JDK-4506427
-       */
+    RuntimeException expected = assertThrows(RuntimeException.class, () -> getList().subList(1, 0));
+    /*
+     * The subList() docs claim that this should be an IndexOutOfBoundsException, but many JDK
+     * implementations throw IllegalArgumentException: https://bugs.openjdk.org/browse/JDK-4506427
+     */
+    if (!(expected instanceof IndexOutOfBoundsException
+        || expected instanceof IllegalArgumentException)) {
+      throw expected;
     }
   }
 

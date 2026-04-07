@@ -216,11 +216,9 @@ public class QueuesTest extends TestCase {
   private void checkDrainThrows(BlockingQueue<Object> q) {
     @SuppressWarnings("unused") // https://errorprone.info/bugpattern/FutureReturnValueIgnored
     Future<?> possiblyIgnoredError = threadPool.submit(new Interrupter(currentThread()));
-    try {
-      Queues.drain(q, ImmutableList.of(), 100, MAX_VALUE, NANOSECONDS);
-      fail();
-    } catch (InterruptedException expected) {
-    }
+    assertThrows(
+        InterruptedException.class,
+        () -> Queues.drain(q, ImmutableList.of(), 100, MAX_VALUE, NANOSECONDS));
   }
 
   public void testDrainUninterruptibly_doesNotThrow() throws Exception {
@@ -281,13 +279,10 @@ public class QueuesTest extends TestCase {
     // but does the wait actually occurs?
     @SuppressWarnings("unused") // https://errorprone.info/bugpattern/FutureReturnValueIgnored
     Future<?> possiblyIgnoredError = threadPool.submit(new Interrupter(currentThread()));
-    try {
-      // if waiting works, this should get stuck
-      Queues.drain(q, new ArrayList<>(), 1, MAX_VALUE, NANOSECONDS);
-      fail();
-    } catch (InterruptedException expected) {
-      // we indeed waited; a slow thread had enough time to interrupt us
-    }
+    // if waiting works, this should get stuck
+    assertThrows(
+        InterruptedException.class,
+        () -> Queues.drain(q, new ArrayList<>(), 1, MAX_VALUE, NANOSECONDS));
   }
 
   // same as above; uninterruptible version

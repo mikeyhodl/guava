@@ -246,30 +246,14 @@ public class RangeTest extends TestCase {
 
   private static void assertUnboundedBelow(Range<Integer> range) {
     assertFalse(range.hasLowerBound());
-    try {
-      range.lowerEndpoint();
-      fail();
-    } catch (IllegalStateException expected) {
-    }
-    try {
-      range.lowerBoundType();
-      fail();
-    } catch (IllegalStateException expected) {
-    }
+    assertThrows(IllegalStateException.class, () -> range.lowerEndpoint());
+    assertThrows(IllegalStateException.class, () -> range.lowerBoundType());
   }
 
   private static void assertUnboundedAbove(Range<Integer> range) {
     assertFalse(range.hasUpperBound());
-    try {
-      range.upperEndpoint();
-      fail();
-    } catch (IllegalStateException expected) {
-    }
-    try {
-      range.upperBoundType();
-      fail();
-    } catch (IllegalStateException expected) {
-    }
+    assertThrows(IllegalStateException.class, () -> range.upperEndpoint());
+    assertThrows(IllegalStateException.class, () -> range.upperBoundType());
   }
 
   public void testOrderingCuts() {

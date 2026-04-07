@@ -698,32 +698,16 @@ public class IterablesTest extends TestCase {
   }
 
   private void testGetOnAbc(Iterable<String> iterable) {
-    try {
-      Iterables.get(iterable, -1);
-      fail();
-    } catch (IndexOutOfBoundsException expected) {
-    }
+    assertThrows(IndexOutOfBoundsException.class, () -> Iterables.get(iterable, -1));
     assertThat(Iterables.get(iterable, 0)).isEqualTo("a");
     assertThat(Iterables.get(iterable, 1)).isEqualTo("b");
     assertThat(Iterables.get(iterable, 2)).isEqualTo("c");
-    try {
-      Iterables.get(iterable, 3);
-      fail();
-    } catch (IndexOutOfBoundsException nsee) {
-    }
-    try {
-      Iterables.get(iterable, 4);
-      fail();
-    } catch (IndexOutOfBoundsException nsee) {
-    }
+    assertThrows(IndexOutOfBoundsException.class, () -> Iterables.get(iterable, 3));
+    assertThrows(IndexOutOfBoundsException.class, () -> Iterables.get(iterable, 4));
   }
 
   private void testGetOnEmpty(Iterable<String> iterable) {
-    try {
-      Iterables.get(iterable, 0);
-      fail();
-    } catch (IndexOutOfBoundsException expected) {
-    }
+    assertThrows(IndexOutOfBoundsException.class, () -> Iterables.get(iterable, 0));
   }
 
   public void testGet_list() {

@@ -29,6 +29,7 @@ import static java.util.concurrent.Executors.newFixedThreadPool;
 import static java.util.concurrent.Executors.newScheduledThreadPool;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
@@ -94,7 +95,7 @@ public class UninterruptiblesTest extends TestCase {
     try {
       super.runBare();
     } catch (AssertionError e) {
-      if (e.getMessage() != null && e.getMessage().contains("Dude, where's my interrupt?")) {
+      if (e.getMessage() != null && e.getMessage().contains("InterruptedException to be thrown")) {
         // Rerun test to work around Marshamallow class-loading issue b/456222735.
         super.runBare();
         return;
@@ -1020,15 +1021,11 @@ public class UninterruptiblesTest extends TestCase {
    * assertTrue(Thread.interrupted())} except that this version tolerates late interrupts.
    */
   private static void assertInterrupted() {
-    try {
-      /*
-       * The sleep() will end immediately if we've already been interrupted or
-       * wait patiently for the interrupt if not.
-       */
-      Thread.sleep(LONG_DELAY_MS);
-      fail("Dude, where's my interrupt?");
-    } catch (InterruptedException expected) {
-    }
+    /*
+     * The sleep() will end immediately if we've already been interrupted or wait patiently for the
+     * interrupt if not.
+     */
+    assertThrows(InterruptedException.class, () -> Thread.sleep(LONG_DELAY_MS));
   }
 
   private static void assertNotInterrupted() {

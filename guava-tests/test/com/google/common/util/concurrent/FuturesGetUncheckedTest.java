@@ -99,12 +99,7 @@ public class FuturesGetUncheckedTest extends TestCase {
   }
 
   public void testGetUnchecked_error() {
-    try {
-      getUnchecked(ERROR_FUTURE);
-    } catch (Error expected) {
-      assertEquals(ERROR, expected);
-      return;
-    }
-    fail();
+    Error expected = assertThrows(Error.class, () -> getUnchecked(ERROR_FUTURE));
+    assertEquals(ERROR, expected);
   }
 }

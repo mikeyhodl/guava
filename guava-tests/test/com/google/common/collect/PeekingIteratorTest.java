@@ -231,10 +231,6 @@ public class PeekingIteratorTest extends TestCase {
   }
 
   private void assertNextThrows(Iterator<?> iterator) {
-    try {
-      iterator.next();
-      fail();
-    } catch (ThrowsAtEndException expected) {
-    }
+    assertThrows(ThrowsAtEndException.class, () -> iterator.next());
   }
 }

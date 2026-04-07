@@ -745,12 +745,7 @@ public class OrderingTest extends TestCase {
   }
 
   private static void assertListImmutable(List<Integer> result) {
-    try {
-      result.set(0, 1);
-      fail();
-    } catch (UnsupportedOperationException expected) {
-      // pass
-    }
+    assertThrows(UnsupportedOperationException.class, () -> result.set(0, 1));
   }
 
   public void testIteratorMinAndMax() {

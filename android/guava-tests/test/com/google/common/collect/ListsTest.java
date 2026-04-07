@@ -529,11 +529,7 @@ public class ListsTest extends TestCase {
   }
 
   private static void assertIndexIsOutOfBounds(List<String> list, int index) {
-    try {
-      list.get(index);
-      fail();
-    } catch (IndexOutOfBoundsException expected) {
-    }
+    assertThrows(IndexOutOfBoundsException.class, () -> list.get(index));
   }
 
   public void testReverseViewRandomAccess() {
@@ -685,20 +681,12 @@ public class ListsTest extends TestCase {
   }
 
   private static void assertTransformModifiable(List<String> list) {
-    try {
-      list.add("5");
-      fail("transformed list is addable");
-    } catch (UnsupportedOperationException expected) {
-    }
+    assertThrows(UnsupportedOperationException.class, () -> list.add("5"));
     list.remove(0);
     assertEquals(asList("2", "3", "4"), list);
     list.remove("3");
     assertEquals(asList("2", "4"), list);
-    try {
-      list.set(0, "5");
-      fail("transformed list is setable");
-    } catch (UnsupportedOperationException expected) {
-    }
+    assertThrows(UnsupportedOperationException.class, () -> list.set(0, "5"));
     list.clear();
     assertEquals(emptyList(), list);
   }
@@ -789,11 +777,7 @@ public class ListsTest extends TestCase {
     assertThat(iterator.next()).isEqualTo("3");
     assertThat(iterator.next()).isEqualTo("4");
     assertEquals(4, iterator.nextIndex());
-    try {
-      iterator.next();
-      fail("did not detect end of list");
-    } catch (NoSuchElementException expected) {
-    }
+    assertThrows(NoSuchElementException.class, () -> iterator.next());
     assertEquals(3, iterator.previousIndex());
     assertThat(iterator.previous()).isEqualTo("4");
     assertThat(iterator.previous()).isEqualTo("3");
@@ -802,25 +786,21 @@ public class ListsTest extends TestCase {
     assertThat(iterator.previous()).isEqualTo("1");
     assertFalse(iterator.hasPrevious());
     assertEquals(-1, iterator.previousIndex());
-    try {
-      iterator.previous();
-      fail("did not detect beginning of list");
-    } catch (NoSuchElementException expected) {
-    }
+    assertThrows(NoSuchElementException.class, () -> iterator.previous());
     iterator.remove();
     assertEquals(asList("2", "3", "4"), list);
     assertFalse(list.isEmpty());
 
     // An UnsupportedOperationException or IllegalStateException may occur.
-    try {
-      iterator.add("1");
-      fail("transformed list iterator is addable");
-    } catch (UnsupportedOperationException | IllegalStateException expected) {
+    RuntimeException expectedAdd = assertThrows(RuntimeException.class, () -> iterator.add("1"));
+    if (!(expectedAdd instanceof UnsupportedOperationException
+        || expectedAdd instanceof IllegalStateException)) {
+      throw expectedAdd;
     }
-    try {
-      iterator.set("1");
-      fail("transformed list iterator is settable");
-    } catch (UnsupportedOperationException | IllegalStateException expected) {
+    RuntimeException expectedSet = assertThrows(RuntimeException.class, () -> iterator.set("1"));
+    if (!(expectedSet instanceof UnsupportedOperationException
+        || expectedSet instanceof IllegalStateException)) {
+      throw expectedSet;
     }
   }
 
@@ -882,11 +862,7 @@ public class ListsTest extends TestCase {
     assertTrue(iterator.hasNext());
     assertThat(iterator.next()).isEqualTo("4");
     assertFalse(iterator.hasNext());
-    try {
-      iterator.next();
-      fail("did not detect end of list");
-    } catch (NoSuchElementException expected) {
-    }
+    assertThrows(NoSuchElementException.class, () -> iterator.next());
     iterator.remove();
     assertEquals(asList("1", "2", "3"), list);
     assertFalse(iterator.hasNext());

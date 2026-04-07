@@ -308,12 +308,7 @@ public class CollectionRetainAllTester<E> extends AbstractCollectionTester<E> {
   }
 
   private void expectThrows(Target target) {
-    try {
-      collection.retainAll(target.toRetain);
-      String message = Platform.format("retainAll(%s) should throw", target);
-      fail(message);
-    } catch (UnsupportedOperationException expected) {
-    }
+    assertThrows(UnsupportedOperationException.class, () -> collection.retainAll(target.toRetain));
   }
 
   private void expectReturnsFalseOrThrows(Target target) {

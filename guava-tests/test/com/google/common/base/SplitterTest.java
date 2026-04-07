@@ -477,11 +477,7 @@ public class SplitterTest extends TestCase {
 
   private void assertIteratorIsUnmodifiable(Iterator<?> iterator) {
     iterator.next();
-    try {
-      iterator.remove();
-      fail();
-    } catch (UnsupportedOperationException expected) {
-    }
+    assertThrows(UnsupportedOperationException.class, () -> iterator.remove());
   }
 
   public void testSplitterIterableIsLazy_char() {

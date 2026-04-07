@@ -131,11 +131,10 @@ public class HostAndPortTest extends TestCase {
     // Apply withDefaultPort(), yielding hp2.
     boolean badDefaultPort = defaultPort < 0 || defaultPort > 65535;
     HostAndPort hp2 = null;
-    try {
+    if (badDefaultPort) {
+      assertThrows(IllegalArgumentException.class, () -> hp.withDefaultPort(defaultPort));
+    } else {
       hp2 = hp.withDefaultPort(defaultPort);
-      assertFalse(badDefaultPort);
-    } catch (IllegalArgumentException e) {
-      assertTrue(badDefaultPort);
     }
 
     // Check the pre-withDefaultPort() instance.
@@ -144,23 +143,17 @@ public class HostAndPortTest extends TestCase {
       assertEquals(expectPort, hp.getPort());
     } else {
       assertFalse(hp.hasPort());
-      try {
-        hp.getPort();
-        fail("Expected IllegalStateException");
-      } catch (IllegalStateException expected) {
-      }
+      assertThrows(IllegalStateException.class, () -> hp.getPort());
     }
     assertThat(hp.getHost()).isEqualTo(expectHost);
 
     // Check the post-withDefaultPort() instance (if any).
     if (!badDefaultPort) {
-      try {
-        int port = hp2.getPort();
-        assertTrue(expectPort != -1);
-        assertEquals(expectPort, port);
-      } catch (IllegalStateException e) {
-        // Make sure we expected this to fail.
-        assertEquals(-1, expectPort);
+      if (expectPort != -1) {
+        assertEquals(expectPort, hp2.getPort());
+      } else {
+        HostAndPort finalHp2 = hp2;
+        assertThrows(IllegalStateException.class, () -> finalHp2.getPort());
       }
       assertThat(hp2.getHost()).isEqualTo(expectHost);
     }

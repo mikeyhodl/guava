@@ -1173,6 +1173,7 @@ public class MapsTest extends TestCase {
     assertThrows(UnsupportedOperationException.class, () -> unmod.put(4, "four"));
     assertThrows(UnsupportedOperationException.class, () -> unmod.forcePut(4, "four"));
     assertThrows(UnsupportedOperationException.class, () -> unmod.putAll(singletonMap(4, "four")));
+    assertThrows(UnsupportedOperationException.class, () -> unmod.clear());
 
     /* UnsupportedOperationException on indirect modifications. */
     BiMap<String, Number> inverse = unmod.inverse();
@@ -1457,31 +1458,12 @@ public class MapsTest extends TestCase {
 
   @GwtIncompatible // NavigableMap
   void ensureNotDirectlyModifiable(NavigableMap<Integer, String> unmod) {
-    try {
-      unmod.put(4, "four");
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {
-    }
-    try {
-      unmod.putAll(singletonMap(4, "four"));
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {
-    }
-    try {
-      unmod.remove(4);
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {
-    }
-    try {
-      unmod.pollFirstEntry();
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {
-    }
-    try {
-      unmod.pollLastEntry();
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {
-    }
+    assertThrows(UnsupportedOperationException.class, () -> unmod.put(4, "four"));
+    assertThrows(UnsupportedOperationException.class, () -> unmod.putAll(singletonMap(4, "four")));
+    assertThrows(UnsupportedOperationException.class, () -> unmod.remove(4));
+    assertThrows(UnsupportedOperationException.class, () -> unmod.pollFirstEntry());
+    assertThrows(UnsupportedOperationException.class, () -> unmod.pollLastEntry());
+    assertThrows(UnsupportedOperationException.class, () -> unmod.clear());
   }
 
   @GwtIncompatible // NavigableMap

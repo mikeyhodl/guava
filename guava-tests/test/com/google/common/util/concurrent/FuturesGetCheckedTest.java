@@ -69,9 +69,10 @@ public class FuturesGetCheckedTest extends TestCase {
     SettableFuture<String> future = SettableFuture.create();
     Thread.currentThread().interrupt();
     try {
-      getChecked(future, TwoArgConstructorException.class);
-      fail();
-    } catch (TwoArgConstructorException expected) {
+      TwoArgConstructorException expected =
+          assertThrows(
+              TwoArgConstructorException.class,
+              () -> getChecked(future, TwoArgConstructorException.class));
       assertThat(expected).hasCauseThat().isInstanceOf(InterruptedException.class);
       assertTrue(Thread.currentThread().isInterrupted());
     } finally {
@@ -128,13 +129,9 @@ public class FuturesGetCheckedTest extends TestCase {
   }
 
   public void testGetCheckedUntimed_error() throws TwoArgConstructorException {
-    try {
-      getChecked(ERROR_FUTURE, TwoArgConstructorException.class);
-    } catch (Error expected) {
-      assertEquals(ERROR, expected);
-      return;
-    }
-    fail();
+    Error expected =
+        assertThrows(Error.class, () -> getChecked(ERROR_FUTURE, TwoArgConstructorException.class));
+    assertEquals(ERROR, expected);
   }
 
   public void testGetCheckedUntimed_badExceptionConstructor_failsEvenForSuccessfulInput()
@@ -172,9 +169,10 @@ public class FuturesGetCheckedTest extends TestCase {
     SettableFuture<String> future = SettableFuture.create();
     Thread.currentThread().interrupt();
     try {
-      getChecked(future, TwoArgConstructorException.class, 0, SECONDS);
-      fail();
-    } catch (TwoArgConstructorException expected) {
+      TwoArgConstructorException expected =
+          assertThrows(
+              TwoArgConstructorException.class,
+              () -> getChecked(future, TwoArgConstructorException.class, 0, SECONDS));
       assertThat(expected).hasCauseThat().isInstanceOf(InterruptedException.class);
       assertTrue(Thread.currentThread().isInterrupted());
     } finally {
@@ -241,13 +239,11 @@ public class FuturesGetCheckedTest extends TestCase {
   }
 
   public void testGetCheckedTimed_error() throws TwoArgConstructorException {
-    try {
-      getChecked(ERROR_FUTURE, TwoArgConstructorException.class, 0, SECONDS);
-    } catch (Error expected) {
-      assertEquals(ERROR, expected);
-      return;
-    }
-    fail();
+    Error expected =
+        assertThrows(
+            Error.class,
+            () -> getChecked(ERROR_FUTURE, TwoArgConstructorException.class, 0, SECONDS));
+    assertEquals(ERROR, expected);
   }
 
   public void testGetCheckedTimed_timeoutException() {

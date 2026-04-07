@@ -17,6 +17,7 @@
 package com.google.common.net;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
@@ -105,18 +106,10 @@ public final class HostSpecifierTest extends TestCase {
   }
 
   private void assertBad(String spec) {
-    try {
-      HostSpecifier.fromValid(spec);
-      fail("Should have thrown IllegalArgumentException: " + spec);
-    } catch (IllegalArgumentException expected) {
-    }
+    assertThrows(IllegalArgumentException.class, () -> HostSpecifier.fromValid(spec));
 
-    try {
-      HostSpecifier.from(spec);
-      fail("Should have thrown ParseException: " + spec);
-    } catch (ParseException expected) {
-      assertThat(expected).hasCauseThat().isInstanceOf(IllegalArgumentException.class);
-    }
+    ParseException expected = assertThrows(ParseException.class, () -> HostSpecifier.from(spec));
+    assertThat(expected).hasCauseThat().isInstanceOf(IllegalArgumentException.class);
 
     assertFalse(HostSpecifier.isValid(spec));
   }

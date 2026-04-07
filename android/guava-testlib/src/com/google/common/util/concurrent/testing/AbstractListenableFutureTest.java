@@ -49,7 +49,6 @@ public abstract class AbstractListenableFutureTest extends TestCase {
 
   @Override
   protected void setUp() throws Exception {
-
     // Create a latch and a future that waits on the latch.
     latch = new CountDownLatch(1);
     future = createListenableFuture(Boolean.TRUE, null, latch);
@@ -90,13 +89,10 @@ public abstract class AbstractListenableFutureTest extends TestCase {
   }
 
   /** Tests that the {@link Future#get(long, TimeUnit)} method times out correctly. */
-  public void testTimeoutOnGetWorksCorrectly() throws InterruptedException, ExecutionException {
-
+  public void testTimeoutOnGetWorksCorrectly() {
     // The task thread waits for the latch, so we expect a timeout here.
     try {
-      future.get(20, MILLISECONDS);
-      fail("Should have timed out trying to get the value.");
-    } catch (TimeoutException expected) {
+      assertThrows(TimeoutException.class, () -> future.get(20, MILLISECONDS));
     } finally {
       latch.countDown();
     }

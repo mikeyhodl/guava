@@ -25,6 +25,7 @@ import static com.google.common.base.CharMatcher.isNot;
 import static com.google.common.base.CharMatcher.noneOf;
 import static com.google.common.base.CharMatcher.whitespace;
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
@@ -182,16 +183,8 @@ public class CharMatcherTest extends TestCase {
   private void reallyTestEmpty(CharMatcher matcher) throws Exception {
     assertEquals(-1, matcher.indexIn(""));
     assertEquals(-1, matcher.indexIn("", 0));
-    try {
-      matcher.indexIn("", 1);
-      fail();
-    } catch (IndexOutOfBoundsException expected) {
-    }
-    try {
-      matcher.indexIn("", -1);
-      fail();
-    } catch (IndexOutOfBoundsException expected) {
-    }
+    assertThrows(IndexOutOfBoundsException.class, () -> matcher.indexIn("", 1));
+    assertThrows(IndexOutOfBoundsException.class, () -> matcher.indexIn("", -1));
     assertEquals(-1, matcher.lastIndexIn(""));
     assertFalse(matcher.matchesAnyOf(""));
     assertTrue(matcher.matchesAllOf(""));
@@ -272,16 +265,9 @@ public class CharMatcherTest extends TestCase {
     assertEquals(-1, matcher.indexIn(s, 0));
     assertEquals(-1, matcher.indexIn(s, 1));
     assertEquals(-1, matcher.indexIn(s, s.length()));
-    try {
-      matcher.indexIn(s, s.length() + 1);
-      fail();
-    } catch (IndexOutOfBoundsException expected) {
-    }
-    try {
-      matcher.indexIn(s, -1);
-      fail();
-    } catch (IndexOutOfBoundsException expected) {
-    }
+    int pastEnd = s.length() + 1;
+    assertThrows(IndexOutOfBoundsException.class, () -> matcher.indexIn(s, pastEnd));
+    assertThrows(IndexOutOfBoundsException.class, () -> matcher.indexIn(s, -1));
     assertEquals(-1, matcher.lastIndexIn(s));
     assertFalse(matcher.matchesAnyOf(s));
     assertFalse(matcher.matchesAllOf(s));

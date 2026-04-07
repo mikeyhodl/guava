@@ -1467,76 +1467,21 @@ public class MapsTest extends TestCase {
 
   @GwtIncompatible // NavigableMap
   void ensureNotDirectlyModifiable(NavigableMap<Integer, String> unmod) {
-    try {
-      unmod.put(4, "four");
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {
-    }
-    try {
-      unmod.putAll(singletonMap(4, "four"));
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {
-    }
-    try {
-      unmod.remove(4);
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {
-    }
-    try {
-      unmod.pollFirstEntry();
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {
-    }
-    try {
-      unmod.pollLastEntry();
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {
-    }
-    try {
-      unmod.replaceAll((k, v) -> v);
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {
-    }
-    try {
-      unmod.putIfAbsent(3, "three");
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {
-    }
-    try {
-      unmod.replace(3, "three", "four");
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {
-    }
-    try {
-      unmod.replace(3, "four");
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {
-    }
-    try {
-      unmod.computeIfAbsent(3, k -> k + "three");
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {
-    }
-    try {
-      unmod.computeIfPresent(4, (k, v) -> v);
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {
-    }
-    try {
-      unmod.compute(4, (k, v) -> v);
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {
-    }
-    try {
-      unmod.merge(4, "four", (k, v) -> v);
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {
-    }
-    try {
-      unmod.clear();
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {
-    }
+    assertThrows(UnsupportedOperationException.class, () -> unmod.put(4, "four"));
+    assertThrows(UnsupportedOperationException.class, () -> unmod.putAll(singletonMap(4, "four")));
+    assertThrows(UnsupportedOperationException.class, () -> unmod.remove(4));
+    assertThrows(UnsupportedOperationException.class, () -> unmod.pollFirstEntry());
+    assertThrows(UnsupportedOperationException.class, () -> unmod.pollLastEntry());
+    assertThrows(UnsupportedOperationException.class, () -> unmod.replaceAll((k, v) -> v));
+    assertThrows(UnsupportedOperationException.class, () -> unmod.putIfAbsent(3, "three"));
+    assertThrows(UnsupportedOperationException.class, () -> unmod.replace(3, "three", "four"));
+    assertThrows(UnsupportedOperationException.class, () -> unmod.replace(3, "four"));
+    assertThrows(
+        UnsupportedOperationException.class, () -> unmod.computeIfAbsent(3, k -> k + "three"));
+    assertThrows(UnsupportedOperationException.class, () -> unmod.computeIfPresent(4, (k, v) -> v));
+    assertThrows(UnsupportedOperationException.class, () -> unmod.compute(4, (k, v) -> v));
+    assertThrows(UnsupportedOperationException.class, () -> unmod.merge(4, "four", (k, v) -> v));
+    assertThrows(UnsupportedOperationException.class, () -> unmod.clear());
   }
 
   @GwtIncompatible // NavigableMap

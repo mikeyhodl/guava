@@ -18,6 +18,7 @@ package com.google.common.util.concurrent;
 
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
@@ -198,17 +199,10 @@ public class StripedTest extends TestCase {
       assertTrue(observed.contains(striped.get(new Object())));
     }
 
-    try {
-      striped.getAt(-1);
-      fail();
-    } catch (RuntimeException expected) {
-    }
+    assertThrows(IndexOutOfBoundsException.class, () -> striped.getAt(-1));
 
-    try {
-      striped.getAt(striped.size());
-      fail();
-    } catch (RuntimeException expected) {
-    }
+    int size = striped.size();
+    assertThrows(IndexOutOfBoundsException.class, () -> striped.getAt(size));
   }
 
   public void testMaxSize() {

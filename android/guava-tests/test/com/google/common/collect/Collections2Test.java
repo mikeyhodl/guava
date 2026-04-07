@@ -21,6 +21,7 @@ import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Collections.nCopies;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
@@ -474,11 +475,7 @@ public class Collections2Test extends TestCase {
 
   private <T> void assertNoMorePermutations(Iterator<List<T>> permutations) {
     assertFalse("Expected no more permutations, but there was one.", permutations.hasNext());
-    try {
-      permutations.next();
-      fail("Expected NoSuchElementException.");
-    } catch (NoSuchElementException expected) {
-    }
+    assertThrows(NoSuchElementException.class, () -> permutations.next());
   }
 
   private <T> void assertPermutationsCount(int expected, Collection<List<T>> permutationSet) {

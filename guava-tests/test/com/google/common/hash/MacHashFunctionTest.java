@@ -93,9 +93,7 @@ public class MacHashFunctionTest extends TestCase {
     ProviderList providers = Providers.getProviderList();
     Providers.setProviderList(ProviderList.newList());
     try {
-      hmacMd5(MD5_KEY);
-      fail("expected ISE");
-    } catch (IllegalStateException expected) {
+      assertThrows(IllegalStateException.class, () -> hmacMd5(MD5_KEY));
     } finally {
       Providers.setProviderList(providers);
     }
@@ -171,12 +169,11 @@ public class MacHashFunctionTest extends TestCase {
             return "RAW";
           }
         };
-    try {
-      hmacMd5(badKey);
-      fail();
-    } catch (IllegalArgumentException expected) {
-    } catch (NullPointerException toleratedOnAndroid) {
-      // TODO(cpovirk): In an ideal world, we'd check here that we're running on Android.
+    RuntimeException expected = assertThrows(RuntimeException.class, () -> hmacMd5(badKey));
+    if (!(expected instanceof IllegalArgumentException
+        || expected instanceof NullPointerException)) {
+      // TODO(cpovirk): In an ideal world, allow NPE only under Android.
+      throw expected;
     }
   }
 

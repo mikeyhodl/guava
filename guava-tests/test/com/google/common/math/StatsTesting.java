@@ -22,7 +22,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static java.lang.Double.NEGATIVE_INFINITY;
 import static java.lang.Double.NaN;
 import static java.lang.Double.POSITIVE_INFINITY;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
@@ -370,26 +370,10 @@ class StatsTesting {
   static void assertStatsApproxEqual(Stats expectedStats, Stats actualStats) {
     assertThat(actualStats.count()).isEqualTo(expectedStats.count());
     if (expectedStats.count() == 0) {
-      try {
-        actualStats.mean();
-        fail("Expected IllegalStateException");
-      } catch (IllegalStateException expected) {
-      }
-      try {
-        actualStats.populationVariance();
-        fail("Expected IllegalStateException");
-      } catch (IllegalStateException expected) {
-      }
-      try {
-        actualStats.min();
-        fail("Expected IllegalStateException");
-      } catch (IllegalStateException expected) {
-      }
-      try {
-        actualStats.max();
-        fail("Expected IllegalStateException");
-      } catch (IllegalStateException expected) {
-      }
+      assertThrows(IllegalStateException.class, () -> actualStats.mean());
+      assertThrows(IllegalStateException.class, () -> actualStats.populationVariance());
+      assertThrows(IllegalStateException.class, () -> actualStats.min());
+      assertThrows(IllegalStateException.class, () -> actualStats.max());
     } else if (expectedStats.count() == 1) {
       assertThat(actualStats.mean()).isWithin(ALLOWED_ERROR).of(expectedStats.mean());
       assertThat(actualStats.populationVariance()).isEqualTo(0.0);
@@ -439,23 +423,16 @@ class StatsTesting {
    * its inverse throws as expected.
    */
   static void assertHorizontalLinearTransformation(LinearTransformation transformation, double y) {
+    LinearTransformation inverse = transformation.inverse();
     assertThat(transformation.isHorizontal()).isTrue();
     assertThat(transformation.isVertical()).isFalse();
     assertThat(transformation.inverse().isHorizontal()).isFalse();
     assertThat(transformation.inverse().isVertical()).isTrue();
     assertThat(transformation.transform(-1.0)).isWithin(ALLOWED_ERROR).of(y);
     assertThat(transformation.transform(1.0)).isWithin(ALLOWED_ERROR).of(y);
-    try {
-      transformation.inverse().transform(0.0);
-      fail("Expected IllegalStateException");
-    } catch (IllegalStateException expected) {
-    }
+    assertThrows(IllegalStateException.class, () -> inverse.transform(0.0));
     assertThat(transformation.slope()).isWithin(ALLOWED_ERROR).of(0.0);
-    try {
-      transformation.inverse().slope();
-      fail("Expected IllegalStateException");
-    } catch (IllegalStateException expected) {
-    }
+    assertThrows(IllegalStateException.class, () -> inverse.slope());
     assertThat(transformation.inverse()).isSameInstanceAs(transformation.inverse());
     assertThat(transformation.inverse().inverse()).isSameInstanceAs(transformation);
   }
@@ -471,18 +448,10 @@ class StatsTesting {
     assertThat(transformation.isVertical()).isTrue();
     assertThat(transformation.inverse().isHorizontal()).isTrue();
     assertThat(transformation.inverse().isVertical()).isFalse();
-    try {
-      transformation.transform(0.0);
-      fail("Expected IllegalStateException");
-    } catch (IllegalStateException expected) {
-    }
+    assertThrows(IllegalStateException.class, () -> transformation.transform(0.0));
     assertThat(transformation.inverse().transform(-1.0)).isWithin(ALLOWED_ERROR).of(x);
     assertThat(transformation.inverse().transform(1.0)).isWithin(ALLOWED_ERROR).of(x);
-    try {
-      transformation.slope();
-      fail("Expected IllegalStateException");
-    } catch (IllegalStateException expected) {
-    }
+    assertThrows(IllegalStateException.class, () -> transformation.slope());
     assertThat(transformation.inverse().slope()).isWithin(ALLOWED_ERROR).of(0.0);
     assertThat(transformation.inverse()).isSameInstanceAs(transformation.inverse());
     assertThat(transformation.inverse().inverse()).isSameInstanceAs(transformation);

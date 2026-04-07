@@ -620,16 +620,8 @@ public abstract class AbstractClosingFutureTest extends TestCase {
                 (closer, peeker) -> {
                   closer.eventuallyClose(closeable1, closingExecutor);
                   assertThat(peeker.getDone(input1)).isSameInstanceAs("value1");
-                  try {
-                    peeker.getDone(input2Failed);
-                    fail("Peeker.getDone() should fail for failed inputs");
-                  } catch (ExecutionException expected) {
-                  }
-                  try {
-                    peeker.getDone(nonInput);
-                    fail("Peeker should not be able to peek into non-input ClosingFuture.");
-                  } catch (IllegalArgumentException expected) {
-                  }
+                  assertThrows(ExecutionException.class, () -> peeker.getDone(input2Failed));
+                  assertThrows(IllegalArgumentException.class, () -> peeker.getDone(nonInput));
                   capturedPeeker.set(peeker);
                   return closeable2;
                 },
@@ -692,16 +684,8 @@ public abstract class AbstractClosingFutureTest extends TestCase {
                 (closer, peeker) -> {
                   closer.eventuallyClose(closeable1, closingExecutor);
                   assertThat(peeker.getDone(input1)).isSameInstanceAs("value1");
-                  try {
-                    peeker.getDone(input2Failed);
-                    fail("Peeker should fail for failed inputs");
-                  } catch (ExecutionException expected) {
-                  }
-                  try {
-                    peeker.getDone(nonInput);
-                    fail("Peeker should not be able to peek into non-input ClosingFuture.");
-                  } catch (IllegalArgumentException expected) {
-                  }
+                  assertThrows(ExecutionException.class, () -> peeker.getDone(input2Failed));
+                  assertThrows(IllegalArgumentException.class, () -> peeker.getDone(nonInput));
                   capturedPeeker.set(peeker);
                   return ClosingFuture.eventuallyClosing(
                       immediateFuture(closeable2), closingExecutor);
@@ -1265,52 +1249,38 @@ public abstract class AbstractClosingFutureTest extends TestCase {
 
   protected final void assertDerivingThrowsIllegalStateException(
       ClosingFuture<String> closingFuture) {
-    try {
-      closingFuture.transform((closer3, v1) -> "value3", executor);
-      fail();
-    } catch (IllegalStateException expected5) {
-    }
-    try {
-      closingFuture.transformAsync(
-          (closer2, v) -> ClosingFuture.from(immediateFuture("value3")), executor);
-      fail();
-    } catch (IllegalStateException expected4) {
-    }
-    try {
-      closingFuture.catching(Exception.class, (closer1, x1) -> "value3", executor);
-      fail();
-    } catch (IllegalStateException expected3) {
-    }
-    try {
-      closingFuture.catchingAsync(
-          Exception.class, (closer, x) -> ClosingFuture.from(immediateFuture("value3")), executor);
-      fail();
-    } catch (IllegalStateException expected2) {
-    }
-    try {
-      ClosingFuture.whenAllComplete(asList(closingFuture));
-      fail();
-    } catch (IllegalStateException expected1) {
-    }
-    try {
-      ClosingFuture.whenAllSucceed(asList(closingFuture));
-      fail();
-    } catch (IllegalStateException expected) {
-    }
+    assertThrows(
+        IllegalStateException.class,
+        () -> closingFuture.transform((closer3, v1) -> "value3", executor));
+    assertThrows(
+        IllegalStateException.class,
+        () ->
+            closingFuture.transformAsync(
+                (closer2, v) -> ClosingFuture.from(immediateFuture("value3")), executor));
+    assertThrows(
+        IllegalStateException.class,
+        () -> closingFuture.catching(Exception.class, (closer1, x1) -> "value3", executor));
+    assertThrows(
+        IllegalStateException.class,
+        () ->
+            closingFuture.catchingAsync(
+                Exception.class,
+                (closer, x) -> ClosingFuture.from(immediateFuture("value3")),
+                executor));
+    assertThrows(
+        IllegalStateException.class, () -> ClosingFuture.whenAllComplete(asList(closingFuture)));
+    assertThrows(
+        IllegalStateException.class, () -> ClosingFuture.whenAllSucceed(asList(closingFuture)));
   }
 
   /** Asserts that marking this step a final step throws {@link IllegalStateException}. */
   protected void assertFinalStepThrowsIllegalStateException(ClosingFuture<?> closingFuture) {
-    try {
-      closingFuture.finishToFuture();
-      fail();
-    } catch (IllegalStateException expected) {
-    }
-    try {
-      closingFuture.finishToValueAndCloser(new NoOpValueAndCloserConsumer<>(), executor);
-      fail();
-    } catch (IllegalStateException expected) {
-    }
+    assertThrows(IllegalStateException.class, () -> closingFuture.finishToFuture());
+
+    NoOpValueAndCloserConsumer<Object> consumer = new NoOpValueAndCloserConsumer<>();
+    assertThrows(
+        IllegalStateException.class,
+        () -> closingFuture.finishToValueAndCloser(consumer, executor));
   }
 
   // Avoid infinite recursion if a closeable's close() method throws RejectedExecutionException and
@@ -1351,20 +1321,12 @@ public abstract class AbstractClosingFutureTest extends TestCase {
   }
 
   void assertThatFutureFailsWithException(Future<?> future) {
-    try {
-      getUninterruptibly(future);
-      fail("Expected future to fail: " + future);
-    } catch (ExecutionException e) {
-      assertThat(e).hasCauseThat().isSameInstanceAs(exception);
-    }
+    ExecutionException e = assertThrows(ExecutionException.class, () -> getUninterruptibly(future));
+    assertThat(e).hasCauseThat().isSameInstanceAs(exception);
   }
 
   static void assertThatFutureBecomesCancelled(Future<?> future) throws ExecutionException {
-    try {
-      getUninterruptibly(future);
-      fail("Expected future to be canceled: " + future);
-    } catch (CancellationException expected) {
-    }
+    assertThrows(CancellationException.class, () -> getUninterruptibly(future));
   }
 
   private static void assertStillOpen(TestCloseable closeable1, TestCloseable... moreCloseables)

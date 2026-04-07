@@ -158,12 +158,7 @@ public class BooleansTest extends TestCase {
     // it's shared to avoid using too much memory in tests
     boolean[] sharedArray = new boolean[arraysDim2];
     Arrays.fill(arrays, sharedArray);
-
-    try {
-      Booleans.concat(arrays);
-      fail();
-    } catch (IllegalArgumentException expected) {
-    }
+    assertThrows(IllegalArgumentException.class, () -> Booleans.concat(arrays));
   }
 
   public void testEnsureCapacity() {

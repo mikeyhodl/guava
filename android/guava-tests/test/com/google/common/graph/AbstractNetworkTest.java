@@ -26,7 +26,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.TruthJUnit.assume;
 import static java.util.concurrent.Executors.newFixedThreadPool;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.fail;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -229,11 +228,9 @@ public abstract class AbstractNetworkTest {
             break;
           default:
             assertThat(network.hasEdgeConnecting(node, otherNode)).isTrue();
-            try {
-              network.edgeConnectingOrNull(node, otherNode);
-              fail();
-            } catch (IllegalArgumentException expected) {
-            }
+            assertThrows(
+                IllegalArgumentException.class,
+                () -> network.edgeConnectingOrNull(node, otherNode));
         }
 
         boolean isSelfLoop = node.equals(otherNode);

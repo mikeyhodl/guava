@@ -22,6 +22,7 @@ import static java.util.Collections.unmodifiableList;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ArrayListMultimap;
@@ -48,14 +49,10 @@ import org.jspecify.annotations.Nullable;
 public class UnmodifiableCollectionTests {
 
   public static void assertMapEntryIsUnmodifiable(Entry<?, ?> entry) {
-    try {
-      // fine because the call is going to fail without modifying the entry
-      @SuppressWarnings("unchecked")
-      Entry<?, @Nullable Object> nullableValueEntry = (Entry<?, @Nullable Object>) entry;
-      nullableValueEntry.setValue(null);
-      fail("setValue on unmodifiable Map.Entry succeeded");
-    } catch (UnsupportedOperationException expected) {
-    }
+    // fine because the call is going to fail without modifying the entry
+    @SuppressWarnings("unchecked")
+    Entry<?, @Nullable Object> nullableValueEntry = (Entry<?, @Nullable Object>) entry;
+    assertThrows(UnsupportedOperationException.class, () -> nullableValueEntry.setValue(null));
   }
 
   /**
@@ -66,11 +63,7 @@ public class UnmodifiableCollectionTests {
   public static void assertIteratorIsUnmodifiable(Iterator<?> iterator) {
     while (iterator.hasNext()) {
       iterator.next();
-      try {
-        iterator.remove();
-        fail("Remove on unmodifiable iterator succeeded");
-      } catch (UnsupportedOperationException expected) {
-      }
+      assertThrows(UnsupportedOperationException.class, () -> iterator.remove());
     }
   }
 
@@ -122,50 +115,27 @@ public class UnmodifiableCollectionTests {
     Collection<E> copy = new ArrayList<>();
     copy.addAll(collection);
 
-    try {
-      collection.add(sampleElement);
-      fail("add succeeded on unmodifiable collection");
-    } catch (UnsupportedOperationException expected) {
-    }
-
+    assertThrows(UnsupportedOperationException.class, () -> collection.add(sampleElement));
     assertCollectionsAreEquivalent(copy, collection);
 
-    try {
-      collection.addAll(siblingCollection);
-      fail("addAll succeeded on unmodifiable collection");
-    } catch (UnsupportedOperationException expected) {
-    }
+    assertThrows(UnsupportedOperationException.class, () -> collection.addAll(siblingCollection));
     assertCollectionsAreEquivalent(copy, collection);
 
-    try {
-      collection.clear();
-      fail("clear succeeded on unmodifiable collection");
-    } catch (UnsupportedOperationException expected) {
-    }
+    assertThrows(UnsupportedOperationException.class, () -> collection.clear());
     assertCollectionsAreEquivalent(copy, collection);
 
     assertIteratorIsUnmodifiable(collection.iterator());
     assertCollectionsAreEquivalent(copy, collection);
 
-    try {
-      collection.remove(sampleElement);
-      fail("remove succeeded on unmodifiable collection");
-    } catch (UnsupportedOperationException expected) {
-    }
+    assertThrows(UnsupportedOperationException.class, () -> collection.remove(sampleElement));
     assertCollectionsAreEquivalent(copy, collection);
 
-    try {
-      collection.removeAll(siblingCollection);
-      fail("removeAll succeeded on unmodifiable collection");
-    } catch (UnsupportedOperationException expected) {
-    }
+    assertThrows(
+        UnsupportedOperationException.class, () -> collection.removeAll(siblingCollection));
     assertCollectionsAreEquivalent(copy, collection);
 
-    try {
-      collection.retainAll(siblingCollection);
-      fail("retainAll succeeded on unmodifiable collection");
-    } catch (UnsupportedOperationException expected) {
-    }
+    assertThrows(
+        UnsupportedOperationException.class, () -> collection.retainAll(siblingCollection));
     assertCollectionsAreEquivalent(copy, collection);
   }
 
@@ -216,18 +186,10 @@ public class UnmodifiableCollectionTests {
 
     assertCollectionsAreEquivalent(multiset, copy);
 
-    try {
-      multiset.add(sampleElement, 2);
-      fail("add(Object, int) succeeded on unmodifiable collection");
-    } catch (UnsupportedOperationException expected) {
-    }
+    assertThrows(UnsupportedOperationException.class, () -> multiset.add(sampleElement, 2));
     assertCollectionsAreEquivalent(multiset, copy);
 
-    try {
-      multiset.remove(sampleElement, 2);
-      fail("remove(Object, int) succeeded on unmodifiable collection");
-    } catch (UnsupportedOperationException expected) {
-    }
+    assertThrows(UnsupportedOperationException.class, () -> multiset.remove(sampleElement, 2));
     assertCollectionsAreEquivalent(multiset, copy);
 
     assertCollectionsAreEquivalent(multiset, copy);
@@ -278,11 +240,7 @@ public class UnmodifiableCollectionTests {
     Collection<V> sampleValueAsCollection = singleton(sampleValue);
 
     // Test #clear()
-    try {
-      multimap.clear();
-      fail("clear succeeded on unmodifiable multimap");
-    } catch (UnsupportedOperationException expected) {
-    }
+    assertThrows(UnsupportedOperationException.class, () -> multimap.clear());
 
     assertMultimapRemainsUnmodified(multimap, originalEntries);
 
@@ -325,83 +283,54 @@ public class UnmodifiableCollectionTests {
     }
 
     // Test #put()
-    try {
-      multimap.put(sampleKey, sampleValue);
-      fail("put succeeded on unmodifiable multimap");
-    } catch (UnsupportedOperationException expected) {
-    }
+    assertThrows(UnsupportedOperationException.class, () -> multimap.put(sampleKey, sampleValue));
     assertMultimapRemainsUnmodified(multimap, originalEntries);
 
     // Test #putAll(K, Collection<V>)
-    try {
-      multimap.putAll(sampleKey, sampleValueAsCollection);
-      fail("putAll(K, Iterable) succeeded on unmodifiable multimap");
-    } catch (UnsupportedOperationException expected) {
-    }
+    assertThrows(
+        UnsupportedOperationException.class,
+        () -> multimap.putAll(sampleKey, sampleValueAsCollection));
     assertMultimapRemainsUnmodified(multimap, originalEntries);
 
     // Test #putAll(Multimap<K, V>)
     Multimap<K, V> multimap2 = ArrayListMultimap.create();
     multimap2.put(sampleKey, sampleValue);
-    try {
-      multimap.putAll(multimap2);
-      fail("putAll(Multimap<K, V>) succeeded on unmodifiable multimap");
-    } catch (UnsupportedOperationException expected) {
-    }
+    assertThrows(UnsupportedOperationException.class, () -> multimap.putAll(multimap2));
     assertMultimapRemainsUnmodified(multimap, originalEntries);
 
     // Test #remove()
-    try {
-      multimap.remove(sampleKey, sampleValue);
-      fail("remove succeeded on unmodifiable multimap");
-    } catch (UnsupportedOperationException expected) {
-    }
+    assertThrows(
+        UnsupportedOperationException.class, () -> multimap.remove(sampleKey, sampleValue));
     assertMultimapRemainsUnmodified(multimap, originalEntries);
 
     // Test #removeAll()
-    try {
-      multimap.removeAll(sampleKey);
-      fail("removeAll succeeded on unmodifiable multimap");
-    } catch (UnsupportedOperationException expected) {
-    }
+    assertThrows(UnsupportedOperationException.class, () -> multimap.removeAll(sampleKey));
     assertMultimapRemainsUnmodified(multimap, originalEntries);
 
     // Test #replaceValues()
-    try {
-      multimap.replaceValues(sampleKey, sampleValueAsCollection);
-      fail("replaceValues succeeded on unmodifiable multimap");
-    } catch (UnsupportedOperationException expected) {
-    }
+    assertThrows(
+        UnsupportedOperationException.class,
+        () -> multimap.replaceValues(sampleKey, sampleValueAsCollection));
     assertMultimapRemainsUnmodified(multimap, originalEntries);
 
     // Test #asMap()
-    try {
-      multimap.asMap().remove(sampleKey);
-      fail("asMap().remove() succeeded on unmodifiable multimap");
-    } catch (UnsupportedOperationException expected) {
-    }
+    assertThrows(UnsupportedOperationException.class, () -> multimap.asMap().remove(sampleKey));
     assertMultimapRemainsUnmodified(multimap, originalEntries);
 
     if (!multimap.isEmpty()) {
       K presentKey = multimap.keySet().iterator().next();
-      try {
-        multimap.asMap().get(presentKey).remove(sampleValue);
-        fail("asMap().get().remove() succeeded on unmodifiable multimap");
-      } catch (UnsupportedOperationException expected) {
-      }
+      assertThrows(
+          UnsupportedOperationException.class,
+          () -> multimap.asMap().get(presentKey).remove(sampleValue));
       assertMultimapRemainsUnmodified(multimap, originalEntries);
 
-      try {
-        multimap.asMap().values().iterator().next().remove(sampleValue);
-        fail("asMap().values().iterator().next().remove() succeeded on unmodifiable multimap");
-      } catch (UnsupportedOperationException expected) {
-      }
+      assertThrows(
+          UnsupportedOperationException.class,
+          () -> multimap.asMap().values().iterator().next().remove(sampleValue));
 
-      try {
-        ((Collection<?>) multimap.asMap().values().toArray()[0]).clear();
-        fail("asMap().values().toArray()[0].clear() succeeded on unmodifiable multimap");
-      } catch (UnsupportedOperationException expected) {
-      }
+      assertThrows(
+          UnsupportedOperationException.class,
+          () -> ((Collection<?>) multimap.asMap().values().toArray()[0]).clear());
     }
 
     assertCollectionIsUnmodifiable(multimap.values(), sampleValue);

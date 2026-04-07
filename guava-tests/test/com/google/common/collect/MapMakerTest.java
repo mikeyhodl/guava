@@ -73,12 +73,8 @@ public class MapMakerTest extends TestCase {
   // TODO(cpovirk): enable when ready (apparently after a change to our GWT emulation)
   public void xtestInitialCapacity_setTwice() {
     MapMaker maker = new MapMaker().initialCapacity(16);
-    try {
-      // even to the same value is not allowed
-      maker.initialCapacity(16);
-      fail();
-    } catch (IllegalStateException expected) {
-    }
+    // even to the same value is not allowed
+    assertThrows(IllegalStateException.class, () -> maker.initialCapacity(16));
   }
 
   public void testReturnsPlainConcurrentHashMapWhenPossible() {
