@@ -246,7 +246,7 @@ public class JoinerTest extends TestCase {
 
     int num = partsArray.length - 2;
     if (num >= 0) {
-      @Nullable Integer[] rest = new @Nullable Integer[num];
+      @Nullable Object[] rest = new @Nullable Object[num];
       for (int i = 0; i < num; i++) {
         rest[i] = partsArray[i + 2];
       }
