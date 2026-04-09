@@ -383,7 +383,7 @@
           <configuration>
             <toolchains>
               <jdk>
-                <version>25</version>
+                <version>26</version>
               </jdk>
             </toolchains>
           </configuration>
@@ -453,14 +453,14 @@
             (But don't run that if you have put something into ~/.m2/toolchains.xml yourself.)
             -->
             <execution>
-              <id>download-25-and-surefire-version</id>
+              <id>download-26-and-surefire-version</id>
               <goals>
                 <goal>toolchain</goal>
               </goals>
               <configuration>
                 <toolchains>
                   <jdk>
-                    <version>25</version>
+                    <version>26</version>
                     <vendor>temurin</vendor>
                   </jdk>
                   <testJdk>

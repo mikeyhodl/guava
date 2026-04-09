@@ -43,7 +43,7 @@ public class MessageDigestHashFunctionTest extends TestCase {
   private static final ImmutableSet<String> INPUTS = ImmutableSet.of("", "Z", "foobar");
 
   // From "How Provider Implementations Are Requested and Supplied" from
-  // https://docs.oracle.com/en/java/javase/25/security/java-cryptography-architecture-jca-reference-guide.html#:~:text=How%20Provider%20Implementations%20Are%20Requested%20and%20Supplied
+  // https://docs.oracle.com/en/java/javase/26/security/java-cryptography-architecture-jca-reference-guide.html#:~:text=How%20Provider%20Implementations%20Are%20Requested%20and%20Supplied
   //  - Some providers may choose to also include alias names.
   //  - For example, the "SHA-1" algorithm might be referred to as "SHA1".
   //  - The algorithm name is not case-sensitive.

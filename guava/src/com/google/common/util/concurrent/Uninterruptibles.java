@@ -115,7 +115,7 @@ public final class Uninterruptibles {
    *
    * <p>If the underlying {@code await} call is interrupted, then {@code awaitUninterruptibly}
    * converts that into a <a
-   * href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/locks/Condition.html#implementation-considerations-heading">spurious
+   * href="https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/util/concurrent/locks/Condition.html#implementation-considerations-heading">spurious
    * wakeup</a>. This means that resulting wait is not "uninterruptible" in the normal sense of
    * {@link Uninterruptibles}. Still, this method allows callers to write <a
    * href="https://errorprone.info/bugpattern/WaitNotInLoop">the standard, required loop for waiting on a {@code
@@ -136,7 +136,7 @@ public final class Uninterruptibles {
    *
    * <p>If the underlying {@code await} call is interrupted, then {@code awaitUninterruptibly}
    * converts that into a <a
-   * href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/locks/Condition.html#implementation-considerations-heading">spurious
+   * href="https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/util/concurrent/locks/Condition.html#implementation-considerations-heading">spurious
    * wakeup</a>. This means that resulting wait is not "uninterruptible" in the normal sense of
    * {@link Uninterruptibles}. Still, this method allows callers to write <a
    * href="https://errorprone.info/bugpattern/WaitNotInLoop">the standard, required loop for waiting on a {@code
