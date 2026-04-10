@@ -19,7 +19,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkPositionIndexes;
 import static java.lang.Byte.toUnsignedInt;
 import static java.lang.Integer.parseInt;
-import static java.security.AccessController.doPrivileged;
 import static java.util.Objects.requireNonNull;
 
 import com.google.common.annotations.GwtIncompatible;
@@ -30,7 +29,6 @@ import com.google.errorprone.annotations.InlineMe;
 import com.google.j2objc.annotations.J2ObjCIncompatible;
 import java.lang.reflect.Field;
 import java.nio.ByteOrder;
-import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -378,20 +376,27 @@ public final class UnsignedBytes {
           // that's okay; try reflection instead
         }
         try {
-          return doPrivileged(
-              (PrivilegedExceptionAction<Unsafe>)
-                  () -> {
-                    Class<Unsafe> k = Unsafe.class;
-                    for (Field f : k.getDeclaredFields()) {
-                      f.setAccessible(true);
-                      Object x = f.get(null);
-                      if (k.isInstance(x)) {
-                        return k.cast(x);
-                      }
-                    }
-                    return null;
-                  });
-        } catch (PrivilegedActionException e) {
+          PrivilegedExceptionAction<Unsafe> action =
+              () -> {
+                Class<Unsafe> k = Unsafe.class;
+                for (Field f : k.getDeclaredFields()) {
+                  f.setAccessible(true);
+                  Object x = f.get(null);
+                  if (k.isInstance(x)) {
+                    return k.cast(x);
+                  }
+                }
+                return null;
+              };
+          try {
+            return (Unsafe)
+                Class.forName("java.security.AccessController")
+                    .getMethod("doPrivileged", PrivilegedExceptionAction.class)
+                    .invoke(null, action);
+          } catch (Exception e) {
+            return action.run();
+          }
+        } catch (Exception e) {
           return null;
         }
       }

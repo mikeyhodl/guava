@@ -24,8 +24,6 @@ import com.google.j2objc.annotations.J2ObjCIncompatible;
 import java.lang.invoke.VarHandle;
 import java.lang.reflect.Field;
 import java.nio.ByteOrder;
-import java.security.AccessController;
-import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.Objects;
 import org.jspecify.annotations.Nullable;
@@ -227,21 +225,28 @@ final class LittleEndianByteArray {
         // We'll try reflection instead.
       }
       try {
-        return AccessController.doPrivileged(
-            (PrivilegedExceptionAction<Unsafe>)
-                () -> {
-                  Class<Unsafe> k = Unsafe.class;
-                  for (Field f : k.getDeclaredFields()) {
-                    f.setAccessible(true);
-                    Object x = f.get(null);
-                    if (k.isInstance(x)) {
-                      return k.cast(x);
-                    }
-                  }
-                  throw new NoSuchFieldError("the Unsafe");
-                });
-      } catch (PrivilegedActionException e) {
-        throw new RuntimeException("Could not initialize intrinsics", e.getCause());
+        PrivilegedExceptionAction<Unsafe> action =
+            () -> {
+              Class<Unsafe> k = Unsafe.class;
+              for (Field f : k.getDeclaredFields()) {
+                f.setAccessible(true);
+                Object x = f.get(null);
+                if (k.isInstance(x)) {
+                  return k.cast(x);
+                }
+              }
+              throw new NoSuchFieldError("the Unsafe");
+            };
+        try {
+          return (Unsafe)
+              Class.forName("java.security.AccessController")
+                  .getMethod("doPrivileged", PrivilegedExceptionAction.class)
+                  .invoke(null, action);
+        } catch (Exception e) {
+          return action.run();
+        }
+      } catch (Exception e) {
+        throw new RuntimeException("Could not initialize intrinsics", e);
       }
     }
 
