@@ -918,7 +918,7 @@ public final class Futures extends GwtFuturesCatchingSpecialization {
       copy[i].addListener(() -> state.recordInputCompletion(delegates, localI), directExecutor());
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") // safe covariant cast
     ImmutableList<ListenableFuture<T>> delegatesCast = (ImmutableList) delegates;
     return delegatesCast;
   }
@@ -1096,10 +1096,10 @@ public final class Futures extends GwtFuturesCatchingSpecialization {
 
   /** See {@link #addCallback(ListenableFuture, FutureCallback, Executor)} for behavioral notes. */
   private static final class CallbackListener<V extends @Nullable Object> implements Runnable {
-    final Future<V> future;
+    final ListenableFuture<V> future;
     final FutureCallback<? super V> callback;
 
-    CallbackListener(Future<V> future, FutureCallback<? super V> callback) {
+    CallbackListener(ListenableFuture<V> future, FutureCallback<? super V> callback) {
       this.future = future;
       this.callback = callback;
     }

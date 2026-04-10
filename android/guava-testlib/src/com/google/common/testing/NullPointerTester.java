@@ -116,6 +116,7 @@ public final class NullPointerTester {
         .filter(
             m ->
                 m.getName().equals("getDoneValue")
+                    || m.getName().equals("getKnownSuccessfulDoneValue")
                     || m.getName().equals("casValue")
                     || m.getName().equals("casListeners")
                     || m.getName().equals("gasListeners"))
@@ -302,7 +303,7 @@ public final class NullPointerTester {
       return isVisible(member.getModifiers());
     }
 
-    final Iterable<Method> getStaticMethods(Class<?> cls) {
+    final ImmutableList<Method> getStaticMethods(Class<?> cls) {
       ImmutableList.Builder<Method> builder = ImmutableList.builder();
       for (Method method : getVisibleMethods(cls)) {
         if (Invokable.from(method).isStatic()) {

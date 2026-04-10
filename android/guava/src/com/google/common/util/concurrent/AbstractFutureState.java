@@ -283,18 +283,16 @@ abstract class AbstractFutureState<V extends @Nullable Object> extends InternalF
    */
   static final LazyLogger log = new LazyLogger(AbstractFuture.class);
 
-  static final boolean GENERATE_CANCELLATION_CAUSES;
+  static final boolean GENERATE_CANCELLATION_CAUSES = computeGenerateCancellationCauses();
 
-  static {
+  private static boolean computeGenerateCancellationCauses() {
     // System.getProperty may throw if the security policy does not permit access.
-    boolean generateCancellationCauses;
     try {
-      generateCancellationCauses =
-          parseBoolean(System.getProperty("guava.concurrent.generate_cancellation_cause", "false"));
+      return parseBoolean(
+          System.getProperty("guava.concurrent.generate_cancellation_cause", "false"));
     } catch (SecurityException e) {
-      generateCancellationCauses = false;
+      return false;
     }
-    GENERATE_CANCELLATION_CAUSES = generateCancellationCauses;
   }
 
   /** Waiter links form a Treiber stack in {@link #waitersField}. */
