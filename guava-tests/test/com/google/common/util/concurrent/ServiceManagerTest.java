@@ -19,6 +19,7 @@ package com.google.common.util.concurrent;
 import static com.google.common.base.StandardSystemProperty.JAVA_SPECIFICATION_VERSION;
 import static com.google.common.base.StandardSystemProperty.OS_NAME;
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 import static java.util.Arrays.asList;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -396,7 +397,7 @@ public class ServiceManagerTest extends TestCase {
       ServiceManager manager, Service.State state, Service... services) {
     Collection<Service> managerServices = manager.servicesByState().get(state);
     for (Service service : services) {
-      assertEquals(service.toString(), state, service.state());
+      assertWithMessage(service.toString()).that(service.state()).isEqualTo(state);
       assertEquals(service.toString(), service.isRunning(), state == Service.State.RUNNING);
       assertTrue(managerServices + " should contain " + service, managerServices.contains(service));
     }

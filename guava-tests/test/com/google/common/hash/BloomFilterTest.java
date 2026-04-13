@@ -537,9 +537,10 @@ public class BloomFilterTest extends TestCase {
   // This test ensures that our reliance on the ordering elsewhere is safe.
   @SuppressWarnings("EnumOrdinal")
   public void testBloomFilterStrategies() {
-    assertThat(BloomFilterStrategies.values()).hasLength(2);
-    assertEquals(BloomFilterStrategies.MURMUR128_MITZ_32, BloomFilterStrategies.values()[0]);
-    assertEquals(BloomFilterStrategies.MURMUR128_MITZ_64, BloomFilterStrategies.values()[1]);
+    assertThat(BloomFilterStrategies.values())
+        .asList()
+        .containsExactly(
+            BloomFilterStrategies.MURMUR128_MITZ_32, BloomFilterStrategies.MURMUR128_MITZ_64);
   }
 
 

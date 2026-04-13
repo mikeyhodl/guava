@@ -493,10 +493,11 @@ public class GeneratedMonitorTest extends TestCase {
         expectedOutcome);
   }
 
+  @SuppressWarnings("TruthConstantAsserts") // HANG really is the actual value/result
   @Override
   protected void runTest() throws Throwable {
     FutureTask<@Nullable Void> task = new FutureTask<>(this::runChosenTest, null);
-    startThread(task::run);
+    startThread(task);
     awaitUninterruptibly(doingCallLatch);
     long hangDelayMillis =
         (expectedOutcome == Outcome.HANG)
@@ -504,7 +505,7 @@ public class GeneratedMonitorTest extends TestCase {
             : UNEXPECTED_HANG_DELAY_MILLIS;
     boolean hung = !awaitUninterruptibly(callCompletedLatch, hangDelayMillis, MILLISECONDS);
     if (hung) {
-      assertEquals(expectedOutcome, Outcome.HANG);
+      assertThat(Outcome.HANG).isEqualTo(expectedOutcome);
     } else {
       assertThat(task.get(UNEXPECTED_HANG_DELAY_MILLIS, MILLISECONDS)).isNull();
     }
@@ -560,7 +561,7 @@ public class GeneratedMonitorTest extends TestCase {
       assertFalse(monitor.isOccupiedByCurrentThread());
     }
 
-    assertEquals(expectedOutcome, actualOutcome);
+    assertThat(actualOutcome).isEqualTo(expectedOutcome);
     assertEquals(expectedOutcome == Outcome.SUCCESS, occupiedAfterCall);
     assertEquals(
         interruptedBeforeCall && expectedOutcome != Outcome.INTERRUPT, interruptedAfterCall);
@@ -600,7 +601,7 @@ public class GeneratedMonitorTest extends TestCase {
       boolean occupiedAfterCall = monitor.isOccupiedByCurrentThread();
       boolean interruptedAfterCall = Thread.currentThread().isInterrupted();
 
-      assertEquals(expectedOutcome, actualOutcome);
+      assertThat(actualOutcome).isEqualTo(expectedOutcome);
       assertTrue(occupiedAfterCall);
       assertEquals(
           interruptedBeforeCall && expectedOutcome != Outcome.INTERRUPT, interruptedAfterCall);

@@ -140,8 +140,8 @@ public class EnumBiMapTest extends TestCase {
     assertThat(bimap.toString()).isEqualTo("{}");
     assertEquals(HashBiMap.create(), bimap);
     bimap.put(Currency.DOLLAR, Country.CANADA);
-    assertEquals(Country.CANADA, bimap.get(Currency.DOLLAR));
-    assertEquals(Currency.DOLLAR, bimap.inverse().get(Country.CANADA));
+    assertThat(bimap).containsEntry(Currency.DOLLAR, Country.CANADA);
+    assertThat(bimap.inverse()).containsEntry(Country.CANADA, Currency.DOLLAR);
   }
 
   public void testCreateFromMap() {
@@ -152,8 +152,8 @@ public class EnumBiMapTest extends TestCase {
             Currency.PESO, Country.CHILE,
             Currency.FRANC, Country.SWITZERLAND);
     EnumBiMap<Currency, Country> bimap = EnumBiMap.create(map);
-    assertEquals(Country.CANADA, bimap.get(Currency.DOLLAR));
-    assertEquals(Currency.DOLLAR, bimap.inverse().get(Country.CANADA));
+    assertThat(bimap).containsEntry(Currency.DOLLAR, Country.CANADA);
+    assertThat(bimap.inverse()).containsEntry(Country.CANADA, Currency.DOLLAR);
 
     /* Map must have at least one entry if not an EnumBiMap. */
     assertThrows(
@@ -174,11 +174,11 @@ public class EnumBiMapTest extends TestCase {
     EnumBiMap<Currency, Country> bimap1 = EnumBiMap.create(Currency.class, Country.class);
     bimap1.put(Currency.DOLLAR, Country.CANADA);
     EnumBiMap<Currency, Country> bimap2 = EnumBiMap.create(bimap1);
-    assertEquals(Country.CANADA, bimap2.get(Currency.DOLLAR));
+    assertThat(bimap2).containsEntry(Currency.DOLLAR, Country.CANADA);
     assertEquals(bimap1, bimap2);
     bimap2.inverse().put(Country.SWITZERLAND, Currency.FRANC);
-    assertEquals(Country.SWITZERLAND, bimap2.get(Currency.FRANC));
-    assertThat(bimap1.get(Currency.FRANC)).isNull();
+    assertThat(bimap2).containsEntry(Currency.FRANC, Country.SWITZERLAND);
+    assertThat(bimap1).doesNotContainKey(Currency.FRANC);
     assertFalse(bimap2.equals(bimap1));
 
     /* Test that it can be empty. */
@@ -238,7 +238,7 @@ public class EnumBiMapTest extends TestCase {
     EnumBiMap<Currency, Country> bimap = EnumBiMap.create(map);
 
     Iterator<Currency> iter = bimap.keySet().iterator();
-    assertEquals(Currency.DOLLAR, iter.next());
+    assertThat(iter.next()).isEqualTo(Currency.DOLLAR);
     iter.remove();
 
     // forward map ordered by currency
@@ -264,8 +264,8 @@ public class EnumBiMapTest extends TestCase {
     EnumBiMap<Currency, Country> bimap = EnumBiMap.create(map);
 
     Iterator<Currency> iter = bimap.keySet().iterator();
-    assertEquals(Currency.DOLLAR, iter.next());
-    assertEquals(Currency.FRANC, iter.next());
+    assertThat(iter.next()).isEqualTo(Currency.DOLLAR);
+    assertThat(iter.next()).isEqualTo(Currency.FRANC);
     iter.remove();
 
     // forward map ordered by currency

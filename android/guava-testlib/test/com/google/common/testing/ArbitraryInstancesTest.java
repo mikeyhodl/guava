@@ -167,7 +167,7 @@ public class ArbitraryInstancesTest extends TestCase {
     assertEquals(0, ArbitraryInstances.get(BigInteger.class).intValue());
     assertThat(ArbitraryInstances.get(String.class)).isEqualTo("");
     assertEquals("", ArbitraryInstances.get(CharSequence.class));
-    assertEquals(SECONDS, ArbitraryInstances.get(TimeUnit.class));
+    assertThat(ArbitraryInstances.get(TimeUnit.class)).isEqualTo(SECONDS);
     assertThat(ArbitraryInstances.get(Object.class)).isNotNull();
     assertEquals(0, ArbitraryInstances.get(Number.class));
     assertEquals(UTF_8, ArbitraryInstances.get(Charset.class));
@@ -295,7 +295,7 @@ public class ArbitraryInstancesTest extends TestCase {
 
   public void testGet_enum() {
     assertThat(ArbitraryInstances.get(EmptyEnum.class)).isNull();
-    assertEquals(Direction.UP, ArbitraryInstances.get(Direction.class));
+    assertThat(ArbitraryInstances.get(Direction.class)).isEqualTo(Direction.UP);
   }
 
   public void testGet_interface() {
@@ -424,7 +424,7 @@ public class ArbitraryInstancesTest extends TestCase {
       assertWithMessage("Expected to return non-null for: %s", mutableClass)
           .that(instance)
           .isNotNull();
-      assertWithMessage("Expected to return fresh instance for: " + mutableClass)
+      assertWithMessage("Expected to return fresh instance for: %s", mutableClass)
           .that(ArbitraryInstances.get(mutableClass))
           .isNotSameInstanceAs(instance);
     }

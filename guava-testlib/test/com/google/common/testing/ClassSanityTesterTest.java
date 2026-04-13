@@ -529,7 +529,7 @@ public class ClassSanityTesterTest extends TestCase {
   }
 
   public void testInstantiate_oneConstantEnum() throws Exception {
-    assertEquals(OneConstantEnum.A, tester.instantiate(OneConstantEnum.class));
+    assertThat(tester.instantiate(OneConstantEnum.class)).isEqualTo(OneConstantEnum.A);
   }
 
   public void testInstantiate_interface() throws Exception {

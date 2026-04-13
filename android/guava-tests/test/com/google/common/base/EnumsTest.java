@@ -117,9 +117,9 @@ public class EnumsTest extends TestCase {
 
   public void testStringConverter_convert() {
     Converter<String, TestEnum> converter = Enums.stringConverter(TestEnum.class);
-    assertEquals(TestEnum.CHEETO, converter.convert("CHEETO"));
-    assertEquals(TestEnum.HONDA, converter.convert("HONDA"));
-    assertEquals(TestEnum.POODLE, converter.convert("POODLE"));
+    assertThat(converter.convert("CHEETO")).isEqualTo(TestEnum.CHEETO);
+    assertThat(converter.convert("HONDA")).isEqualTo(TestEnum.HONDA);
+    assertThat(converter.convert("POODLE")).isEqualTo(TestEnum.POODLE);
     assertThat(converter.convert(null)).isNull();
     assertThat(converter.reverse().convert(null)).isNull();
   }

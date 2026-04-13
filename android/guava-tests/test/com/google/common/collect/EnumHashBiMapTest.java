@@ -138,7 +138,7 @@ public class EnumHashBiMapTest extends TestCase {
     assertEquals(HashBiMap.create(), bimap);
     bimap.put(Currency.DOLLAR, "dollar");
     assertThat(bimap.get(Currency.DOLLAR)).isEqualTo("dollar");
-    assertEquals(Currency.DOLLAR, bimap.inverse().get("dollar"));
+    assertThat(bimap.inverse()).containsEntry("dollar", Currency.DOLLAR);
   }
 
   public void testCreateFromMap() {
@@ -150,7 +150,7 @@ public class EnumHashBiMapTest extends TestCase {
             Currency.FRANC, "franc");
     EnumHashBiMap<Currency, String> bimap = EnumHashBiMap.create(map);
     assertThat(bimap.get(Currency.DOLLAR)).isEqualTo("dollar");
-    assertEquals(Currency.DOLLAR, bimap.inverse().get("dollar"));
+    assertThat(bimap.inverse()).containsEntry("dollar", Currency.DOLLAR);
 
     /* Map must have at least one entry if not an EnumHashBiMap. */
     assertThrows(

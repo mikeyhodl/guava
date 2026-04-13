@@ -108,7 +108,7 @@ public class AbstractScheduledServiceTest extends TestCase {
     // An execution exception holds a runtime exception (from throwables.propagate) that holds our
     // original exception.
     assertEquals(service.runException, service.failureCause());
-    assertEquals(Service.State.FAILED, service.state());
+    assertThat(service.state()).isEqualTo(Service.State.FAILED);
   }
 
   public void testFailOnExceptionFromStartUp() {
@@ -118,7 +118,7 @@ public class AbstractScheduledServiceTest extends TestCase {
         assertThrows(IllegalStateException.class, () -> service.startAsync().awaitRunning());
     assertThat(e).hasCauseThat().isEqualTo(service.startUpException);
     assertEquals(0, service.numberOfTimesRunCalled.get());
-    assertEquals(Service.State.FAILED, service.state());
+    assertThat(service.state()).isEqualTo(Service.State.FAILED);
   }
 
   public void testFailOnErrorFromStartUpListener() throws InterruptedException {
@@ -134,7 +134,7 @@ public class AbstractScheduledServiceTest extends TestCase {
 
           @Override
           public void failed(State from, Throwable failure) {
-            assertEquals(State.RUNNING, from);
+            assertThat(from).isEqualTo(State.RUNNING);
             assertEquals(error, failure);
             latch.countDown();
           }
@@ -144,7 +144,7 @@ public class AbstractScheduledServiceTest extends TestCase {
     latch.await();
 
     assertEquals(0, service.numberOfTimesRunCalled.get());
-    assertEquals(Service.State.FAILED, service.state());
+    assertThat(service.state()).isEqualTo(Service.State.FAILED);
   }
 
   public void testFailOnExceptionFromShutDown() throws Exception {
@@ -156,7 +156,7 @@ public class AbstractScheduledServiceTest extends TestCase {
     service.runSecondBarrier.await();
     IllegalStateException e = assertThrows(IllegalStateException.class, service::awaitTerminated);
     assertThat(e).hasCauseThat().isEqualTo(service.shutDownException);
-    assertEquals(Service.State.FAILED, service.state());
+    assertThat(service.state()).isEqualTo(Service.State.FAILED);
   }
 
   public void testRunOneIterationCalledMultipleTimes() throws Exception {
@@ -313,7 +313,7 @@ public class AbstractScheduledServiceTest extends TestCase {
       assertTrue(startUpCalled);
       assertFalse(shutDownCalled);
       numberOfTimesRunCalled.incrementAndGet();
-      assertEquals(State.RUNNING, state());
+      assertThat(state()).isEqualTo(State.RUNNING);
       runFirstBarrier.await();
       runSecondBarrier.await();
       if (runException != null) {
@@ -326,7 +326,7 @@ public class AbstractScheduledServiceTest extends TestCase {
       assertFalse(startUpCalled);
       assertFalse(shutDownCalled);
       startUpCalled = true;
-      assertEquals(State.STARTING, state());
+      assertThat(state()).isEqualTo(State.STARTING);
       if (startUpException != null) {
         throw startUpException;
       }
@@ -379,7 +379,7 @@ public class AbstractScheduledServiceTest extends TestCase {
     called = true;
     assertEquals(INITIAL_DELAY, initialDelay);
     assertEquals(DELAY, delay);
-    assertEquals(UNIT, unit);
+    assertThat(unit).isEqualTo(UNIT);
     assertEquals(testRunnable, command);
   }
 
@@ -624,7 +624,7 @@ public class AbstractScheduledServiceTest extends TestCase {
     Thread.sleep(1000);
     assertThrows(
         IllegalStateException.class, () -> service.stopAsync().awaitTerminated(100, SECONDS));
-    assertEquals(State.FAILED, service.state());
+    assertThat(service.state()).isEqualTo(State.FAILED);
   }
 
   private static class TestFailingCustomScheduledService extends AbstractScheduledService {
