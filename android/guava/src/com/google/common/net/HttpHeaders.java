@@ -269,7 +269,7 @@ public final class HttpHeaders {
    * The HTTP <a href="https://datatracker.ietf.org/doc/rfc9213/">{@code CDN-Cache-Control}</a>
    * header field name.
    *
-   * @since NEXT
+   * @since 33.6.0
    */
   public static final String CDN_CACHE_CONTROL = "CDN-Cache-Control";
 

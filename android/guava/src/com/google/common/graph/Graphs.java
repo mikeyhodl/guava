@@ -183,7 +183,7 @@ public final class Graphs extends GraphsBridgeMethods {
    * of the transitive closure of {@code graph}. In other words, the returned {@link Graph} will not
    * be updated after modifications to {@code graph}.
    *
-   * @since NEXT
+   * @since 33.6.0
    */
   // TODO(b/31438252): Consider optimizing for undirected graphs.
   public static <N> ImmutableGraph<N> transitiveClosure(
@@ -240,7 +240,7 @@ public final class Graphs extends GraphsBridgeMethods {
    *
    * <p>The strategies differ based on how they define "cycle incident to a node".
    *
-   * @since NEXT
+   * @since 33.6.0
    */
   public enum TransitiveClosureSelfLoopStrategy {
     /**

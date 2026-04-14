@@ -72,7 +72,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
    * the collection operation is performed. (This differs from the {@code Collector} returned by
    * {@link Collectors#toMap(Function, Function)}, which throws an {@code IllegalStateException}.)
    *
-   * @since NEXT
+   * @since 33.6.0
    */
   @IgnoreJRERequirement // Users will use this only if they're already using streams.
   public static <T extends @Nullable Object, K extends Comparable<? super K>, V>
@@ -111,7 +111,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
    * <p>If the mapped keys contain duplicates, the values are merged using the specified merging
    * function.
    *
-   * @since NEXT
+   * @since 33.6.0
    */
   @IgnoreJRERequirement // Users will use this only if they're already using streams.
   public static <T extends @Nullable Object, K extends Comparable<? super K>, V>

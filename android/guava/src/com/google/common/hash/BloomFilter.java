@@ -232,7 +232,7 @@ public final class BloomFilter<T extends @Nullable Object> implements Predicate<
    * size before writing to pre-allocated space (e.g., for memory-mapped files or fixed-size
    * records).
    *
-   * @since NEXT
+   * @since 33.6.0
    */
   public long serializedSize() {
     // We return a long (and not an int) because the max serialized size is approximately
