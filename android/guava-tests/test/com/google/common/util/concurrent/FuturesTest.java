@@ -159,10 +159,10 @@ public class FuturesTest extends TestCase {
     assertThat(future.toString()).endsWith("[status=FAILURE, cause=[" + exception + "]]");
 
     ExecutionException expected = assertThrows(ExecutionException.class, () -> getDone(future));
-    assertThat(expected.getCause()).isEqualTo(exception);
+    assertThat(expected).hasCauseThat().isEqualTo(exception);
 
     expected = assertThrows(ExecutionException.class, () -> getDoneFromTimeoutOverload(future));
-    assertThat(expected.getCause()).isEqualTo(exception);
+    assertThat(expected).hasCauseThat().isEqualTo(exception);
   }
 
   public void testImmediateFailedFuture_cancellationException() throws Exception {
@@ -172,10 +172,10 @@ public class FuturesTest extends TestCase {
     assertThat(future.toString()).endsWith("[status=FAILURE, cause=[" + exception + "]]");
 
     ExecutionException expected = assertThrows(ExecutionException.class, () -> getDone(future));
-    assertThat(expected.getCause()).isEqualTo(exception);
+    assertThat(expected).hasCauseThat().isEqualTo(exception);
 
     expected = assertThrows(ExecutionException.class, () -> getDoneFromTimeoutOverload(future));
-    assertThat(expected.getCause()).isEqualTo(exception);
+    assertThat(expected).hasCauseThat().isEqualTo(exception);
   }
 
   public void testImmediateCancelledFutureBasic() throws Exception {
@@ -726,10 +726,10 @@ public class FuturesTest extends TestCase {
     Future<String> transformed = lazyTransform(immediateFuture(1), function);
     ExecutionException expected =
         assertThrows(ExecutionException.class, () -> getDone(transformed));
-    assertThat(expected.getCause()).isEqualTo(exception);
+    assertThat(expected).hasCauseThat().isEqualTo(exception);
     expected =
         assertThrows(ExecutionException.class, () -> getDoneFromTimeoutOverload(transformed));
-    assertThat(expected.getCause()).isEqualTo(exception);
+    assertThat(expected).hasCauseThat().isEqualTo(exception);
   }
 
   private static class FunctionSpy<I, O> implements Function<I, O> {
@@ -847,7 +847,7 @@ public class FuturesTest extends TestCase {
             ExecutionException.class,
             () ->
                 getDone(catchingAsync(failingFuture, Throwable.class, fallback, directExecutor())));
-    assertThat(expected.getCause()).isEqualTo(error);
+    assertThat(expected).hasCauseThat().isEqualTo(error);
   }
 
   public void testCatchingAsync_fallbackReturnsRuntimeException() throws Exception {
@@ -878,7 +878,7 @@ public class FuturesTest extends TestCase {
         catchingAsync(failingFuture, Throwable.class, fallback, directExecutor());
     ExecutionException expected =
         assertThrows(ExecutionException.class, () -> getDone(faultTolerantFuture));
-    assertThat(expected.getCause()).isEqualTo(expectedException);
+    assertThat(expected).hasCauseThat().isEqualTo(expectedException);
     fallback.verifyCallCount(1);
   }
 
@@ -1081,7 +1081,7 @@ public class FuturesTest extends TestCase {
         assertThrows(
             ExecutionException.class,
             () -> getDone(catching(failingFuture, Throwable.class, fallback, directExecutor())));
-    assertThat(expected.getCause()).isEqualTo(error);
+    assertThat(expected).hasCauseThat().isEqualTo(error);
   }
 
   /*
@@ -1104,7 +1104,7 @@ public class FuturesTest extends TestCase {
         catching(failingFuture, Throwable.class, fallback, directExecutor());
     ExecutionException expected =
         assertThrows(ExecutionException.class, () -> getDone(faultTolerantFuture));
-    assertThat(expected.getCause()).isEqualTo(expectedException);
+    assertThat(expected).hasCauseThat().isEqualTo(expectedException);
     fallback.verifyCallCount(1);
   }
 
@@ -1449,7 +1449,7 @@ public class FuturesTest extends TestCase {
     inputFuture.set("value");
     ExecutionException expected =
         assertThrows(ExecutionException.class, () -> getDone(outputFuture));
-    assertThat(expected.getCause()).isEqualTo(error);
+    assertThat(expected).hasCauseThat().isEqualTo(error);
   }
 
   // test of a bogus implementation
@@ -1535,7 +1535,7 @@ public class FuturesTest extends TestCase {
     inputFuture.set("value");
     ExecutionException expected =
         assertThrows(ExecutionException.class, () -> getDone(outputFuture));
-    assertThat(expected.getCause()).isEqualTo(error);
+    assertThat(expected).hasCauseThat().isEqualTo(error);
   }
 
   // test of a bogus implementation
@@ -1684,7 +1684,7 @@ public class FuturesTest extends TestCase {
     inputFuture.set("value");
     ExecutionException expected =
         assertThrows(ExecutionException.class, () -> getDone(outputFuture));
-    assertThat(expected.getCause()).isEqualTo(error);
+    assertThat(expected).hasCauseThat().isEqualTo(error);
   }
 
   @J2ktIncompatible
@@ -1841,7 +1841,7 @@ public class FuturesTest extends TestCase {
     assertFalse(future2.isDone());
 
     ExecutionException expected = assertThrows(ExecutionException.class, () -> getDone(compound));
-    assertThat(expected.getCause()).isEqualTo(exception);
+    assertThat(expected).hasCauseThat().isEqualTo(exception);
   }
 
   public void testAllAsList_singleFailure() throws Exception {
@@ -1850,7 +1850,7 @@ public class FuturesTest extends TestCase {
     ListenableFuture<List<String>> compound = allAsList(ImmutableList.of(future));
 
     ExecutionException expected = assertThrows(ExecutionException.class, () -> getDone(compound));
-    assertThat(expected.getCause()).isEqualTo(exception);
+    assertThat(expected).hasCauseThat().isEqualTo(exception);
   }
 
   public void testAllAsList_immediateFailure() throws Exception {
@@ -1860,7 +1860,7 @@ public class FuturesTest extends TestCase {
     ListenableFuture<List<String>> compound = allAsList(ImmutableList.of(future1, future2));
 
     ExecutionException expected = assertThrows(ExecutionException.class, () -> getDone(compound));
-    assertThat(expected.getCause()).isEqualTo(exception);
+    assertThat(expected).hasCauseThat().isEqualTo(exception);
   }
 
   public void testAllAsList_error() throws Exception {
@@ -1871,7 +1871,7 @@ public class FuturesTest extends TestCase {
 
     future1.setException(error);
     ExecutionException expected = assertThrows(ExecutionException.class, () -> getDone(compound));
-    assertThat(expected.getCause()).isEqualTo(error);
+    assertThat(expected).hasCauseThat().isEqualTo(error);
   }
 
   public void testAllAsList_cancelled() throws Exception {
@@ -2233,7 +2233,7 @@ public class FuturesTest extends TestCase {
 
     ExecutionException expected =
         assertThrows(ExecutionException.class, () -> getDone(futureResult));
-    assertThat(expected.getCause()).isEqualTo(thrown);
+    assertThat(expected).hasCauseThat().isEqualTo(thrown);
   }
 
   @J2ktIncompatible
@@ -2344,7 +2344,7 @@ public class FuturesTest extends TestCase {
 
     ExecutionException expected =
         assertThrows(ExecutionException.class, () -> getDone(futureResult));
-    assertThat(expected.getCause()).isEqualTo(thrown);
+    assertThat(expected).hasCauseThat().isEqualTo(thrown);
   }
 
   @J2ktIncompatible
@@ -2436,7 +2436,7 @@ public class FuturesTest extends TestCase {
     futureBoolean.set(booleanPartial);
     ExecutionException expected =
         assertThrows(ExecutionException.class, () -> getDone(futureResult));
-    assertThat(expected.getCause()).isEqualTo(partialResultException);
+    assertThat(expected).hasCauseThat().isEqualTo(partialResultException);
   }
 
   @J2ktIncompatible
@@ -3134,7 +3134,7 @@ public class FuturesTest extends TestCase {
     assertFalse(wrapper.isDone());
     input.setException(failure);
     ExecutionException expected = assertThrows(ExecutionException.class, () -> getDone(wrapper));
-    assertThat(expected.getCause()).isEqualTo(failure);
+    assertThat(expected).hasCauseThat().isEqualTo(failure);
   }
 
   public void testNonCancellationPropagating_delegateCancelled() throws Exception {

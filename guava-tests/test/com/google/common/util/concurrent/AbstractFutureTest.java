@@ -1110,7 +1110,7 @@ public class AbstractFutureTest extends TestCase {
     normalFuture.setFuture(new FailFuture(exception));
     assertTrue(normalFuture.isDone());
     ExecutionException e = assertThrows(ExecutionException.class, normalFuture::get);
-    assertThat(e.getCause()).isEqualTo(exception);
+    assertThat(e).hasCauseThat().isEqualTo(exception);
   }
 
   private static void awaitUnchecked(CyclicBarrier barrier) {
