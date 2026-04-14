@@ -145,8 +145,8 @@ public class ArbitraryInstancesTest extends TestCase {
   public void testGet_primitives() {
     assertThat(ArbitraryInstances.get(void.class)).isNull();
     assertThat(ArbitraryInstances.get(Void.class)).isNull();
-    assertEquals(Boolean.FALSE, ArbitraryInstances.get(boolean.class));
-    assertEquals(Boolean.FALSE, ArbitraryInstances.get(Boolean.class));
+    assertThat(ArbitraryInstances.get(boolean.class)).isFalse();
+    assertThat(ArbitraryInstances.get(Boolean.class)).isFalse();
     assertEquals(Character.valueOf('\0'), ArbitraryInstances.get(char.class));
     assertEquals(Character.valueOf('\0'), ArbitraryInstances.get(Character.class));
     assertEquals(Byte.valueOf((byte) 0), ArbitraryInstances.get(byte.class));

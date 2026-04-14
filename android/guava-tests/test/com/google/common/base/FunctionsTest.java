@@ -288,10 +288,10 @@ public class FunctionsTest extends TestCase {
     //     assertEquals(c1, c2);
 
     // But for now, settle for this:
-    assertEquals(c1.hashCode(), c2.hashCode());
+    assertThat(c1.hashCode()).isEqualTo(c2.hashCode());
 
-    assertEquals(c1.apply(1.0f), c2.apply(1.0f));
-    assertEquals(c1.apply(5.0f), c2.apply(5.0f));
+    assertThat(c1.apply(1.0f)).isEqualTo(c2.apply(1.0f));
+    assertThat(c1.apply(5.0f)).isEqualTo(c2.apply(5.0f));
   }
 
   public void testComposeOfPredicateAndFunctionIsAssociative() {

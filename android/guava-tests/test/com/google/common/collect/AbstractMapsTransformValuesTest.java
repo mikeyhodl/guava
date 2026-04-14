@@ -117,23 +117,14 @@ abstract class AbstractMapsTransformValuesTest extends MapInterfaceTest<String, 
     underlying.put("a", null);
     underlying.put("b", "");
 
-    Map<String, Boolean> map =
-        transformValues(
-            underlying,
-            new Function<@Nullable String, Boolean>() {
-              @Override
-              public Boolean apply(@Nullable String from) {
-                return from == null;
-              }
-            });
-    Map<String, Boolean> expected = ImmutableMap.of("a", true, "b", false);
-    assertMapsEqual(expected, map);
-    assertEquals(expected.get("a"), map.get("a"));
-    assertEquals(expected.containsKey("a"), map.containsKey("a"));
-    assertEquals(expected.get("b"), map.get("b"));
-    assertEquals(expected.containsKey("b"), map.containsKey("b"));
-    assertEquals(expected.get("c"), map.get("c"));
-    assertEquals(expected.containsKey("c"), map.containsKey("c"));
+    Map<String, Boolean> map = transformValues(underlying, from -> from == null);
+    assertMapsEqual(ImmutableMap.of("a", true, "b", false), map);
+    assertThat(map.get("a")).isEqualTo(true);
+    assertThat(map.containsKey("a")).isEqualTo(true);
+    assertThat(map.get("b")).isEqualTo(false);
+    assertThat(map.containsKey("b")).isEqualTo(true);
+    assertThat(map.get("c")).isNull();
+    assertThat(map.containsKey("c")).isEqualTo(false);
   }
 
   public void testTransformReflectsUnderlyingMap() {
