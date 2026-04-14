@@ -437,11 +437,11 @@ abstract class AbstractAbstractFutureTest extends TestCase {
     assertThat(future.isCancelled()).isFalse();
 
     ExecutionException e1 = assertThrows(ExecutionException.class, () -> getDone(future));
-    assertThat(e1).hasCauseThat().isSameInstanceAs(expectedException);
+    assertThat(e1).hasCauseThat().isEqualTo(expectedException);
 
     ExecutionException e2 =
         assertThrows(ExecutionException.class, () -> getDoneFromTimeoutOverload(future));
-    assertThat(e2).hasCauseThat().isSameInstanceAs(expectedException);
+    assertThat(e2).hasCauseThat().isEqualTo(expectedException);
   }
 
   private static void assertCancelled(

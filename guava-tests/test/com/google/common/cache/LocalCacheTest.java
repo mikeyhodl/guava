@@ -259,7 +259,7 @@ public class LocalCacheTest extends TestCase {
   }
 
   private void checkLogged(Throwable t) {
-    assertThat(popLoggedThrowable()).isSameInstanceAs(t);
+    assertThat(popLoggedThrowable()).isEqualTo(t);
   }
 
   /*
