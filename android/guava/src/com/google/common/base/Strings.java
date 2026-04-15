@@ -239,10 +239,8 @@ public final class Strings {
    *
    * <p><b>Note:</b> For most string-formatting needs, use {@link String#format String.format},
    * {@link java.io.PrintWriter#format PrintWriter.format}, and related methods. These support the
-   * full range of <a
-   * href="https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/util/Formatter.html#syntax">format
-   * specifiers</a>, and alert you to usage errors by throwing {@link
-   * java.util.IllegalFormatException}.
+   * full range of {@linkplain java.util.Formatter##syntax format specifiers}, and alert you to
+   * usage errors by throwing {@link java.util.IllegalFormatException}.
    *
    * <p>In certain cases, such as outputting debugging information or constructing a message to be
    * used for another unchecked exception, an exception during string formatting would serve little
