@@ -20,6 +20,7 @@ import static com.google.common.cache.TestingCacheLoaders.errorLoader;
 import static com.google.common.cache.TestingCacheLoaders.exceptionLoader;
 import static com.google.common.cache.TestingCacheLoaders.identityLoader;
 import static com.google.common.cache.TestingRemovalListeners.countingRemovalListener;
+import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.common.util.concurrent.Futures.immediateFailedFuture;
@@ -34,7 +35,6 @@ import com.google.common.cache.TestingCacheLoaders.CountingLoader;
 import com.google.common.cache.TestingCacheLoaders.IdentityLoader;
 import com.google.common.cache.TestingRemovalListeners.CountingRemovalListener;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.google.common.testing.FakeTicker;
 import com.google.common.testing.TestLogHandler;
 import com.google.common.util.concurrent.Callables;
@@ -2045,7 +2045,7 @@ public class CacheLoadingTest extends TestCase {
     gettersStartedSignal.countDown();
     gettersComplete.await();
 
-    List<Object> resultList = Lists.newArrayListWithExpectedSize(nThreads);
+    List<Object> resultList = newArrayListWithExpectedSize(nThreads);
     for (int i = 0; i < nThreads; i++) {
       resultList.add(result.get(i));
     }

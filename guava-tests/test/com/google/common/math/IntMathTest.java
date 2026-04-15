@@ -16,6 +16,7 @@
 
 package com.google.common.math;
 
+import static com.google.common.math.IntMath.sqrt;
 import static com.google.common.math.MathTesting.ALL_INTEGER_CANDIDATES;
 import static com.google.common.math.MathTesting.ALL_ROUNDING_MODES;
 import static com.google.common.math.MathTesting.ALL_SAFE_ROUNDING_MODES;
@@ -149,8 +150,7 @@ public class IntMathTest extends TestCase {
   @GwtIncompatible // sqrt
   public void testPowersSqrtMaxInt() {
     assertEquals(
-        /* expected= */ IntMath.sqrt(Integer.MAX_VALUE, FLOOR),
-        /* actual= */ IntMath.FLOOR_SQRT_MAX_INT);
+        /* expected= */ sqrt(Integer.MAX_VALUE, FLOOR), /* actual= */ IntMath.FLOOR_SQRT_MAX_INT);
   }
 
   @AndroidIncompatible // presumably slow
@@ -267,7 +267,7 @@ public class IntMathTest extends TestCase {
   @GwtIncompatible // sqrt
   public void testSqrtZeroAlwaysZero() {
     for (RoundingMode mode : ALL_ROUNDING_MODES) {
-      assertEquals(0, IntMath.sqrt(0, mode));
+      assertEquals(0, sqrt(0, mode));
     }
   }
 
@@ -275,7 +275,7 @@ public class IntMathTest extends TestCase {
   public void testSqrtNegativeAlwaysThrows() {
     for (int x : NEGATIVE_INTEGER_CANDIDATES) {
       for (RoundingMode mode : RoundingMode.values()) {
-        assertThrows(IllegalArgumentException.class, () -> IntMath.sqrt(x, mode));
+        assertThrows(IllegalArgumentException.class, () -> sqrt(x, mode));
       }
     }
   }
@@ -288,7 +288,7 @@ public class IntMathTest extends TestCase {
         // The BigInteger implementation is tested separately, use it as the reference.
         // Promote the int value (rather than using intValue() on the expected value) to avoid
         // any risk of truncation which could lead to a false positive.
-        assertEquals(BigIntegerMath.sqrt(valueOf(x), mode), valueOf(IntMath.sqrt(x, mode)));
+        assertEquals(BigIntegerMath.sqrt(valueOf(x), mode), valueOf(sqrt(x, mode)));
       }
     }
   }
@@ -297,11 +297,11 @@ public class IntMathTest extends TestCase {
   @GwtIncompatible // sqrt
   public void testSqrtExactMatchesFloorOrThrows() {
     for (int x : POSITIVE_INTEGER_CANDIDATES) {
-      int floor = IntMath.sqrt(x, FLOOR);
+      int floor = sqrt(x, FLOOR);
       // We only expect an exception if x was not a perfect square.
       boolean isPerfectSquare = floor * floor == x;
       try {
-        assertEquals(floor, IntMath.sqrt(x, UNNECESSARY));
+        assertEquals(floor, sqrt(x, UNNECESSARY));
         assertTrue(isPerfectSquare);
       } catch (ArithmeticException e) {
         assertFalse(isPerfectSquare);

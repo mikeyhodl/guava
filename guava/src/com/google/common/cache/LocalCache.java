@@ -18,6 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.cache.CacheBuilder.NULL_TICKER;
 import static com.google.common.cache.CacheBuilder.UNSET_INT;
+import static com.google.common.collect.Maps.immutableEntry;
 import static com.google.common.util.concurrent.Futures.immediateFailedFuture;
 import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static com.google.common.util.concurrent.Futures.transform;
@@ -43,7 +44,6 @@ import com.google.common.cache.CacheLoader.UnsupportedLoadingOperationException;
 import com.google.common.collect.AbstractSequentialIterator;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Maps;
 import com.google.common.primitives.Ints;
 import com.google.common.util.concurrent.ExecutionError;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -4627,7 +4627,7 @@ final class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<
     @Override
     public boolean removeIf(Predicate<? super Entry<K, V>> filter) {
       checkNotNull(filter);
-      return LocalCache.this.removeIf((k, v) -> filter.test(Maps.immutableEntry(k, v)));
+      return LocalCache.this.removeIf((k, v) -> filter.test(immutableEntry(k, v)));
     }
 
     @Override

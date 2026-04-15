@@ -17,6 +17,7 @@ package com.google.common.hash;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.Byte.toUnsignedInt;
+import static java.lang.Math.log;
 import static java.lang.Math.max;
 
 import com.google.common.annotations.Beta;
@@ -121,7 +122,7 @@ public final class BloomFilter<T extends @Nullable Object> implements Predicate<
   private final Strategy strategy;
 
   /** Natural logarithm of 2, used to optimize calculations in Bloom filter sizing. */
-  private static final double LOG_TWO = Math.log(2);
+  private static final double LOG_TWO = log(2);
 
   /** Square of the natural logarithm of 2, reused to optimize the bit size calculation. */
   private static final double SQUARED_LOG_TWO = LOG_TWO * LOG_TWO;
@@ -551,7 +552,7 @@ public final class BloomFilter<T extends @Nullable Object> implements Predicate<
   @VisibleForTesting
   static int optimalNumOfHashFunctions(double p) {
     // -log(p) / log(2), ensuring the result is rounded to avoid truncation.
-    return max(1, (int) Math.round(-Math.log(p) / LOG_TWO));
+    return max(1, (int) Math.round(-log(p) / LOG_TWO));
   }
 
   /**
@@ -569,7 +570,7 @@ public final class BloomFilter<T extends @Nullable Object> implements Predicate<
     if (p == 0) {
       p = Double.MIN_VALUE;
     }
-    return (long) (-n * Math.log(p) / SQUARED_LOG_TWO);
+    return (long) (-n * log(p) / SQUARED_LOG_TWO);
   }
 
     private Object writeReplace() {

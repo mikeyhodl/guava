@@ -50,7 +50,6 @@ import com.google.common.testing.NullPointerTester;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.util.Arrays;
 import junit.framework.TestCase;
 import org.jspecify.annotations.NullUnmarked;
 
@@ -482,7 +481,7 @@ public class DoubleMathTest extends TestCase {
 
   @GwtIncompatible // DoubleMath.isMathematicalInteger
   public void testIsMathematicalIntegerNotFinite() {
-    for (double d : Arrays.asList(Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NaN)) {
+    for (double d : asList(Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NaN)) {
       assertFalse(DoubleMath.isMathematicalInteger(d));
     }
   }

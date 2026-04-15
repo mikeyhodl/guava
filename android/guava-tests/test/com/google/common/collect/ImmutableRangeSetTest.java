@@ -14,6 +14,7 @@
 
 package com.google.common.collect;
 
+import static com.google.common.testing.SerializableTester.reserializeAndAssert;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 
@@ -23,7 +24,6 @@ import com.google.common.collect.testing.SampleElements;
 import com.google.common.collect.testing.TestSetGenerator;
 import com.google.common.collect.testing.features.CollectionFeature;
 import com.google.common.collect.testing.features.CollectionSize;
-import com.google.common.testing.SerializableTester;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Set;
@@ -429,8 +429,8 @@ public class ImmutableRangeSetTest extends AbstractRangeSetTest {
         assertEquals(mutable.contains(i), built.contains(i));
       }
 
-      SerializableTester.reserializeAndAssert(built);
-      SerializableTester.reserializeAndAssert(built.asRanges());
+      reserializeAndAssert(built);
+      reserializeAndAssert(built.asRanges());
     }
   }
 
@@ -491,7 +491,7 @@ public class ImmutableRangeSetTest extends AbstractRangeSetTest {
     assertEquals(expectedSet, asSet);
     assertThat(asSet).containsExactlyElementsIn(expectedSet).inOrder();
     assertTrue(asSet.containsAll(expectedSet));
-    SerializableTester.reserializeAndAssert(asSet);
+    reserializeAndAssert(asSet);
   }
 
   public void testAsSetHeadSet() {

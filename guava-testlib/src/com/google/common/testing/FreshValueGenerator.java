@@ -19,6 +19,7 @@ package com.google.common.testing;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.throwIfUnchecked;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 
 import com.google.common.annotations.GwtIncompatible;
@@ -98,7 +99,6 @@ import java.nio.LongBuffer;
 import java.nio.ShortBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Currency;
@@ -328,7 +328,7 @@ class FreshValueGenerator {
   }
 
   private <T> T pickInstance(T[] instances, T defaultValue) {
-    return pickInstance(Arrays.asList(instances), defaultValue);
+    return pickInstance(asList(instances), defaultValue);
   }
 
   private <T> T pickInstance(Collection<T> instances, T defaultValue) {

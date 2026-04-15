@@ -21,6 +21,8 @@ import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.base.Predicates.in;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.not;
+import static com.google.common.collect.Maps.immutableEntry;
+import static com.google.common.collect.Multimaps.filterKeys;
 import static com.google.common.util.concurrent.Internal.toNanosSaturated;
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 import static com.google.common.util.concurrent.Service.State.FAILED;
@@ -46,7 +48,6 @@ import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.MultimapBuilder;
-import com.google.common.collect.Multimaps;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.SetMultimap;
@@ -597,7 +598,7 @@ public final class ServiceManager implements ServiceManagerBridge {
           throw new TimeoutException(
               "Timeout waiting for the services to become healthy. The "
                   + "following services have not started: "
-                  + Multimaps.filterKeys(servicesByState, in(ImmutableSet.of(NEW, STARTING))));
+                  + filterKeys(servicesByState, in(ImmutableSet.of(NEW, STARTING))));
         }
         checkHealthy();
       } finally {
@@ -617,7 +618,7 @@ public final class ServiceManager implements ServiceManagerBridge {
           throw new TimeoutException(
               "Timeout waiting for the services to stop. The following "
                   + "services have not stopped: "
-                  + Multimaps.filterKeys(servicesByState, not(in(EnumSet.of(TERMINATED, FAILED)))));
+                  + filterKeys(servicesByState, not(in(EnumSet.of(TERMINATED, FAILED)))));
         }
       } finally {
         monitor.leave();
@@ -649,7 +650,7 @@ public final class ServiceManager implements ServiceManagerBridge {
           Service service = entry.getKey();
           Stopwatch stopwatch = entry.getValue();
           if (!stopwatch.isRunning() && !(service instanceof NoOpService)) {
-            loadTimes.add(Maps.immutableEntry(service, stopwatch.elapsed(MILLISECONDS)));
+            loadTimes.add(immutableEntry(service, stopwatch.elapsed(MILLISECONDS)));
           }
         }
       } finally {
@@ -763,7 +764,7 @@ public final class ServiceManager implements ServiceManagerBridge {
         IllegalStateException exception =
             new IllegalStateException(
                 "Expected to be healthy after starting. The following services are not running: "
-                    + Multimaps.filterKeys(servicesByState, not(equalTo(RUNNING))));
+                    + filterKeys(servicesByState, not(equalTo(RUNNING))));
         for (Service service : servicesByState.get(State.FAILED)) {
           exception.addSuppressed(new FailedService(service));
         }

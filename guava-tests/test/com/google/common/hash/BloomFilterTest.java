@@ -21,6 +21,8 @@ import static com.google.common.hash.Funnels.byteArrayFunnel;
 import static com.google.common.hash.Funnels.integerFunnel;
 import static com.google.common.hash.Funnels.stringFunnel;
 import static com.google.common.hash.Funnels.unencodedCharsFunnel;
+import static com.google.common.testing.SerializableTester.reserialize;
+import static com.google.common.testing.SerializableTester.reserializeAndAssert;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -34,7 +36,6 @@ import com.google.common.math.LongMath;
 import com.google.common.primitives.Ints;
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.NullPointerTester;
-import com.google.common.testing.SerializableTester;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -428,7 +429,7 @@ public class BloomFilterTest extends TestCase {
   }
 
   public void testSerializationWithCustomFunnel() {
-    SerializableTester.reserializeAndAssert(BloomFilter.create(new CustomFunnel(), 100));
+    reserializeAndAssert(BloomFilter.create(new CustomFunnel(), 100));
   }
 
   private static final class CustomFunnel implements Funnel<Long> {
@@ -505,13 +506,13 @@ public class BloomFilterTest extends TestCase {
       bf.put(Ints.toByteArray(i));
     }
 
-    BloomFilter<byte[]> copy = SerializableTester.reserialize(bf);
+    BloomFilter<byte[]> copy = reserialize(bf);
     for (int i = 0; i < 10; i++) {
       assertTrue(copy.mightContain(Ints.toByteArray(i)));
     }
     assertThat(copy.expectedFpp()).isEqualTo(bf.expectedFpp());
 
-    SerializableTester.reserializeAndAssert(bf);
+    reserializeAndAssert(bf);
   }
 
   public void testCustomSerialization() throws Exception {

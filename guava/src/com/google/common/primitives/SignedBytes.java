@@ -17,9 +17,9 @@ package com.google.common.primitives;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkPositionIndexes;
+import static java.util.Arrays.sort;
 
 import com.google.common.annotations.GwtCompatible;
-import java.util.Arrays;
 import java.util.Comparator;
 
 /**
@@ -211,7 +211,7 @@ public final class SignedBytes {
   public static void sortDescending(byte[] array, int fromIndex, int toIndex) {
     checkNotNull(array);
     checkPositionIndexes(fromIndex, toIndex, array.length);
-    Arrays.sort(array, fromIndex, toIndex);
+    sort(array, fromIndex, toIndex);
     Bytes.reverse(array, fromIndex, toIndex);
   }
 }

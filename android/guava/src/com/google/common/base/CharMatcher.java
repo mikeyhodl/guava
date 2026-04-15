@@ -17,6 +17,7 @@ package com.google.common.base;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkPositionIndex;
+import static java.util.Arrays.sort;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
@@ -1738,7 +1739,7 @@ public abstract class CharMatcher implements Predicate<Character> {
 
     AnyOf(CharSequence chars) {
       this.chars = chars.toString().toCharArray();
-      Arrays.sort(this.chars);
+      sort(this.chars);
     }
 
     @Override

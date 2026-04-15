@@ -17,6 +17,7 @@
 package com.google.common.collect;
 
 import static com.google.common.collect.Maps.immutableEntry;
+import static com.google.common.testing.SerializableTester.reserializeAndAssert;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 
@@ -30,7 +31,6 @@ import com.google.common.collect.testing.features.MapFeature;
 import com.google.common.collect.testing.google.BiMapTestSuiteBuilder;
 import com.google.common.collect.testing.google.TestBiMapGenerator;
 import com.google.common.testing.NullPointerTester;
-import com.google.common.testing.SerializableTester;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -229,7 +229,7 @@ public class EnumHashBiMapTest extends TestCase {
   @GwtIncompatible
   @J2ktIncompatible
     public void testSerializable() {
-    SerializableTester.reserializeAndAssert(EnumHashBiMap.create(Currency.class));
+    reserializeAndAssert(EnumHashBiMap.create(Currency.class));
   }
 
   @J2ktIncompatible

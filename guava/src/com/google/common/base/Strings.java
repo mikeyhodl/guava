@@ -17,6 +17,7 @@ package com.google.common.base;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.Math.min;
+import static java.lang.System.arraycopy;
 import static java.util.logging.Level.WARNING;
 
 import com.google.common.annotations.GwtCompatible;
@@ -167,9 +168,9 @@ public final class Strings {
     string.getChars(0, len, array, 0);
     int n;
     for (n = len; n < size - n; n <<= 1) {
-      System.arraycopy(array, 0, array, n, n);
+      arraycopy(array, 0, array, n, n);
     }
-    System.arraycopy(array, 0, array, n, size - n);
+    arraycopy(array, 0, array, n, size - n);
     return new String(array);
   }
 

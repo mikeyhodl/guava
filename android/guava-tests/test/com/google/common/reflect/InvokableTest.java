@@ -17,6 +17,7 @@
 package com.google.common.reflect;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.util.Collections.nCopies;
 import static org.junit.Assert.assertThrows;
 
 import com.google.common.collect.ImmutableList;
@@ -34,7 +35,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.TypeVariable;
-import java.util.Collections;
 import junit.framework.TestCase;
 import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
@@ -757,7 +757,7 @@ public class InvokableTest extends TestCase {
     @SuppressWarnings("ThrowsUncheckedException")
     Iterable<String> prepend(Iterable<String> tail)
         throws IllegalArgumentException, NullPointerException {
-      return Iterables.concat(Collections.nCopies(times, prefix), tail);
+      return Iterables.concat(nCopies(times, prefix), tail);
     }
 
     static Invokable<?, Prepender> constructor(Class<?>... parameterTypes) throws Exception {

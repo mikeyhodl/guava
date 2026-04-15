@@ -24,7 +24,9 @@ import static com.google.common.base.CharMatcher.is;
 import static com.google.common.base.CharMatcher.isNot;
 import static com.google.common.base.CharMatcher.noneOf;
 import static com.google.common.base.CharMatcher.whitespace;
+import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.truth.Truth.assertThat;
+import static java.util.Arrays.sort;
 import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
@@ -32,7 +34,6 @@ import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.collect.Sets;
 import com.google.common.testing.NullPointerTester;
-import java.util.Arrays;
 import java.util.BitSet;
 import java.util.HashSet;
 import java.util.Random;
@@ -127,7 +128,7 @@ public class CharMatcherTest extends TestCase {
     doTestSetBits(anyOf("CharMatcher"));
     doTestSetBits(noneOf("CharMatcher"));
     doTestSetBits(inRange('n', 'q'));
-    doTestSetBits(forPredicate(Predicates.equalTo('c')));
+    doTestSetBits(forPredicate(equalTo('c')));
     doTestSetBits(CharMatcher.ascii());
     doTestSetBits(CharMatcher.digit());
     doTestSetBits(CharMatcher.invisible());
@@ -155,7 +156,7 @@ public class CharMatcherTest extends TestCase {
     doTestEmpty(anyOf("CharMatcher"));
     doTestEmpty(noneOf("CharMatcher"));
     doTestEmpty(inRange('n', 'q'));
-    doTestEmpty(forPredicate(Predicates.equalTo('c')));
+    doTestEmpty(forPredicate(equalTo('c')));
   }
 
   @J2ktIncompatible
@@ -171,7 +172,7 @@ public class CharMatcherTest extends TestCase {
     doTestNull(anyOf("CharMatcher"));
     doTestNull(noneOf("CharMatcher"));
     doTestNull(inRange('n', 'q'));
-    doTestNull(forPredicate(Predicates.equalTo('c')));
+    doTestNull(forPredicate(equalTo('c')));
   }
 
   private void doTestEmpty(CharMatcher matcher) throws Exception {
@@ -213,7 +214,7 @@ public class CharMatcherTest extends TestCase {
     doTestNoMatches(anyOf("CharMatcher"), "zxqy");
     doTestNoMatches(noneOf("CharMatcher"), "ChMa");
     doTestNoMatches(inRange('p', 'x'), "mom");
-    doTestNoMatches(forPredicate(Predicates.equalTo('c')), "abe");
+    doTestNoMatches(forPredicate(equalTo('c')), "abe");
     doTestNoMatches(inRange('A', 'Z').and(inRange('F', 'K').negate()), "F1a");
     doTestNoMatches(CharMatcher.digit(), "\tAz()");
     doTestNoMatches(CharMatcher.javaDigit(), "\tAz()");
@@ -241,7 +242,7 @@ public class CharMatcherTest extends TestCase {
     doTestAllMatches(anyOf("xy"), "xyyx");
     doTestAllMatches(anyOf("CharMatcher"), "ChMa");
     doTestAllMatches(inRange('m', 'p'), "mom");
-    doTestAllMatches(forPredicate(Predicates.equalTo('c')), "ccc");
+    doTestAllMatches(forPredicate(equalTo('c')), "ccc");
     doTestAllMatches(CharMatcher.digit(), "0123456789\u0ED0\u1B59");
     doTestAllMatches(CharMatcher.javaDigit(), "0123456789");
     doTestAllMatches(CharMatcher.digit().and(CharMatcher.ascii()), "0123456789");
@@ -750,7 +751,7 @@ public class CharMatcherTest extends TestCase {
     for (char c : chars) {
       retValue[i++] = c;
     }
-    Arrays.sort(retValue);
+    sort(retValue);
     return retValue;
   }
 

@@ -16,11 +16,12 @@ package com.google.common.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.unmodifiableMap;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -404,7 +405,7 @@ public final class Splitter {
       result.add(iterator.next());
     }
 
-    return Collections.unmodifiableList(result);
+    return unmodifiableList(result);
   }
 
   /**
@@ -510,7 +511,7 @@ public final class Splitter {
 
         checkArgument(!entryFields.hasNext(), INVALID_ENTRY_MESSAGE, entry);
       }
-      return Collections.unmodifiableMap(map);
+      return unmodifiableMap(map);
     }
   }
 

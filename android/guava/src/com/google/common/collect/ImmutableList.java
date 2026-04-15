@@ -24,6 +24,7 @@ import static com.google.common.base.Preconditions.checkPositionIndexes;
 import static com.google.common.collect.CollectPreconditions.checkNonnegative;
 import static com.google.common.collect.ObjectArrays.checkElementsNotNull;
 import static com.google.common.collect.RegularImmutableList.EMPTY;
+import static java.lang.System.arraycopy;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
@@ -217,7 +218,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
     array[9] = e10;
     array[10] = e11;
     array[11] = e12;
-    System.arraycopy(others, 0, array, 12, others.length);
+    arraycopy(others, 0, array, 12, others.length);
     return construct(array);
   }
 

@@ -16,6 +16,8 @@
 
 package com.google.common.math;
 
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.transform;
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
 import static java.math.RoundingMode.CEILING;
@@ -85,7 +87,7 @@ public final class MathTesting {
     NEGATIVE_INTEGER_CANDIDATES =
         ImmutableList.copyOf(
             Iterables.concat(
-                Iterables.transform(POSITIVE_INTEGER_CANDIDATES, x -> -x),
+                transform(POSITIVE_INTEGER_CANDIDATES, x -> -x),
                 ImmutableList.of(Integer.MIN_VALUE)));
     NONZERO_INTEGER_CANDIDATES =
         ImmutableList.copyOf(
@@ -109,7 +111,7 @@ public final class MathTesting {
   static {
     ImmutableSet.Builder<Long> longValues = ImmutableSet.builder();
     // First add all the integer candidate values.
-    longValues.addAll(Iterables.transform(POSITIVE_INTEGER_CANDIDATES, Long::valueOf));
+    longValues.addAll(transform(POSITIVE_INTEGER_CANDIDATES, Long::valueOf));
     // Add boundary values manually to avoid over/under flow (this covers 2^N for 31 and 63).
     longValues.add(Integer.MAX_VALUE + 1L, Long.MAX_VALUE - 1L, Long.MAX_VALUE);
 
@@ -122,8 +124,7 @@ public final class MathTesting {
     POSITIVE_LONG_CANDIDATES = longValues.build();
     NEGATIVE_LONG_CANDIDATES =
         Iterables.concat(
-            Iterables.transform(POSITIVE_LONG_CANDIDATES, x -> -x),
-            ImmutableList.of(Long.MIN_VALUE));
+            transform(POSITIVE_LONG_CANDIDATES, x -> -x), ImmutableList.of(Long.MIN_VALUE));
     NONZERO_LONG_CANDIDATES = Iterables.concat(POSITIVE_LONG_CANDIDATES, NEGATIVE_LONG_CANDIDATES);
     ALL_LONG_CANDIDATES = Iterables.concat(NONZERO_LONG_CANDIDATES, ImmutableList.of(0L));
   }
@@ -144,7 +145,7 @@ public final class MathTesting {
   static {
     ImmutableSet.Builder<BigInteger> bigValues = ImmutableSet.builder();
     // First add all the long candidate values.
-    bigValues.addAll(Iterables.transform(POSITIVE_LONG_CANDIDATES, BigInteger::valueOf));
+    bigValues.addAll(transform(POSITIVE_LONG_CANDIDATES, BigInteger::valueOf));
     // Add boundary values manually to avoid over/under flow.
     bigValues.add(BigInteger.valueOf(Long.MAX_VALUE).add(ONE));
     // Now add values near 2^N for lots of values of N.
@@ -174,8 +175,7 @@ public final class MathTesting {
     // down
     bigValues.add(new BigInteger("218838949120258359057546634"));
     POSITIVE_BIGINTEGER_CANDIDATES = bigValues.build();
-    NEGATIVE_BIGINTEGER_CANDIDATES =
-        Iterables.transform(POSITIVE_BIGINTEGER_CANDIDATES, BigInteger::negate);
+    NEGATIVE_BIGINTEGER_CANDIDATES = transform(POSITIVE_BIGINTEGER_CANDIDATES, BigInteger::negate);
     NONZERO_BIGINTEGER_CANDIDATES =
         Iterables.concat(POSITIVE_BIGINTEGER_CANDIDATES, NEGATIVE_BIGINTEGER_CANDIDATES);
     ALL_BIGINTEGER_CANDIDATES =
@@ -245,8 +245,7 @@ public final class MathTesting {
     FRACTIONAL_DOUBLE_CANDIDATES = fractionalBuilder.build();
     FINITE_DOUBLE_CANDIDATES =
         Iterables.concat(FRACTIONAL_DOUBLE_CANDIDATES, INTEGRAL_DOUBLE_CANDIDATES);
-    POSITIVE_FINITE_DOUBLE_CANDIDATES =
-        Iterables.filter(FINITE_DOUBLE_CANDIDATES, input -> input > 0.0);
+    POSITIVE_FINITE_DOUBLE_CANDIDATES = filter(FINITE_DOUBLE_CANDIDATES, input -> input > 0.0);
     DOUBLE_CANDIDATES_EXCEPT_NAN = Iterables.concat(FINITE_DOUBLE_CANDIDATES, INFINITIES);
     ALL_DOUBLE_CANDIDATES = Iterables.concat(DOUBLE_CANDIDATES_EXCEPT_NAN, asList(Double.NaN));
   }

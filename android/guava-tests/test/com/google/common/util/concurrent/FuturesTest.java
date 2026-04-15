@@ -18,7 +18,9 @@ package com.google.common.util.concurrent;
 
 import static com.google.common.base.Functions.identity;
 import static com.google.common.base.Throwables.propagateIfInstanceOf;
+import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.intersection;
 import static com.google.common.truth.Truth.assertThat;
@@ -64,7 +66,6 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 import com.google.common.testing.ClassSanityTester;
 import com.google.common.testing.GcFinalization;
 import com.google.common.testing.TestLogHandler;
@@ -192,8 +193,8 @@ public class FuturesTest extends TestCase {
     CancellationException expected =
         assertThrows(CancellationException.class, () -> CallerClass2.get(future));
     List<StackTraceElement> stackTrace = ImmutableList.copyOf(expected.getStackTrace());
-    assertFalse(Iterables.any(stackTrace, hasClassName(CallerClass1.class)));
-    assertTrue(Iterables.any(stackTrace, hasClassName(CallerClass2.class)));
+    assertFalse(any(stackTrace, hasClassName(CallerClass1.class)));
+    assertTrue(any(stackTrace, hasClassName(CallerClass2.class)));
 
     // See AbstractFutureCancellationCauseTest for how to set causes.
     assertThat(expected).hasCauseThat().isNull();
@@ -2639,7 +2640,7 @@ public class FuturesTest extends TestCase {
      * replaced with the name of each future from {@link #allFutures}.
      */
     String smartToString(ImmutableSet<ListenableFuture<String>> inputs) {
-      Iterable<String> inputNames = Iterables.transform(inputs, nameGetter);
+      Iterable<String> inputNames = transform(inputs, nameGetter);
       return Joiner.on(", ").join(inputNames);
     }
 

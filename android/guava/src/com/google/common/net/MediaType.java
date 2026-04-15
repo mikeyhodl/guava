@@ -20,6 +20,7 @@ import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.collect.Maps.transformValues;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.hash;
 
@@ -32,7 +33,6 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMultiset;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
@@ -843,7 +843,7 @@ public final class MediaType {
   }
 
   private Map<String, ImmutableMultiset<String>> parametersAsMap() {
-    return Maps.transformValues(parameters.asMap(), ImmutableMultiset::copyOf);
+    return transformValues(parameters.asMap(), ImmutableMultiset::copyOf);
   }
 
   /**

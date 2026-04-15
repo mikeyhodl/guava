@@ -17,6 +17,8 @@
 package com.google.common.collect;
 
 import static com.google.common.collect.Maps.immutableEntry;
+import static com.google.common.testing.SerializableTester.reserialize;
+import static com.google.common.testing.SerializableTester.reserializeAndAssert;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Collections.singletonMap;
 import static org.junit.Assert.assertThrows;
@@ -37,7 +39,6 @@ import com.google.common.collect.testing.google.SortedMapGenerators.ImmutableSor
 import com.google.common.collect.testing.google.SortedMapGenerators.ImmutableSortedMapKeyListGenerator;
 import com.google.common.collect.testing.google.SortedMapGenerators.ImmutableSortedMapValueListGenerator;
 import com.google.common.testing.NullPointerTester;
-import com.google.common.testing.SerializableTester;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -695,11 +696,9 @@ public class ImmutableSortedMapTest extends TestCase {
   @GwtIncompatible // SerializableTester
   public void testViewSerialization() {
     Map<String, Integer> map = ImmutableSortedMap.of("one", 1, "two", 2, "three", 3);
-    SerializableTester.reserializeAndAssert(map.entrySet());
-    SerializableTester.reserializeAndAssert(map.keySet());
-    assertEquals(
-        new ArrayList<>(map.values()),
-        new ArrayList<>(SerializableTester.reserialize(map.values())));
+    reserializeAndAssert(map.entrySet());
+    reserializeAndAssert(map.keySet());
+    assertEquals(new ArrayList<>(map.values()), new ArrayList<>(reserialize(map.values())));
   }
 
   public void testHeadMapInclusive() {

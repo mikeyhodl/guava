@@ -18,6 +18,8 @@ package com.google.common.util.concurrent;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.util.concurrent.Uninterruptibles.awaitUninterruptibly;
+import static java.util.Arrays.asList;
+import static java.util.Arrays.sort;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 import com.google.common.annotations.GwtIncompatible;
@@ -29,7 +31,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
@@ -222,12 +223,12 @@ public class GeneratedMonitorTest extends TestCase {
 
   /** Determines whether the given method can throw InterruptedException. */
   private static boolean isInterruptible(Method method) {
-    return Arrays.asList(method.getExceptionTypes()).contains(InterruptedException.class);
+    return asList(method.getExceptionTypes()).contains(InterruptedException.class);
   }
 
   /** Sorts the given methods primarily by name and secondarily by number of parameters. */
   private static void sortMethods(Method[] methods) {
-    Arrays.sort(
+    sort(
         methods,
         (m1, m2) -> {
           int nameComparison = m1.getName().compareTo(m2.getName());

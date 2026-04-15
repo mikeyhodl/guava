@@ -16,6 +16,9 @@
 
 package com.google.common.base;
 
+import static com.google.common.base.Predicates.equalTo;
+import static com.google.common.testing.SerializableTester.reserialize;
+import static com.google.common.testing.SerializableTester.reserializeAndAssert;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 
@@ -26,7 +29,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.testing.ClassSanityTester;
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.NullPointerTester;
-import com.google.common.testing.SerializableTester;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -144,8 +146,7 @@ public class FunctionsTest extends TestCase {
     assertEquals(3, function.apply("Three").intValue());
 
     new EqualsTester()
-        .addEqualityGroup(
-            function, Functions.forMap(map, 42), SerializableTester.reserialize(function))
+        .addEqualityGroup(function, Functions.forMap(map, 42), reserialize(function))
         .addEqualityGroup(Functions.forMap(map))
         .addEqualityGroup(Functions.forMap(map, null))
         .addEqualityGroup(Functions.forMap(map, 43))
@@ -183,7 +184,7 @@ public class FunctionsTest extends TestCase {
 
     // check basic sanity of equals and hashCode
     new EqualsTester()
-        .addEqualityGroup(function, SerializableTester.reserialize(function))
+        .addEqualityGroup(function, reserialize(function))
         .addEqualityGroup(Functions.forMap(map, 1))
         .testEquals();
   }
@@ -251,7 +252,7 @@ public class FunctionsTest extends TestCase {
         .addEqualityGroup(
             japaneseToSpanish,
             Functions.compose(integerToSpanish, japaneseToInteger),
-            SerializableTester.reserialize(japaneseToSpanish))
+            reserialize(japaneseToSpanish))
         .addEqualityGroup(japaneseToInteger)
         .addEqualityGroup(integerToSpanish)
         .addEqualityGroup(Functions.compose(japaneseToInteger, integerToSpanish))
@@ -296,7 +297,7 @@ public class FunctionsTest extends TestCase {
 
   public void testComposeOfPredicateAndFunctionIsAssociative() {
     Map<Float, String> m = ImmutableMap.of(4.0f, "A", 3.0f, "B", 2.0f, "C", 1.0f, "D");
-    Predicate<? super Integer> h = Predicates.equalTo(42);
+    Predicate<? super Integer> h = equalTo(42);
     Function<? super String, Integer> g = new HashCodeFunction();
     Function<Float, String> f = Functions.forMap(m, "F");
 
@@ -330,7 +331,7 @@ public class FunctionsTest extends TestCase {
   @J2ktIncompatible
   @GwtIncompatible // SerializableTester
   public void testForPredicateSerializable() {
-    checkCanReserialize(Functions.forPredicate(Predicates.equalTo(5)));
+    checkCanReserialize(Functions.forPredicate(equalTo(5)));
   }
 
   public void testConstant() {
@@ -426,7 +427,7 @@ public class FunctionsTest extends TestCase {
   @J2ktIncompatible
   @GwtIncompatible // SerializableTester
   private static <Y> void checkCanReserialize(Function<? super Integer, Y> f) {
-    Function<? super Integer, Y> g = SerializableTester.reserializeAndAssert(f);
+    Function<? super Integer, Y> g = reserializeAndAssert(f);
     for (int i = 1; i < 5; i++) {
       // convoluted way to check that the same result happens from each
       Y expected = null;
@@ -447,7 +448,7 @@ public class FunctionsTest extends TestCase {
   @J2ktIncompatible
   @GwtIncompatible // SerializableTester
   private static <Y> void checkCanReserializeSingleton(Function<? super String, Y> f) {
-    Function<? super String, Y> g = SerializableTester.reserializeAndAssert(f);
+    Function<? super String, Y> g = reserializeAndAssert(f);
     assertThat(g).isSameInstanceAs(f);
     for (Integer i = 1; i < 5; i++) {
       assertEquals(f.apply(i.toString()), g.apply(i.toString()));

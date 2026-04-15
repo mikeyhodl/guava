@@ -16,6 +16,7 @@ package com.google.common.eventbus;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Arrays.asList;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.MoreObjects;
@@ -34,7 +35,6 @@ import com.google.common.reflect.TypeToken;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.google.j2objc.annotations.Weak;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -249,7 +249,7 @@ final class SubscriberRegistry {
 
     MethodIdentifier(Method method) {
       this.name = method.getName();
-      this.parameterTypes = Arrays.asList(method.getParameterTypes());
+      this.parameterTypes = asList(method.getParameterTypes());
     }
 
     @Override

@@ -17,6 +17,8 @@
 package com.google.common.hash;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.lang.Math.log;
+import static java.lang.System.arraycopy;
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static java.nio.charset.StandardCharsets.US_ASCII;
 import static java.nio.charset.StandardCharsets.UTF_16;
@@ -73,7 +75,7 @@ final class HashTestUtils {
       key[i] = (byte) i;
       int seed = 256 - i;
       byte[] hash = hashFunction.hash(Arrays.copyOf(key, i), seed);
-      System.arraycopy(hash, 0, hashes, i * hashBytes, hash.length);
+      arraycopy(hash, 0, hashes, i * hashBytes, hash.length);
     }
 
     // Then hash the result array
@@ -295,7 +297,7 @@ final class HashTestUtils {
       int diff = 0x0; // bitset for output bits with different values
       int count = 0;
       // originally was 2 * Math.log(...), making it try more times to avoid flakiness issues
-      int maxCount = (int) (4 * Math.log(2 * keyBits * hashBits) + 1);
+      int maxCount = (int) (4 * log(2 * keyBits * hashBits) + 1);
       while (same != 0xffffffff || diff != 0xffffffff) {
         int key1 = rand.nextInt();
         // flip input bit for key2

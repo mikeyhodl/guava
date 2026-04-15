@@ -19,6 +19,7 @@ package com.google.common.collect;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.CollectPreconditions.checkNonnegative;
+import static com.google.common.collect.Iterables.any;
 import static java.lang.Math.min;
 import static java.util.Objects.requireNonNull;
 
@@ -166,7 +167,7 @@ public final class Collections2 {
 
     @Override
     public boolean isEmpty() {
-      return !Iterables.any(unfiltered, predicate);
+      return !any(unfiltered, predicate);
     }
 
     @Override

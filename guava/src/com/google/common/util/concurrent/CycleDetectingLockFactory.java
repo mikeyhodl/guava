@@ -16,6 +16,7 @@ package com.google.common.util.concurrent;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.newArrayListWithCapacity;
+import static java.util.Collections.unmodifiableMap;
 import static java.util.Objects.requireNonNull;
 
 import com.google.common.annotations.GwtIncompatible;
@@ -31,7 +32,6 @@ import com.google.common.collect.Sets;
 import com.google.j2objc.annotations.Weak;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -319,7 +319,7 @@ public class CycleDetectingLockFactory {
     for (int i = 0; i < numKeys - 1; i++) {
       nodes.get(i).checkAcquiredLocks(Policies.DISABLED, nodes.subList(i + 1, numKeys));
     }
-    return Collections.unmodifiableMap(map);
+    return unmodifiableMap(map);
   }
 
   /**

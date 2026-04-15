@@ -18,6 +18,7 @@ package com.google.common.util.concurrent;
 
 import static com.google.common.base.StandardSystemProperty.JAVA_SPECIFICATION_VERSION;
 import static com.google.common.base.StandardSystemProperty.OS_NAME;
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
@@ -30,7 +31,6 @@ import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.common.testing.NullPointerTester;
 import com.google.common.testing.TestLogHandler;
@@ -413,7 +413,7 @@ public class ServiceManagerTest extends TestCase {
     logger.setLevel(Level.FINEST);
     TestLogHandler logHandler = new TestLogHandler();
     logger.addHandler(logHandler);
-    ServiceManager manager = new ServiceManager(Arrays.asList());
+    ServiceManager manager = new ServiceManager(asList());
     RecordingListener listener = new RecordingListener();
     manager.addListener(listener, directExecutor());
     manager.startAsync().awaitHealthy();
@@ -465,7 +465,7 @@ public class ServiceManagerTest extends TestCase {
 
     assertThat(suppressed[1]).hasCauseThat().isInstanceOf(IllegalStateException.class);
     assertThat(suppressed[1]).hasCauseThat().hasMessageThat().isEqualTo("start failure");
-    LogRecord record = Iterables.getOnlyElement(logHandler.getStoredLogRecords());
+    LogRecord record = getOnlyElement(logHandler.getStoredLogRecords());
     // We log failures that occur after startup
     assertThat(record.getMessage())
         .contains("Service FailRunService [FAILED] has failed in the RUNNING state");
@@ -501,7 +501,7 @@ public class ServiceManagerTest extends TestCase {
             notifyStopped();
           }
         };
-    ServiceManager manager = new ServiceManager(Arrays.asList(failRunService, new NoOpService()));
+    ServiceManager manager = new ServiceManager(asList(failRunService, new NoOpService()));
     manager.addListener(
         new ServiceManager.Listener() {
           @Override
@@ -547,7 +547,7 @@ public class ServiceManagerTest extends TestCase {
     logger.addHandler(logHandler);
     NoOpService service = new NoOpService();
     service.startAsync();
-    assertThrows(IllegalArgumentException.class, () -> new ServiceManager(Arrays.asList(service)));
+    assertThrows(IllegalArgumentException.class, () -> new ServiceManager(asList(service)));
     service.stopAsync();
     // Nothing was logged!
     assertEquals(0, logHandler.getStoredLogRecords().size());
@@ -617,8 +617,7 @@ public class ServiceManagerTest extends TestCase {
         };
     IllegalArgumentException expected =
         assertThrows(
-            IllegalArgumentException.class,
-            () -> new ServiceManager(Arrays.asList(service1, service2)));
+            IllegalArgumentException.class, () -> new ServiceManager(asList(service1, service2)));
     assertThat(expected).hasMessageThat().contains("started transitioning asynchronously");
   }
 
@@ -672,7 +671,7 @@ public class ServiceManagerTest extends TestCase {
   }
 
   public void testNulls() {
-    ServiceManager manager = new ServiceManager(Arrays.asList());
+    ServiceManager manager = new ServiceManager(asList());
     new NullPointerTester()
         .setDefault(ServiceManager.Listener.class, new RecordingListener())
         .testAllPublicInstanceMethods(manager);

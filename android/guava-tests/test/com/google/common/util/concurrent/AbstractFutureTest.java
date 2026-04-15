@@ -18,6 +18,7 @@ package com.google.common.util.concurrent;
 
 import static com.google.common.base.StandardSystemProperty.JAVA_SPECIFICATION_VERSION;
 import static com.google.common.base.StandardSystemProperty.OS_NAME;
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.common.util.concurrent.Futures.immediateCancelledFuture;
@@ -25,6 +26,10 @@ import static com.google.common.util.concurrent.Futures.immediateFailedFuture;
 import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 import static com.google.common.util.concurrent.SneakyThrows.sneakyThrow;
+import static java.util.Arrays.asList;
+import static java.util.Collections.shuffle;
+import static java.util.Collections.singletonList;
+import static java.util.Collections.synchronizedSet;
 import static java.util.concurrent.Executors.callable;
 import static java.util.concurrent.Executors.newFixedThreadPool;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -34,14 +39,12 @@ import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Range;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 import com.google.common.util.concurrent.internal.InternalFutureFailureAccess;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -245,11 +248,11 @@ public class AbstractFutureTest extends TestCase {
             return new String(new char[50_000]);
           }
         };
-    List<Object> list = Collections.singletonList(object);
+    List<Object> list = singletonList(object);
     for (int i = 0; i < 10; i++) {
       Object[] array = new Object[500];
       Arrays.fill(array, list);
-      list = Arrays.asList(array);
+      list = asList(array);
     }
     future2.set(list);
 
@@ -501,7 +504,7 @@ public class AbstractFutureTest extends TestCase {
             return null;
           }
         };
-    Set<Object> finalResults = Collections.synchronizedSet(Sets.newIdentityHashSet());
+    Set<Object> finalResults = synchronizedSet(Sets.newIdentityHashSet());
     Runnable collectResultsRunnable =
         () -> {
           try {
@@ -556,7 +559,7 @@ public class AbstractFutureTest extends TestCase {
     }
     assertEquals(allTasks.size() + 1, barrier.getParties());
     for (int i = 0; i < 1000; i++) {
-      Collections.shuffle(allTasks);
+      shuffle(allTasks);
       AbstractFuture<String> future = new AbstractFuture<String>() {};
       currentFuture.set(future);
       for (Callable<?> task : allTasks) {
@@ -567,7 +570,7 @@ public class AbstractFutureTest extends TestCase {
       assertThat(future.isDone()).isTrue();
       // inspect state and ensure it is correct!
       // asserts that all get calling threads received the same value
-      Object result = Iterables.getOnlyElement(finalResults);
+      Object result = getOnlyElement(finalResults);
       if (result == CancellationException.class) {
         assertTrue(future.isCancelled());
         if (future.wasInterrupted()) {
@@ -616,7 +619,7 @@ public class AbstractFutureTest extends TestCase {
           setFutureCompletionSuccess.set(future.set("hello-async-world"));
           awaitUnchecked(barrier);
         };
-    Set<Object> finalResults = Collections.synchronizedSet(Sets.newIdentityHashSet());
+    Set<Object> finalResults = synchronizedSet(Sets.newIdentityHashSet());
     Runnable collectResultsRunnable =
         () -> {
           try {
@@ -663,7 +666,7 @@ public class AbstractFutureTest extends TestCase {
     }
     assertEquals(allTasks.size() + 1, barrier.getParties()); // sanity check
     for (int i = 0; i < 1000; i++) {
-      Collections.shuffle(allTasks);
+      shuffle(allTasks);
       AbstractFuture<String> future = new AbstractFuture<String>() {};
       AbstractFuture<String> setFuture = new AbstractFuture<String>() {};
       currentFuture.set(future);
@@ -675,7 +678,7 @@ public class AbstractFutureTest extends TestCase {
       assertThat(future.isDone()).isTrue();
       // inspect state and ensure it is correct!
       // asserts that all get calling threads received the same value
-      Object result = Iterables.getOnlyElement(finalResults);
+      Object result = getOnlyElement(finalResults);
       if (result == CancellationException.class) {
         assertTrue(future.isCancelled());
         assertTrue(cancellationSuccess.get());
@@ -733,7 +736,7 @@ public class AbstractFutureTest extends TestCase {
             return null;
           }
         };
-    Set<Object> finalResults = Collections.synchronizedSet(Sets.newIdentityHashSet());
+    Set<Object> finalResults = synchronizedSet(Sets.newIdentityHashSet());
     Runnable collectResultsRunnable =
         () -> {
           try {
@@ -753,7 +756,7 @@ public class AbstractFutureTest extends TestCase {
     allTasks.add(callable(collectResultsRunnable));
     assertEquals(allTasks.size() + 1, barrier.getParties()); // sanity check
     for (int i = 0; i < 1000; i++) {
-      Collections.shuffle(allTasks);
+      shuffle(allTasks);
       AbstractFuture<String> future = new AbstractFuture<String>() {};
       currentFuture.set(future);
       for (Callable<?> task : allTasks) {
@@ -764,7 +767,7 @@ public class AbstractFutureTest extends TestCase {
       assertThat(future.isDone()).isTrue();
       // inspect state and ensure it is correct!
       // asserts that all get calling threads received the same value
-      Object result = Iterables.getOnlyElement(finalResults);
+      Object result = getOnlyElement(finalResults);
       if (result == CancellationException.class) {
         assertTrue(future.isCancelled());
         assertTrue(cancellationSuccess.get());

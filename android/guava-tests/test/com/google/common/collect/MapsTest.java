@@ -21,6 +21,7 @@ import static com.google.common.collect.Maps.transformEntries;
 import static com.google.common.collect.Maps.transformValues;
 import static com.google.common.collect.Maps.unmodifiableNavigableMap;
 import static com.google.common.collect.testing.Helpers.mapEntry;
+import static com.google.common.testing.SerializableTester.reserializeAndAssert;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static java.util.Arrays.asList;
@@ -40,7 +41,6 @@ import com.google.common.collect.Maps.EntryTransformer;
 import com.google.common.collect.Maps.ValueDifferenceImpl;
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.NullPointerTester;
-import com.google.common.testing.SerializableTester;
 import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Field;
@@ -1149,7 +1149,7 @@ public class MapsTest extends TestCase {
             "one", 1,
             "two", 2);
     Converter<String, Integer> converter = Maps.asConverter(biMap);
-    SerializableTester.reserializeAndAssert(converter);
+    reserializeAndAssert(converter);
   }
 
   public void testUnmodifiableBiMap() {

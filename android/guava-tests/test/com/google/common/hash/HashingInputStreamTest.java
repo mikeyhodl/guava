@@ -15,6 +15,7 @@
 package com.google.common.hash;
 
 import static com.google.common.hash.Hashing.sha512;
+import static java.lang.System.arraycopy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -93,7 +94,7 @@ public class HashingInputStreamTest extends TestCase {
   public void testRead_putByteArrayOutOfBound() throws Exception {
     byte[] buf = new byte[100];
     byte[] expectedBytes = buf.clone();
-    System.arraycopy(testBytes, 0, expectedBytes, 0, testBytes.length);
+    arraycopy(testBytes, 0, expectedBytes, 0, testBytes.length);
 
     HashingInputStream in = new HashingInputStream(hashFunction, buffer);
 

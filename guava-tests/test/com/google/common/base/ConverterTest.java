@@ -17,6 +17,7 @@
 package com.google.common.base;
 
 import static com.google.common.base.Functions.toStringFunction;
+import static com.google.common.testing.SerializableTester.reserializeAndAssert;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.annotations.GwtCompatible;
@@ -26,7 +27,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Longs;
 import com.google.common.testing.EqualsTester;
-import com.google.common.testing.SerializableTester;
 import java.util.Iterator;
 import java.util.List;
 import junit.framework.TestCase;
@@ -212,12 +212,12 @@ public class ConverterTest extends TestCase {
 
   public void testSerialization_identity() {
     Converter<String, String> identityConverter = Converter.identity();
-    SerializableTester.reserializeAndAssert(identityConverter);
+    reserializeAndAssert(identityConverter);
   }
 
   public void testSerialization_reverse() {
     Converter<Long, String> reverseConverter = Longs.stringConverter().reverse();
-    SerializableTester.reserializeAndAssert(reverseConverter);
+    reserializeAndAssert(reverseConverter);
   }
 
   @GwtIncompatible // J2CL generics problem
@@ -225,11 +225,11 @@ public class ConverterTest extends TestCase {
     Converter<String, Long> converterA = Longs.stringConverter();
     Converter<Long, String> reverseConverter = Longs.stringConverter().reverse();
     Converter<String, String> composedConverter = converterA.andThen(reverseConverter);
-    SerializableTester.reserializeAndAssert(composedConverter);
+    reserializeAndAssert(composedConverter);
   }
 
   public void testSerialization_from() {
     Converter<String, String> dumb = Converter.from(toStringFunction(), toStringFunction());
-    SerializableTester.reserializeAndAssert(dumb);
+    reserializeAndAssert(dumb);
   }
 }

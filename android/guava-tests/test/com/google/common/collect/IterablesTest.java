@@ -1328,7 +1328,7 @@ public class IterablesTest extends TestCase {
     ImmutableList<Integer> second = ImmutableList.of(1, 3, 5, 7, 9);
 
     Comparator<Object> comparator = Ordering.allEqual();
-    Iterable<Integer> merged = Iterables.mergeSorted(ImmutableList.of(first, second), comparator);
+    Iterable<Integer> merged = mergeSorted(ImmutableList.of(first, second), comparator);
 
     assertThat(merged).containsExactly(0, 2, 4, 6, 8, 1, 3, 5, 7, 9).inOrder();
   }

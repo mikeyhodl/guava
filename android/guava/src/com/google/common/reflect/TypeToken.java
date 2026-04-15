@@ -18,6 +18,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static java.lang.Math.max;
+import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -42,7 +43,6 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -1351,7 +1351,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
 
           @Override
           Iterable<? extends Class<?>> getInterfaces(Class<?> type) {
-            return Arrays.asList(type.getInterfaces());
+            return asList(type.getInterfaces());
           }
 
           @Override

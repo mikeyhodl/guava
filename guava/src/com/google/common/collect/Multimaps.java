@@ -19,7 +19,15 @@ package com.google.common.collect;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.CollectPreconditions.checkNonnegative;
 import static com.google.common.collect.CollectPreconditions.checkRemove;
+import static com.google.common.collect.Maps.immutableEntry;
+import static com.google.common.collect.Maps.safeGet;
+import static com.google.common.collect.Multisets.unmodifiableMultiset;
 import static com.google.common.collect.NullnessCasts.uncheckedCastNullableTToT;
+import static com.google.common.collect.Sets.unmodifiableNavigableSet;
+import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.unmodifiableMap;
+import static java.util.Collections.unmodifiableSet;
+import static java.util.Collections.unmodifiableSortedSet;
 import static java.util.Objects.requireNonNull;
 
 import com.google.common.annotations.GwtCompatible;
@@ -241,13 +249,13 @@ public final class Multimaps {
     <E extends @Nullable Object> Collection<E> unmodifiableCollectionSubclass(
         Collection<E> collection) {
       if (collection instanceof NavigableSet) {
-        return Sets.unmodifiableNavigableSet((NavigableSet<E>) collection);
+        return unmodifiableNavigableSet((NavigableSet<E>) collection);
       } else if (collection instanceof SortedSet) {
-        return Collections.unmodifiableSortedSet((SortedSet<E>) collection);
+        return unmodifiableSortedSet((SortedSet<E>) collection);
       } else if (collection instanceof Set) {
-        return Collections.unmodifiableSet((Set<E>) collection);
+        return unmodifiableSet((Set<E>) collection);
       } else if (collection instanceof List) {
-        return Collections.unmodifiableList((List<E>) collection);
+        return unmodifiableList((List<E>) collection);
       } else {
         return Collections.unmodifiableCollection(collection);
       }
@@ -448,11 +456,11 @@ public final class Multimaps {
     <E extends @Nullable Object> Collection<E> unmodifiableCollectionSubclass(
         Collection<E> collection) {
       if (collection instanceof NavigableSet) {
-        return Sets.unmodifiableNavigableSet((NavigableSet<E>) collection);
+        return unmodifiableNavigableSet((NavigableSet<E>) collection);
       } else if (collection instanceof SortedSet) {
-        return Collections.unmodifiableSortedSet((SortedSet<E>) collection);
+        return unmodifiableSortedSet((SortedSet<E>) collection);
       } else {
-        return Collections.unmodifiableSet((Set<E>) collection);
+        return unmodifiableSet((Set<E>) collection);
       }
     }
 
@@ -703,7 +711,7 @@ public final class Multimaps {
       if (result == null) {
         result =
             map =
-                Collections.unmodifiableMap(
+                unmodifiableMap(
                     Maps.transformValues(delegate.asMap(), Multimaps::unmodifiableValueCollection));
       }
       return result;
@@ -732,7 +740,7 @@ public final class Multimaps {
     public Multiset<K> keys() {
       Multiset<K> result = keys;
       if (result == null) {
-        keys = result = Multisets.unmodifiableMultiset(delegate.keys());
+        keys = result = unmodifiableMultiset(delegate.keys());
       }
       return result;
     }
@@ -741,7 +749,7 @@ public final class Multimaps {
     public Set<K> keySet() {
       Set<K> result = keySet;
       if (result == null) {
-        keySet = result = Collections.unmodifiableSet(delegate.keySet());
+        keySet = result = unmodifiableSet(delegate.keySet());
       }
       return result;
     }
@@ -802,7 +810,7 @@ public final class Multimaps {
 
     @Override
     public List<V> get(@ParametricNullness K key) {
-      return Collections.unmodifiableList(delegate().get(key));
+      return unmodifiableList(delegate().get(key));
     }
 
     @Override
@@ -836,7 +844,7 @@ public final class Multimaps {
        * Note that this doesn't return a SortedSet when delegate is a
        * SortedSetMultiset, unlike (SortedSet<V>) super.get().
        */
-      return Collections.unmodifiableSet(delegate().get(key));
+      return unmodifiableSet(delegate().get(key));
     }
 
     @Override
@@ -871,7 +879,7 @@ public final class Multimaps {
 
     @Override
     public SortedSet<V> get(@ParametricNullness K key) {
-      return Collections.unmodifiableSortedSet(delegate().get(key));
+      return unmodifiableSortedSet(delegate().get(key));
     }
 
     @Override
@@ -1037,11 +1045,11 @@ public final class Multimaps {
   private static <V extends @Nullable Object> Collection<V> unmodifiableValueCollection(
       Collection<V> collection) {
     if (collection instanceof SortedSet) {
-      return Collections.unmodifiableSortedSet((SortedSet<V>) collection);
+      return unmodifiableSortedSet((SortedSet<V>) collection);
     } else if (collection instanceof Set) {
-      return Collections.unmodifiableSet((Set<V>) collection);
+      return unmodifiableSet((Set<V>) collection);
     } else if (collection instanceof List) {
-      return Collections.unmodifiableList((List<V>) collection);
+      return unmodifiableList((List<V>) collection);
     }
     return Collections.unmodifiableCollection(collection);
   }
@@ -1160,7 +1168,7 @@ public final class Multimaps {
 
     @Override
     public boolean containsEntry(@Nullable Object key, @Nullable Object value) {
-      return map.entrySet().contains(Maps.immutableEntry(key, value));
+      return map.entrySet().contains(immutableEntry(key, value));
     }
 
     @Override
@@ -1228,7 +1236,7 @@ public final class Multimaps {
 
     @Override
     public boolean remove(@Nullable Object key, @Nullable Object value) {
-      return map.entrySet().remove(Maps.immutableEntry(key, value));
+      return map.entrySet().remove(immutableEntry(key, value));
     }
 
     @Override
@@ -1766,7 +1774,7 @@ public final class Multimaps {
 
     @Override
     public int count(@Nullable Object element) {
-      Collection<V> values = Maps.safeGet(multimap.asMap(), element);
+      Collection<V> values = safeGet(multimap.asMap(), element);
       return (values == null) ? 0 : values.size();
     }
 
@@ -1777,7 +1785,7 @@ public final class Multimaps {
         return count(element);
       }
 
-      Collection<V> values = Maps.safeGet(multimap.asMap(), element);
+      Collection<V> values = safeGet(multimap.asMap(), element);
 
       if (values == null) {
         return 0;

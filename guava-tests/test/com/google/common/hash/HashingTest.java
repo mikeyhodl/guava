@@ -20,6 +20,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
+import static java.util.Collections.shuffle;
 import static org.junit.Assert.assertThrows;
 
 import com.google.common.collect.ImmutableList;
@@ -298,7 +299,7 @@ public class HashingTest extends TestCase {
       hashCodes.add(HashCode.fromLong(random.nextLong()));
     }
     HashCode hashCode1 = Hashing.combineOrdered(hashCodes);
-    Collections.shuffle(hashCodes, random);
+    shuffle(hashCodes, random);
     HashCode hashCode2 = Hashing.combineOrdered(hashCodes);
 
     assertFalse(hashCode1.equals(hashCode2));
@@ -339,7 +340,7 @@ public class HashingTest extends TestCase {
       hashCodes.add(HashCode.fromLong(random.nextLong()));
     }
     HashCode hashCode1 = Hashing.combineUnordered(hashCodes);
-    Collections.shuffle(hashCodes);
+    shuffle(hashCodes);
     HashCode hashCode2 = Hashing.combineUnordered(hashCodes);
 
     assertEquals(hashCode1, hashCode2);

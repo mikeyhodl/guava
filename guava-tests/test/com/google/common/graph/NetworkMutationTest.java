@@ -17,9 +17,9 @@
 package com.google.common.graph;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.util.Collections.shuffle;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.RandomAccess;
@@ -76,7 +76,7 @@ public final class NetworkMutationTest {
       assertThat(network.edges()).hasSize(NUM_EDGES);
       AbstractNetworkTest.validateNetwork(network);
 
-      Collections.shuffle(edgeList, gen);
+      shuffle(edgeList, gen);
       int numEdgesToRemove = gen.nextInt(NUM_EDGES);
       for (int i = 0; i < numEdgesToRemove; ++i) {
         Object edge = edgeList.get(i);
@@ -87,7 +87,7 @@ public final class NetworkMutationTest {
       assertThat(network.edges()).hasSize(NUM_EDGES - numEdgesToRemove);
       AbstractNetworkTest.validateNetwork(network);
 
-      Collections.shuffle(nodeList, gen);
+      shuffle(nodeList, gen);
       int numNodesToRemove = gen.nextInt(NUM_NODES);
       for (int i = 0; i < numNodesToRemove; ++i) {
         assertThat(network.removeNode(nodeList.get(i))).isTrue();
@@ -105,11 +105,11 @@ public final class NetworkMutationTest {
       assertThat(network.edges()).isEmpty(); // no edges can remain if there's no nodes
       AbstractNetworkTest.validateNetwork(network);
 
-      Collections.shuffle(nodeList, gen);
+      shuffle(nodeList, gen);
       for (Integer node : nodeList) {
         assertThat(network.addNode(node)).isTrue();
       }
-      Collections.shuffle(edgeList, gen);
+      shuffle(edgeList, gen);
       for (Object edge : edgeList) {
         assertThat(
                 network.addEdge(

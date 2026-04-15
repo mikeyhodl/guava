@@ -20,6 +20,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.throwIfUnchecked;
 import static com.google.common.testing.NullPointerTester.isNullable;
+import static com.google.common.testing.SerializableTester.reserialize;
+import static com.google.common.testing.SerializableTester.reserializeAndAssert;
 
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
@@ -505,7 +507,7 @@ public final class ClassSanityTester {
         Object instance = instantiate(factory);
         if (instance != null) {
           try {
-            SerializableTester.reserialize(instance);
+            reserialize(instance);
           } catch (Exception e) { // sneaky checked exception
             throw new AssertionError(
                 "Serialization failed on return value of " + factory, e.getCause());
@@ -535,7 +537,7 @@ public final class ClassSanityTester {
         Object instance = instantiate(factory);
         if (instance != null) {
           try {
-            SerializableTester.reserializeAndAssert(instance);
+            reserializeAndAssert(instance);
           } catch (Exception e) { // sneaky checked exception
             throw new AssertionError(
                 "Serialization failed on return value of " + factory, e.getCause());

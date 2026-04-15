@@ -21,6 +21,8 @@ import static com.google.common.collect.Iterators.singletonIterator;
 import static com.google.common.collect.testing.Helpers.misleadingSizeCollection;
 import static com.google.common.collect.testing.features.CollectionFeature.ALLOWS_NULL_QUERIES;
 import static com.google.common.collect.testing.features.CollectionFeature.SERIALIZABLE;
+import static com.google.common.testing.SerializableTester.reserialize;
+import static com.google.common.testing.SerializableTester.reserializeAndAssert;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -46,7 +48,6 @@ import com.google.common.collect.testing.testers.ListHashCodeTester;
 import com.google.common.testing.CollectorTester;
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.NullPointerTester;
-import com.google.common.testing.SerializableTester;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -444,21 +445,21 @@ public class ImmutableListTest extends TestCase {
   @GwtIncompatible // SerializableTester
   public void testSerialization_empty() {
     Collection<String> c = ImmutableList.of();
-    assertThat(SerializableTester.reserialize(c)).isSameInstanceAs(c);
+    assertThat(reserialize(c)).isSameInstanceAs(c);
   }
 
   @J2ktIncompatible
   @GwtIncompatible // SerializableTester
   public void testSerialization_singleton() {
     Collection<String> c = ImmutableList.of("a");
-    SerializableTester.reserializeAndAssert(c);
+    reserializeAndAssert(c);
   }
 
   @J2ktIncompatible
   @GwtIncompatible // SerializableTester
   public void testSerialization_multiple() {
     Collection<String> c = ImmutableList.of("a", "b", "c");
-    SerializableTester.reserializeAndAssert(c);
+    reserializeAndAssert(c);
   }
 
   public void testEquals_immutableList() {

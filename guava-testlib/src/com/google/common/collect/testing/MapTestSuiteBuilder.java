@@ -18,6 +18,8 @@ package com.google.common.collect.testing;
 
 import static com.google.common.collect.testing.DerivedCollectionGenerators.keySetGenerator;
 import static com.google.common.collect.testing.Helpers.copyToSet;
+import static com.google.common.testing.SerializableTester.reserialize;
+import static java.util.Arrays.asList;
 
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.collect.testing.DerivedCollectionGenerators.MapEntrySetGenerator;
@@ -52,8 +54,6 @@ import com.google.common.collect.testing.testers.MapReplaceTester;
 import com.google.common.collect.testing.testers.MapSerializationTester;
 import com.google.common.collect.testing.testers.MapSizeTester;
 import com.google.common.collect.testing.testers.MapToStringTester;
-import com.google.common.testing.SerializableTester;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -77,7 +77,7 @@ public class MapTestSuiteBuilder<K, V>
   @SuppressWarnings("rawtypes") // class literals
   @Override
   protected List<Class<? extends AbstractTester>> getTesters() {
-    return Arrays.asList(
+    return asList(
         MapClearTester.class,
         MapComputeTester.class,
         MapComputeIfAbsentTester.class,
@@ -273,7 +273,7 @@ public class MapTestSuiteBuilder<K, V>
 
     @Override
     public Map<K, V> create(Object... elements) {
-      return SerializableTester.reserialize(mapGenerator.create(elements));
+      return reserialize(mapGenerator.create(elements));
     }
 
     @Override

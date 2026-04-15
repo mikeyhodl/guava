@@ -16,6 +16,7 @@
 
 package com.google.common.util.concurrent;
 
+import static com.google.common.collect.Iterables.all;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
 import static com.google.common.util.concurrent.Runnables.doNothing;
@@ -307,7 +308,7 @@ public class WrappingExecutorServiceTest extends TestCase {
 
     private static <T> void assertTaskWrapped(Collection<? extends Callable<T>> tasks) {
       Predicate<Object> p = Predicates.instanceOf(WrappedCallable.class);
-      assertTrue(Iterables.all(tasks, p));
+      assertTrue(all(tasks, p));
     }
   }
 }

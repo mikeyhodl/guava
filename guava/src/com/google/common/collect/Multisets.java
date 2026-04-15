@@ -23,6 +23,9 @@ import static com.google.common.collect.CollectPreconditions.checkRemove;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.util.Arrays.asList;
+import static java.util.Arrays.sort;
+import static java.util.Collections.nCopies;
+import static java.util.Collections.unmodifiableSet;
 import static java.util.Objects.requireNonNull;
 
 import com.google.common.annotations.GwtCompatible;
@@ -37,9 +40,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.InlineMe;
 import com.google.errorprone.annotations.concurrent.LazyInit;
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -145,7 +146,7 @@ public final class Multisets {
     @LazyInit transient @Nullable Set<E> elementSet;
 
     Set<E> createElementSet() {
-      return Collections.unmodifiableSet(delegate.elementSet());
+      return unmodifiableSet(delegate.elementSet());
     }
 
     @Override
@@ -163,7 +164,7 @@ public final class Multisets {
       return (es == null)
           // Safe because the returned set is made unmodifiable and Entry
           // itself is readonly
-          ? entrySet = (Set) Collections.unmodifiableSet(delegate.entrySet())
+          ? entrySet = (Set) unmodifiableSet(delegate.entrySet())
           : es;
     }
 
@@ -1125,7 +1126,7 @@ public final class Multisets {
     Spliterator<Entry<E>> entrySpliterator = multiset.entrySet().spliterator();
     return CollectSpliterators.flatMap(
         entrySpliterator,
-        (Entry<E> entry) -> Collections.nCopies(entry.getCount(), entry.getElement()).spliterator(),
+        (Entry<E> entry) -> nCopies(entry.getCount(), entry.getElement()).spliterator(),
         Spliterator.SIZED
             | (entrySpliterator.characteristics()
                 & (Spliterator.ORDERED | Spliterator.NONNULL | Spliterator.IMMUTABLE)),
@@ -1151,7 +1152,7 @@ public final class Multisets {
     @SuppressWarnings("unchecked") // generics+arrays
     // TODO(cpovirk): Consider storing an Entry<?> instead of Entry<E>.
     Entry<E>[] entries = (Entry<E>[]) multiset.entrySet().toArray((Entry<E>[]) new Entry<?>[0]);
-    Arrays.sort(entries, DecreasingCount.INSTANCE);
+    sort(entries, DecreasingCount.INSTANCE);
     return ImmutableMultiset.copyFromEntries(asList(entries));
   }
 

@@ -18,6 +18,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.hash.Hashing.murmur3_32_fixed;
 import static java.lang.Math.max;
+import static java.lang.System.arraycopy;
 import static java.util.Objects.requireNonNull;
 
 import com.google.common.annotations.GwtIncompatible;
@@ -1145,7 +1146,7 @@ public final class InetAddresses {
     }
 
     // Copy the bytes into the least significant positions.
-    System.arraycopy(addressBytes, srcPos, targetCopyArray, destPos, copyLength);
+    arraycopy(addressBytes, srcPos, targetCopyArray, destPos, copyLength);
 
     try {
       return InetAddress.getByAddress(targetCopyArray);

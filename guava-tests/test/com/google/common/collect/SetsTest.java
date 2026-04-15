@@ -24,6 +24,7 @@ import static com.google.common.collect.Sets.powerSet;
 import static com.google.common.collect.Sets.toImmutableEnumSet;
 import static com.google.common.collect.Sets.unmodifiableNavigableSet;
 import static com.google.common.collect.testing.IteratorFeature.UNMODIFIABLE;
+import static com.google.common.testing.SerializableTester.reserializeAndAssert;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static java.io.ObjectStreamConstants.TC_REFERENCE;
@@ -51,7 +52,6 @@ import com.google.common.collect.testing.features.CollectionSize;
 import com.google.common.collect.testing.features.SetFeature;
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.NullPointerTester;
-import com.google.common.testing.SerializableTester;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -334,7 +334,7 @@ public class SetsTest extends TestCase {
 
     assertThat(units).containsExactly(SomeEnum.B, SomeEnum.D).inOrder();
 
-    Set<SomeEnum> copy = SerializableTester.reserializeAndAssert(units);
+    Set<SomeEnum> copy = reserializeAndAssert(units);
     assertTrue(copy instanceof ImmutableEnumSet);
   }
 
@@ -657,7 +657,7 @@ public class SetsTest extends TestCase {
     @SuppressWarnings({"deprecation", "InlineMeInliner"}) // test of a deprecated method
     Set<Integer> set = Sets.newSetFromMap(new LinkedHashMap<Integer, Boolean>());
     set.addAll(SOME_COLLECTION);
-    Set<Integer> copy = SerializableTester.reserializeAndAssert(set);
+    Set<Integer> copy = reserializeAndAssert(set);
     assertThat(copy).containsExactly(0, 1).inOrder();
   }
 

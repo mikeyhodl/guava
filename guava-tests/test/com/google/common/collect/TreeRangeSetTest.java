@@ -16,11 +16,11 @@ package com.google.common.collect;
 
 import static com.google.common.collect.BoundType.OPEN;
 import static com.google.common.collect.Range.range;
+import static com.google.common.testing.SerializableTester.reserializeAndAssert;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 
 import com.google.common.annotations.GwtIncompatible;
-import com.google.common.testing.SerializableTester;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NavigableMap;
@@ -688,6 +688,6 @@ public class TreeRangeSetTest extends AbstractRangeSetTest {
     RangeSet<Integer> rangeSet = TreeRangeSet.create();
     rangeSet.add(Range.closed(3, 10));
     rangeSet.remove(Range.open(5, 7));
-    SerializableTester.reserializeAndAssert(rangeSet);
+    reserializeAndAssert(rangeSet);
   }
 }

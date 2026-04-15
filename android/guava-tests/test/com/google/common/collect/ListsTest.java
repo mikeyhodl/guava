@@ -25,6 +25,7 @@ import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 import static com.google.common.collect.Lists.partition;
 import static com.google.common.collect.Lists.transform;
 import static com.google.common.collect.testing.IteratorFeature.UNMODIFIABLE;
+import static com.google.common.testing.SerializableTester.reserializeAndAssert;
 import static com.google.common.truth.Truth.assertThat;
 import static java.lang.System.arraycopy;
 import static java.util.Arrays.asList;
@@ -47,7 +48,6 @@ import com.google.common.collect.testing.features.ListFeature;
 import com.google.common.collect.testing.google.ListGenerators.CharactersOfCharSequenceGenerator;
 import com.google.common.collect.testing.google.ListGenerators.CharactersOfStringGenerator;
 import com.google.common.testing.NullPointerTester;
-import com.google.common.testing.SerializableTester;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -452,7 +452,7 @@ public class ListsTest extends TestCase {
   public void testAsList1() {
     List<String> list = Lists.asList("foo", new String[] {"bar", "baz"});
     checkFooBarBazList(list);
-    SerializableTester.reserializeAndAssert(list);
+    reserializeAndAssert(list);
     assertTrue(list instanceof RandomAccess);
 
     new IteratorTester<String>(
@@ -516,7 +516,7 @@ public class ListsTest extends TestCase {
     assertThat(list.get(0)).isEqualTo("foo");
     assertThat(list.get(1)).isEqualTo("bar");
     assertIndexIsOutOfBounds(list, 2);
-    SerializableTester.reserializeAndAssert(list);
+    reserializeAndAssert(list);
     assertTrue(list instanceof RandomAccess);
 
     new IteratorTester<String>(

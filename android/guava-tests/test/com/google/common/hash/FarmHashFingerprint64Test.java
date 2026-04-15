@@ -20,9 +20,9 @@ import static com.google.common.hash.Hashing.farmHashFingerprint64;
 import static com.google.common.truth.Truth.assertThat;
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Arrays.asList;
 
 import com.google.common.base.Strings;
-import java.util.Arrays;
 import junit.framework.TestCase;
 import org.jspecify.annotations.NullUnmarked;
 
@@ -48,7 +48,7 @@ public class FarmHashFingerprint64Test extends TestCase {
   }
 
   public void testStringsConsistency() {
-    for (String s : Arrays.asList("", "some", "test", "strings", "to", "try")) {
+    for (String s : asList("", "some", "test", "strings", "to", "try")) {
       assertEquals(HASH_FN.newHasher().putUnencodedChars(s).hash(), HASH_FN.hashUnencodedChars(s));
     }
   }

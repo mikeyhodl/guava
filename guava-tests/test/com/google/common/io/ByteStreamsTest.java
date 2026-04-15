@@ -17,6 +17,7 @@
 package com.google.common.io;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.lang.System.arraycopy;
 import static java.nio.charset.StandardCharsets.US_ASCII;
 import static java.nio.charset.StandardCharsets.UTF_16;
 import static java.nio.charset.StandardCharsets.UTF_16BE;
@@ -196,7 +197,7 @@ public class ByteStreamsTest extends IoTestCase {
   public void testNewDataInput_readUTF() {
     byte[] data = new byte[17];
     data[1] = 15;
-    System.arraycopy("Kilroy was here".getBytes(UTF_8), 0, data, 2, 15);
+    arraycopy("Kilroy was here".getBytes(UTF_8), 0, data, 2, 15);
     ByteArrayDataInput in = ByteStreams.newDataInput(data);
     assertThat(in.readUTF()).isEqualTo("Kilroy was here");
   }

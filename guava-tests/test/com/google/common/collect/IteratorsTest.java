@@ -29,6 +29,7 @@ import static com.google.common.collect.Iterators.frequency;
 import static com.google.common.collect.Iterators.get;
 import static com.google.common.collect.Iterators.getLast;
 import static com.google.common.collect.Iterators.getOnlyElement;
+import static com.google.common.collect.Iterators.mergeSorted;
 import static com.google.common.collect.Iterators.peekingIterator;
 import static com.google.common.collect.Iterators.singletonIterator;
 import static com.google.common.collect.Iterators.tryFind;
@@ -1560,7 +1561,7 @@ public class IteratorsTest extends TestCase {
     // before C2, since C1 is from the first iterator.
 
     Iterator<TestDatum> merged =
-        Iterators.mergeSorted(ImmutableList.of(left.iterator(), right.iterator()), comparator);
+        mergeSorted(ImmutableList.of(left.iterator(), right.iterator()), comparator);
 
     ImmutableList<TestDatum> result = ImmutableList.copyOf(merged);
 
@@ -1580,7 +1581,7 @@ public class IteratorsTest extends TestCase {
 
     Comparator<TestDatum> comparator = Comparator.comparing(d -> d.letter);
     Iterator<TestDatum> merged =
-        Iterators.mergeSorted(ImmutableList.of(first.iterator(), second.iterator()), comparator);
+        mergeSorted(ImmutableList.of(first.iterator(), second.iterator()), comparator);
 
     ImmutableList<TestDatum> result = ImmutableList.copyOf(merged);
 

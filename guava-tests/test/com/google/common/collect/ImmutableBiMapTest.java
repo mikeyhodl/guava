@@ -20,6 +20,7 @@ import static com.google.common.collect.ImmutableBiMap.toImmutableBiMap;
 import static com.google.common.collect.Maps.immutableEntry;
 import static com.google.common.collect.Sets.newHashSet;
 import static com.google.common.collect.testing.Helpers.mapEntry;
+import static com.google.common.testing.SerializableTester.reserializeAndAssert;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonMap;
@@ -40,7 +41,6 @@ import com.google.common.collect.testing.google.BiMapInverseTester;
 import com.google.common.collect.testing.google.BiMapTestSuiteBuilder;
 import com.google.common.collect.testing.google.TestStringBiMapGenerator;
 import com.google.common.testing.CollectorTester;
-import com.google.common.testing.SerializableTester;
 import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -631,7 +631,7 @@ public class ImmutableBiMapTest extends TestCase {
   @GwtIncompatible // SerializableTester
   public void testEmptySerialization() {
     ImmutableBiMap<String, Integer> bimap = ImmutableBiMap.of();
-    assertThat(SerializableTester.reserializeAndAssert(bimap)).isSameInstanceAs(bimap);
+    assertThat(reserializeAndAssert(bimap)).isSameInstanceAs(bimap);
   }
 
   @J2ktIncompatible
@@ -639,7 +639,7 @@ public class ImmutableBiMapTest extends TestCase {
   public void testSerialization() {
     ImmutableBiMap<String, Integer> bimap =
         ImmutableBiMap.copyOf(ImmutableMap.of("one", 1, "two", 2));
-    ImmutableBiMap<String, Integer> copy = SerializableTester.reserializeAndAssert(bimap);
+    ImmutableBiMap<String, Integer> copy = reserializeAndAssert(bimap);
     assertEquals(Integer.valueOf(1), copy.get("one"));
     assertThat(copy.inverse().get(1)).isEqualTo("one");
     assertThat(copy.inverse().inverse()).isSameInstanceAs(copy);
@@ -650,7 +650,7 @@ public class ImmutableBiMapTest extends TestCase {
   public void testInverseSerialization() {
     ImmutableBiMap<String, Integer> bimap =
         ImmutableBiMap.copyOf(ImmutableMap.of(1, "one", 2, "two")).inverse();
-    ImmutableBiMap<String, Integer> copy = SerializableTester.reserializeAndAssert(bimap);
+    ImmutableBiMap<String, Integer> copy = reserializeAndAssert(bimap);
     assertEquals(Integer.valueOf(1), copy.get("one"));
     assertThat(copy.inverse().get(1)).isEqualTo("one");
     assertThat(copy.inverse().inverse()).isSameInstanceAs(copy);

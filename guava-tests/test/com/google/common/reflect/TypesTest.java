@@ -16,6 +16,8 @@
 
 package com.google.common.reflect;
 
+import static com.google.common.testing.SerializableTester.reserialize;
+import static com.google.common.testing.SerializableTester.reserializeAndAssert;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertThrows;
@@ -24,7 +26,6 @@ import com.google.common.collect.Lists;
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.NullPointerTester;
 import com.google.common.testing.NullPointerTester.Visibility;
-import com.google.common.testing.SerializableTester;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.GenericDeclaration;
@@ -32,7 +33,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,8 +72,8 @@ public class TypesTest extends TestCase {
         .containsExactlyElementsIn(asList(jvmType.getActualTypeArguments()))
         .inOrder();
     assertEquals(
-        Arrays.asList(String.class, Types.newArrayType(Types.newArrayType(int.class))),
-        Arrays.asList(ourType.getActualTypeArguments()));
+        asList(String.class, Types.newArrayType(Types.newArrayType(int.class))),
+        asList(ourType.getActualTypeArguments()));
     assertThat(ourType.getOwnerType()).isNull();
   }
 
@@ -116,8 +116,7 @@ public class TypesTest extends TestCase {
   }
 
   public void testNewParameterizedType_serializable() {
-    SerializableTester.reserializeAndAssert(
-        Types.newParameterizedType(Entry.class, String.class, Integer.class));
+    reserializeAndAssert(Types.newParameterizedType(Entry.class, String.class, Integer.class));
   }
 
   public void testNewParameterizedType_ownerMismatch() {
@@ -185,7 +184,7 @@ public class TypesTest extends TestCase {
   }
 
   public void testNewArrayType_serializable() {
-    SerializableTester.reserializeAndAssert(Types.newArrayType(int[].class));
+    reserializeAndAssert(Types.newArrayType(int[].class));
   }
 
   private static class WithWildcardType {
@@ -237,9 +236,9 @@ public class TypesTest extends TestCase {
   }
 
   public void testNewWildcardType_serializable() {
-    SerializableTester.reserializeAndAssert(Types.supertypeOf(String.class));
-    SerializableTester.reserializeAndAssert(Types.subtypeOf(String.class));
-    SerializableTester.reserializeAndAssert(Types.subtypeOf(Object.class));
+    reserializeAndAssert(Types.supertypeOf(String.class));
+    reserializeAndAssert(Types.subtypeOf(String.class));
+    reserializeAndAssert(Types.subtypeOf(Object.class));
   }
 
   private static void assertEqualWildcardType(WildcardType expected, WildcardType actual) {
@@ -313,7 +312,7 @@ public class TypesTest extends TestCase {
   public void testNewTypeVariable_serializable() throws Exception {
     assertThrows(
         RuntimeException.class,
-        () -> SerializableTester.reserialize(Types.newArtificialTypeVariable(List.class, "E")));
+        () -> reserialize(Types.newArtificialTypeVariable(List.class, "E")));
   }
 
   private static <D extends GenericDeclaration> TypeVariable<D> withBounds(

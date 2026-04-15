@@ -19,10 +19,13 @@ package com.google.common.collect;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.CollectPreconditions.checkNonnegative;
+import static com.google.common.collect.Iterables.find;
+import static com.google.common.collect.Iterators.find;
 import static com.google.common.math.IntMath.saturatedAdd;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableSortedSet;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
@@ -1323,7 +1326,7 @@ public final class Sets {
     @Override
     @ParametricNullness
     public E first() {
-      return Iterators.find(unfiltered.iterator(), predicate);
+      return find(unfiltered.iterator(), predicate);
     }
 
     @Override
@@ -1353,22 +1356,22 @@ public final class Sets {
 
     @Override
     public @Nullable E lower(@ParametricNullness E e) {
-      return Iterators.find(unfiltered().headSet(e, false).descendingIterator(), predicate, null);
+      return find(unfiltered().headSet(e, false).descendingIterator(), predicate, null);
     }
 
     @Override
     public @Nullable E floor(@ParametricNullness E e) {
-      return Iterators.find(unfiltered().headSet(e, true).descendingIterator(), predicate, null);
+      return find(unfiltered().headSet(e, true).descendingIterator(), predicate, null);
     }
 
     @Override
     public @Nullable E ceiling(@ParametricNullness E e) {
-      return Iterables.find(unfiltered().tailSet(e, true), predicate, null);
+      return find(unfiltered().tailSet(e, true), predicate, null);
     }
 
     @Override
     public @Nullable E higher(@ParametricNullness E e) {
-      return Iterables.find(unfiltered().tailSet(e, false), predicate, null);
+      return find(unfiltered().tailSet(e, false), predicate, null);
     }
 
     @Override
@@ -1394,7 +1397,7 @@ public final class Sets {
     @Override
     @ParametricNullness
     public E last() {
-      return Iterators.find(unfiltered().descendingIterator(), predicate);
+      return find(unfiltered().descendingIterator(), predicate);
     }
 
     @Override
@@ -1956,7 +1959,7 @@ public final class Sets {
 
     UnmodifiableNavigableSet(NavigableSet<E> delegate) {
       this.delegate = checkNotNull(delegate);
-      this.unmodifiableDelegate = Collections.unmodifiableSortedSet(delegate);
+      this.unmodifiableDelegate = unmodifiableSortedSet(delegate);
     }
 
     @Override

@@ -17,13 +17,13 @@
 package com.google.common.collect;
 
 import static com.google.common.collect.Tables.immutableCell;
+import static com.google.common.testing.SerializableTester.reserializeAndAssert;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
-import com.google.common.testing.SerializableTester;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -436,7 +436,7 @@ public class ImmutableTableTest extends AbstractTableReadTest<Character> {
   }
 
   private static <R, C, V> void validateReserialization(Table<R, C, V> original) {
-    Table<R, C, V> copy = SerializableTester.reserializeAndAssert(original);
+    Table<R, C, V> copy = reserializeAndAssert(original);
     assertThat(copy.cellSet()).containsExactlyElementsIn(original.cellSet()).inOrder();
     assertThat(copy.rowKeySet()).containsExactlyElementsIn(original.rowKeySet()).inOrder();
     assertThat(copy.columnKeySet()).containsExactlyElementsIn(original.columnKeySet()).inOrder();

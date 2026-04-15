@@ -18,6 +18,7 @@ package com.google.common.base;
 
 import static com.google.common.testing.SerializableTester.reserialize;
 import static com.google.common.truth.Truth.assertThat;
+import static java.util.Collections.singleton;
 import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
@@ -27,7 +28,6 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.NullPointerTester;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import junit.framework.TestCase;
@@ -151,7 +151,7 @@ public final class OptionalTest extends TestCase {
   }
 
   public void testAsSet_present() {
-    Set<String> expected = Collections.singleton("a");
+    Set<String> expected = singleton("a");
     assertEquals(expected, Optional.of("a").asSet());
   }
 

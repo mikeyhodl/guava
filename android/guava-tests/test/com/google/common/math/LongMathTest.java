@@ -16,6 +16,7 @@
 
 package com.google.common.math;
 
+import static com.google.common.math.LongMath.sqrt;
 import static com.google.common.math.MathTesting.ALL_LONG_CANDIDATES;
 import static com.google.common.math.MathTesting.ALL_ROUNDING_MODES;
 import static com.google.common.math.MathTesting.ALL_SAFE_ROUNDING_MODES;
@@ -138,8 +139,7 @@ public class LongMathTest extends TestCase {
   @GwtIncompatible // TODO
   public void testConstantsSqrtMaxLong() {
     assertEquals(
-        /* expected= */ LongMath.sqrt(Long.MAX_VALUE, FLOOR),
-        /* actual= */ LongMath.FLOOR_SQRT_MAX_LONG);
+        /* expected= */ sqrt(Long.MAX_VALUE, FLOOR), /* actual= */ LongMath.FLOOR_SQRT_MAX_LONG);
   }
 
   @GwtIncompatible // TODO
@@ -315,7 +315,7 @@ public class LongMathTest extends TestCase {
   public void testSqrtNegativeAlwaysThrows() {
     for (long x : NEGATIVE_LONG_CANDIDATES) {
       for (RoundingMode mode : ALL_ROUNDING_MODES) {
-        assertThrows(IllegalArgumentException.class, () -> LongMath.sqrt(x, mode));
+        assertThrows(IllegalArgumentException.class, () -> sqrt(x, mode));
       }
     }
   }
@@ -327,7 +327,7 @@ public class LongMathTest extends TestCase {
       for (RoundingMode mode : ALL_SAFE_ROUNDING_MODES) {
         // Promote the long value (rather than using longValue() on the expected value) to avoid
         // any risk of truncation which could lead to a false positive.
-        assertEquals(BigIntegerMath.sqrt(valueOf(x), mode), valueOf(LongMath.sqrt(x, mode)));
+        assertEquals(BigIntegerMath.sqrt(valueOf(x), mode), valueOf(sqrt(x, mode)));
       }
     }
   }
@@ -336,11 +336,11 @@ public class LongMathTest extends TestCase {
   @GwtIncompatible // TODO
   public void testSqrtExactMatchesFloorOrThrows() {
     for (long x : POSITIVE_LONG_CANDIDATES) {
-      long sqrtFloor = LongMath.sqrt(x, FLOOR);
+      long sqrtFloor = sqrt(x, FLOOR);
       // We only expect an exception if x was not a perfect square.
       boolean isPerfectSquare = sqrtFloor * sqrtFloor == x;
       try {
-        assertEquals(sqrtFloor, LongMath.sqrt(x, UNNECESSARY));
+        assertEquals(sqrtFloor, sqrt(x, UNNECESSARY));
         assertTrue(isPerfectSquare);
       } catch (ArithmeticException e) {
         assertFalse(isPerfectSquare);

@@ -19,10 +19,10 @@ package com.google.common.graph;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.graph.GraphConstants.INNER_CAPACITY;
 import static com.google.common.graph.GraphConstants.INNER_LOAD_FACTOR;
+import static java.util.Collections.unmodifiableSet;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterators;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -63,7 +63,7 @@ final class UndirectedGraphConnections<N, V> implements GraphConnections<N, V> {
 
   @Override
   public Set<N> adjacentNodes() {
-    return Collections.unmodifiableSet(adjacentNodeValues.keySet());
+    return unmodifiableSet(adjacentNodeValues.keySet());
   }
 
   @Override

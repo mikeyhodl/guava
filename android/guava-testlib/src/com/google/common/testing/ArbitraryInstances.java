@@ -18,7 +18,10 @@ package com.google.common.testing;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Iterators.peekingIterator;
+import static com.google.common.collect.Sets.unmodifiableNavigableSet;
+import static com.google.common.collect.Tables.unmodifiableRowSortedTable;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Arrays.sort;
 import static java.util.Objects.requireNonNull;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
@@ -65,7 +68,6 @@ import com.google.common.collect.SortedMapDifference;
 import com.google.common.collect.SortedMultiset;
 import com.google.common.collect.SortedSetMultimap;
 import com.google.common.collect.Table;
-import com.google.common.collect.Tables;
 import com.google.common.collect.TreeBasedTable;
 import com.google.common.collect.TreeMultimap;
 import com.google.common.io.ByteSink;
@@ -109,7 +111,6 @@ import java.nio.LongBuffer;
 import java.nio.ShortBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayDeque;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Currency;
@@ -253,7 +254,7 @@ public final class ArbitraryInstances {
           .put(ImmutableSet.class, ImmutableSet.of())
           .put(SortedSet.class, ImmutableSortedSet.of())
           .put(ImmutableSortedSet.class, ImmutableSortedSet.of())
-          .put(NavigableSet.class, Sets.unmodifiableNavigableSet(Sets.newTreeSet()))
+          .put(NavigableSet.class, unmodifiableNavigableSet(Sets.newTreeSet()))
           .put(Map.class, ImmutableMap.of())
           .put(ImmutableMap.class, ImmutableMap.of())
           .put(SortedMap.class, ImmutableSortedMap.of())
@@ -276,7 +277,7 @@ public final class ArbitraryInstances {
           .put(ImmutableBiMap.class, ImmutableBiMap.of())
           .put(Table.class, ImmutableTable.of())
           .put(ImmutableTable.class, ImmutableTable.of())
-          .put(RowSortedTable.class, Tables.unmodifiableRowSortedTable(TreeBasedTable.create()))
+          .put(RowSortedTable.class, unmodifiableRowSortedTable(TreeBasedTable.create()))
           .put(ClassToInstanceMap.class, ImmutableClassToInstanceMap.builder().build())
           .put(ImmutableClassToInstanceMap.class, ImmutableClassToInstanceMap.builder().build())
           .put(Comparable.class, ByToString.INSTANCE)
@@ -384,7 +385,7 @@ public final class ArbitraryInstances {
 
   private static <T> @Nullable T arbitraryConstantInstanceOrNull(Class<T> type) {
     Field[] fields = type.getDeclaredFields();
-    Arrays.sort(fields, BY_FIELD_NAME);
+    sort(fields, BY_FIELD_NAME);
     for (Field field : fields) {
       if (Modifier.isPublic(field.getModifiers())
           && Modifier.isStatic(field.getModifiers())

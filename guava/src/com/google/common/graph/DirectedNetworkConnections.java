@@ -17,11 +17,11 @@
 package com.google.common.graph;
 
 import static com.google.common.graph.GraphConstants.EXPECTED_DEGREE;
+import static java.util.Collections.unmodifiableSet;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableBiMap;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -51,12 +51,12 @@ final class DirectedNetworkConnections<N, E> extends AbstractDirectedNetworkConn
 
   @Override
   public Set<N> predecessors() {
-    return Collections.unmodifiableSet(((BiMap<E, N>) inEdgeMap).values());
+    return unmodifiableSet(((BiMap<E, N>) inEdgeMap).values());
   }
 
   @Override
   public Set<N> successors() {
-    return Collections.unmodifiableSet(((BiMap<E, N>) outEdgeMap).values());
+    return unmodifiableSet(((BiMap<E, N>) outEdgeMap).values());
   }
 
   @Override

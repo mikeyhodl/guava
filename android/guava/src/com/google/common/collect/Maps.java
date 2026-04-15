@@ -21,9 +21,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Predicates.compose;
 import static com.google.common.collect.CollectPreconditions.checkEntryNotNull;
 import static com.google.common.collect.CollectPreconditions.checkNonnegative;
+import static com.google.common.collect.Iterables.any;
+import static com.google.common.collect.Iterators.filter;
 import static com.google.common.collect.NullnessCasts.uncheckedCastNullableTToT;
+import static com.google.common.collect.Sets.unmodifiableNavigableSet;
 import static java.lang.Math.ceil;
 import static java.util.Collections.singletonMap;
+import static java.util.Collections.unmodifiableSet;
 import static java.util.Objects.requireNonNull;
 
 import com.google.common.annotations.GwtCompatible;
@@ -1430,7 +1434,7 @@ public final class Maps {
    */
   static <K extends @Nullable Object, V extends @Nullable Object>
       Set<Entry<K, V>> unmodifiableEntrySet(Set<Entry<K, V>> entrySet) {
-    return new UnmodifiableEntrySet<>(Collections.unmodifiableSet(entrySet));
+    return new UnmodifiableEntrySet<>(unmodifiableSet(entrySet));
   }
 
   /**
@@ -1684,7 +1688,7 @@ public final class Maps {
     @Override
     public Set<V> values() {
       Set<V> result = values;
-      return (result == null) ? values = Collections.unmodifiableSet(delegate.values()) : result;
+      return (result == null) ? values = unmodifiableSet(delegate.values()) : result;
     }
 
     @GwtIncompatible @J2ktIncompatible private static final long serialVersionUID = 0;
@@ -3125,12 +3129,12 @@ public final class Maps {
 
     @Override
     Iterator<Entry<K, V>> entryIterator() {
-      return Iterators.filter(unfiltered.entrySet().iterator(), entryPredicate);
+      return filter(unfiltered.entrySet().iterator(), entryPredicate);
     }
 
     @Override
     Iterator<Entry<K, V>> descendingEntryIterator() {
-      return Iterators.filter(unfiltered.descendingMap().entrySet().iterator(), entryPredicate);
+      return filter(unfiltered.descendingMap().entrySet().iterator(), entryPredicate);
     }
 
     @Override
@@ -3140,7 +3144,7 @@ public final class Maps {
 
     @Override
     public boolean isEmpty() {
-      return !Iterables.any(unfiltered.entrySet(), entryPredicate);
+      return !any(unfiltered.entrySet(), entryPredicate);
     }
 
     @Override
@@ -3392,12 +3396,12 @@ public final class Maps {
 
     @Override
     public NavigableSet<K> navigableKeySet() {
-      return Sets.unmodifiableNavigableSet(delegate.navigableKeySet());
+      return unmodifiableNavigableSet(delegate.navigableKeySet());
     }
 
     @Override
     public NavigableSet<K> descendingKeySet() {
-      return Sets.unmodifiableNavigableSet(delegate.descendingKeySet());
+      return unmodifiableNavigableSet(delegate.descendingKeySet());
     }
 
     @Override
