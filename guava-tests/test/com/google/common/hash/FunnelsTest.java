@@ -16,6 +16,7 @@
 
 package com.google.common.hash;
 
+import static com.google.common.hash.Funnels.asOutputStream;
 import static com.google.common.hash.Funnels.byteArrayFunnel;
 import static com.google.common.hash.Funnels.integerFunnel;
 import static com.google.common.hash.Funnels.longFunnel;
@@ -139,7 +140,7 @@ public class FunnelsTest extends TestCase {
 
   public void testAsOutputStream() throws Exception {
     PrimitiveSink sink = mock(PrimitiveSink.class);
-    OutputStream out = Funnels.asOutputStream(sink);
+    OutputStream out = asOutputStream(sink);
     byte[] bytes = {1, 2, 3, 4};
     out.write(255);
     out.write(bytes);
