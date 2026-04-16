@@ -16,6 +16,9 @@
 
 package com.google.common.math;
 
+import static com.google.common.math.LongMath.checkedAdd;
+import static com.google.common.math.LongMath.checkedMultiply;
+import static com.google.common.math.LongMath.checkedSubtract;
 import static com.google.common.math.LongMath.sqrt;
 import static com.google.common.math.MathTesting.ALL_LONG_CANDIDATES;
 import static com.google.common.math.MathTesting.ALL_ROUNDING_MODES;
@@ -28,7 +31,7 @@ import static com.google.common.math.MathTesting.POSITIVE_INTEGER_CANDIDATES;
 import static com.google.common.math.MathTesting.POSITIVE_LONG_CANDIDATES;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
-import static java.math.BigInteger.valueOf;
+import static java.lang.Math.multiplyExact;
 import static java.math.RoundingMode.DOWN;
 import static java.math.RoundingMode.FLOOR;
 import static java.math.RoundingMode.UNNECESSARY;
@@ -53,6 +56,7 @@ import org.jspecify.annotations.NullUnmarked;
  */
 @GwtCompatible
 @NullUnmarked
+@SuppressWarnings("LongMathMod") // We are testing LongMathMod against alternatives.
 public class LongMathTest extends TestCase {
   @SuppressWarnings("ConstantOverflow")
   public void testMaxSignedPowerOfTwo() {
@@ -62,7 +66,7 @@ public class LongMathTest extends TestCase {
 
   public void testCeilingPowerOfTwo() {
     for (long x : POSITIVE_LONG_CANDIDATES) {
-      BigInteger expectedResult = BigIntegerMath.ceilingPowerOfTwo(BigInteger.valueOf(x));
+      BigInteger expectedResult = BigIntegerMath.ceilingPowerOfTwo(bigInt(x));
       if (fitsInLong(expectedResult)) {
         assertEquals(expectedResult.longValue(), LongMath.ceilingPowerOfTwo(x));
       } else {
@@ -73,7 +77,7 @@ public class LongMathTest extends TestCase {
 
   public void testFloorPowerOfTwo() {
     for (long x : POSITIVE_LONG_CANDIDATES) {
-      BigInteger expectedResult = BigIntegerMath.floorPowerOfTwo(BigInteger.valueOf(x));
+      BigInteger expectedResult = BigIntegerMath.floorPowerOfTwo(bigInt(x));
       assertEquals(expectedResult.longValue(), LongMath.floorPowerOfTwo(x));
     }
   }
@@ -101,9 +105,8 @@ public class LongMathTest extends TestCase {
   @GwtIncompatible // TODO
   public void testConstantMaxPowerOfSqrt2Unsigned() {
     assertEquals(
-        /* expected= */ BigIntegerMath.sqrt(BigInteger.ZERO.setBit(2 * Long.SIZE - 1), FLOOR)
-            .longValue(),
-        /* actual= */ LongMath.MAX_POWER_OF_SQRT2_UNSIGNED);
+        BigIntegerMath.sqrt(BigInteger.ZERO.setBit(2 * Long.SIZE - 1), FLOOR).longValue(),
+        LongMath.MAX_POWER_OF_SQRT2_UNSIGNED);
   }
 
   @GwtIncompatible // BigIntegerMath // TODO(cpovirk): GWT-enable BigIntegerMath
@@ -129,17 +132,16 @@ public class LongMathTest extends TestCase {
     for (int i = 0; i < LongMath.halfPowersOf10.length; i++) {
       assertEquals(
           BigIntegerMath.sqrt(BigInteger.TEN.pow(2 * i + 1), FLOOR),
-          BigInteger.valueOf(LongMath.halfPowersOf10[i]));
+          bigInt(LongMath.halfPowersOf10[i]));
     }
     BigInteger nextBigger =
         BigIntegerMath.sqrt(BigInteger.TEN.pow(2 * LongMath.halfPowersOf10.length + 1), FLOOR);
-    assertThat(nextBigger).isGreaterThan(BigInteger.valueOf(Long.MAX_VALUE));
+    assertThat(nextBigger).isGreaterThan(bigInt(Long.MAX_VALUE));
   }
 
   @GwtIncompatible // TODO
   public void testConstantsSqrtMaxLong() {
-    assertEquals(
-        /* expected= */ sqrt(Long.MAX_VALUE, FLOOR), /* actual= */ LongMath.FLOOR_SQRT_MAX_LONG);
+    assertEquals(sqrt(Long.MAX_VALUE, FLOOR), LongMath.FLOOR_SQRT_MAX_LONG);
   }
 
   @GwtIncompatible // TODO
@@ -151,8 +153,9 @@ public class LongMathTest extends TestCase {
     assertThrows(
         ArithmeticException.class,
         () ->
-            LongMath.checkedMultiply(
-                LongMath.factorials[LongMath.factorials.length - 1], LongMath.factorials.length));
+            multiplyExact(
+                LongMath.factorials[LongMath.factorials.length - 1],
+                (long) LongMath.factorials.length));
   }
 
   @GwtIncompatible // TODO
@@ -191,7 +194,7 @@ public class LongMathTest extends TestCase {
   public void testLessThanBranchFree() {
     for (long x : ALL_LONG_CANDIDATES) {
       for (long y : ALL_LONG_CANDIDATES) {
-        BigInteger difference = BigInteger.valueOf(x).subtract(BigInteger.valueOf(y));
+        BigInteger difference = bigInt(x).subtract(bigInt(y));
         if (fitsInLong(difference)) {
           int expected = (x < y) ? 1 : 0;
           int actual = LongMath.lessThanBranchFree(x, y);
@@ -205,8 +208,8 @@ public class LongMathTest extends TestCase {
   @GwtIncompatible // TODO
   private long simpleBinomial(int n, int k) {
     long accum = 1;
-    for (int i = 0; i < k; i++) {
-      accum = LongMath.checkedMultiply(accum, n - i);
+    for (long i = 0; i < k; i++) {
+      accum = multiplyExact(accum, n - i);
       accum /= i + 1;
     }
     return accum;
@@ -216,7 +219,7 @@ public class LongMathTest extends TestCase {
   public void testIsPowerOfTwo() {
     for (long x : ALL_LONG_CANDIDATES) {
       // Checks for a single bit set.
-      BigInteger bigX = BigInteger.valueOf(x);
+      BigInteger bigX = bigInt(x);
       boolean expected = (bigX.signum() > 0) && (bigX.bitCount() == 1);
       assertEquals(expected, LongMath.isPowerOfTwo(x));
     }
@@ -241,7 +244,7 @@ public class LongMathTest extends TestCase {
     for (long x : POSITIVE_LONG_CANDIDATES) {
       for (RoundingMode mode : ALL_SAFE_ROUNDING_MODES) {
         // The BigInteger implementation is tested separately, use it as the reference.
-        assertEquals(BigIntegerMath.log2(valueOf(x), mode), LongMath.log2(x, mode));
+        assertEquals(BigIntegerMath.log2(bigInt(x), mode), LongMath.log2(x, mode));
       }
     }
   }
@@ -281,7 +284,7 @@ public class LongMathTest extends TestCase {
   public void testLog10MatchesBigInteger() {
     for (long x : POSITIVE_LONG_CANDIDATES) {
       for (RoundingMode mode : ALL_SAFE_ROUNDING_MODES) {
-        assertEquals(BigIntegerMath.log10(valueOf(x), mode), LongMath.log10(x, mode));
+        assertEquals(BigIntegerMath.log10(bigInt(x), mode), LongMath.log10(x, mode));
       }
     }
   }
@@ -327,7 +330,7 @@ public class LongMathTest extends TestCase {
       for (RoundingMode mode : ALL_SAFE_ROUNDING_MODES) {
         // Promote the long value (rather than using longValue() on the expected value) to avoid
         // any risk of truncation which could lead to a false positive.
-        assertEquals(BigIntegerMath.sqrt(valueOf(x), mode), valueOf(sqrt(x, mode)));
+        assertEquals(BigIntegerMath.sqrt(bigInt(x), mode), bigInt(sqrt(x, mode)));
       }
     }
   }
@@ -352,7 +355,7 @@ public class LongMathTest extends TestCase {
   public void testPow() {
     for (long i : ALL_LONG_CANDIDATES) {
       for (int exp : EXPONENTS) {
-        assertEquals(LongMath.pow(i, exp), valueOf(i).pow(exp).longValue());
+        assertEquals(LongMath.pow(i, exp), bigInt(i).pow(exp).longValue());
       }
     }
   }
@@ -365,7 +368,7 @@ public class LongMathTest extends TestCase {
       for (long q : NONZERO_LONG_CANDIDATES) {
         for (RoundingMode mode : ALL_SAFE_ROUNDING_MODES) {
           long expected =
-              new BigDecimal(valueOf(p)).divide(new BigDecimal(valueOf(q)), 0, mode).longValue();
+              new BigDecimal(bigInt(p)).divide(new BigDecimal(bigInt(q)), 0, mode).longValue();
           long actual = LongMath.divide(p, q, mode);
           if (expected != actual) {
             failFormat("expected divide(%s, %s, %s) = %s; got %s", p, q, mode, expected, actual);
@@ -423,7 +426,7 @@ public class LongMathTest extends TestCase {
   public void testIntMod() {
     for (long x : ALL_LONG_CANDIDATES) {
       for (int m : POSITIVE_INTEGER_CANDIDATES) {
-        assertEquals(valueOf(x).mod(valueOf(m)).intValue(), LongMath.mod(x, m));
+        assertEquals(bigInt(x).mod(bigInt(m)).intValue(), LongMath.mod(x, m));
       }
     }
   }
@@ -449,7 +452,7 @@ public class LongMathTest extends TestCase {
   public void testMod() {
     for (long x : ALL_LONG_CANDIDATES) {
       for (long m : POSITIVE_LONG_CANDIDATES) {
-        assertEquals(valueOf(x).mod(valueOf(m)).longValue(), LongMath.mod(x, m));
+        assertEquals(bigInt(x).mod(bigInt(m)).longValue(), LongMath.mod(x, m));
       }
     }
   }
@@ -466,7 +469,7 @@ public class LongMathTest extends TestCase {
   public void testGCDExhaustive() {
     for (long a : POSITIVE_LONG_CANDIDATES) {
       for (long b : POSITIVE_LONG_CANDIDATES) {
-        assertEquals(valueOf(a).gcd(valueOf(b)), valueOf(LongMath.gcd(a, b)));
+        assertEquals(bigInt(a).gcd(bigInt(b)), bigInt(LongMath.gcd(a, b)));
       }
     }
   }
@@ -496,14 +499,16 @@ public class LongMathTest extends TestCase {
     }
   }
 
+  @SuppressWarnings("InlineMeInliner") // We need to test checkedAdd
   @AndroidIncompatible // slow
   public void testCheckedAdd() {
     for (long a : ALL_LONG_CANDIDATES) {
       for (long b : ALL_LONG_CANDIDATES) {
-        BigInteger expectedResult = valueOf(a).add(valueOf(b));
+        // TODO: cpovirk - Test against Math.addExact instead?
+        BigInteger expectedResult = bigInt(a).add(bigInt(b));
         boolean expectedSuccess = fitsInLong(expectedResult);
         try {
-          assertEquals(a + b, LongMath.checkedAdd(a, b));
+          assertEquals(a + b, checkedAdd(a, b));
           assertTrue(expectedSuccess);
         } catch (ArithmeticException e) {
           if (expectedSuccess) {
@@ -515,14 +520,16 @@ public class LongMathTest extends TestCase {
     }
   }
 
+  @SuppressWarnings("InlineMeInliner") // We need to test checkedSubtract
   @AndroidIncompatible // slow
   public void testCheckedSubtract() {
     for (long a : ALL_LONG_CANDIDATES) {
       for (long b : ALL_LONG_CANDIDATES) {
-        BigInteger expectedResult = valueOf(a).subtract(valueOf(b));
+        // TODO: cpovirk - Test against Math.subtractExact instead?
+        BigInteger expectedResult = bigInt(a).subtract(bigInt(b));
         boolean expectedSuccess = fitsInLong(expectedResult);
         try {
-          assertEquals(a - b, LongMath.checkedSubtract(a, b));
+          assertEquals(a - b, checkedSubtract(a, b));
           assertTrue(expectedSuccess);
         } catch (ArithmeticException e) {
           if (expectedSuccess) {
@@ -535,6 +542,7 @@ public class LongMathTest extends TestCase {
     }
   }
 
+  @SuppressWarnings("InlineMeInliner") // We need to test checkedMultiply
   @AndroidIncompatible // slow
   public void testCheckedMultiply() {
     boolean isAndroid = TestPlatform.isAndroid();
@@ -550,10 +558,11 @@ public class LongMathTest extends TestCase {
            */
           continue;
         }
-        BigInteger expectedResult = valueOf(a).multiply(valueOf(b));
+        // TODO: cpovirk - Test against Math.multiplyExact instead?
+        BigInteger expectedResult = bigInt(a).multiply(bigInt(b));
         boolean expectedSuccess = fitsInLong(expectedResult);
         try {
-          assertEquals(a * b, LongMath.checkedMultiply(a, b));
+          assertEquals(a * b, checkedMultiply(a, b));
           assertTrue(expectedSuccess);
         } catch (ArithmeticException e) {
           if (expectedSuccess) {
@@ -570,7 +579,7 @@ public class LongMathTest extends TestCase {
   public void testCheckedPow() {
     for (long b : ALL_LONG_CANDIDATES) {
       for (int exp : EXPONENTS) {
-        BigInteger expectedResult = valueOf(b).pow(exp);
+        BigInteger expectedResult = bigInt(b).pow(exp);
         boolean expectedSuccess = fitsInLong(expectedResult);
         try {
           assertEquals(expectedResult.longValue(), LongMath.checkedPow(b, exp));
@@ -592,7 +601,7 @@ public class LongMathTest extends TestCase {
     for (long a : ALL_LONG_CANDIDATES) {
       for (long b : ALL_LONG_CANDIDATES) {
         assertOperationEquals(
-            a, b, "s+", saturatedCast(valueOf(a).add(valueOf(b))), LongMath.saturatedAdd(a, b));
+            a, b, "s+", saturatedCast(bigInt(a).add(bigInt(b))), LongMath.saturatedAdd(a, b));
       }
     }
   }
@@ -606,7 +615,7 @@ public class LongMathTest extends TestCase {
             a,
             b,
             "s-",
-            saturatedCast(valueOf(a).subtract(valueOf(b))),
+            saturatedCast(bigInt(a).subtract(bigInt(b))),
             LongMath.saturatedSubtract(a, b));
       }
     }
@@ -621,7 +630,7 @@ public class LongMathTest extends TestCase {
             a,
             b,
             "s*",
-            saturatedCast(valueOf(a).multiply(valueOf(b))),
+            saturatedCast(bigInt(a).multiply(bigInt(b))),
             LongMath.saturatedMultiply(a, b));
       }
     }
@@ -632,7 +641,7 @@ public class LongMathTest extends TestCase {
     for (long a : ALL_LONG_CANDIDATES) {
       for (int b : EXPONENTS) {
         assertOperationEquals(
-            a, b, "s^", saturatedCast(valueOf(a).pow(b)), LongMath.saturatedPow(a, b));
+            a, b, "s^", saturatedCast(bigInt(a).pow(b)), LongMath.saturatedPow(a, b));
       }
     }
   }
@@ -773,8 +782,8 @@ public class LongMathTest extends TestCase {
    * arithmetic.
    */
   private static long computeMeanSafely(long x, long y) {
-    BigInteger bigX = BigInteger.valueOf(x);
-    BigInteger bigY = BigInteger.valueOf(y);
+    BigInteger bigX = bigInt(x);
+    BigInteger bigY = bigInt(y);
     BigDecimal two = BigDecimal.valueOf(2); // Android doesn't have BigDecimal.TWO yet
     BigDecimal bigMean = new BigDecimal(bigX.add(bigY)).divide(two, RoundingMode.FLOOR);
     return bigMean.longValueExact();
@@ -784,8 +793,8 @@ public class LongMathTest extends TestCase {
     return big.bitLength() <= 63;
   }
 
-  private static final BigInteger MAX_LONG = BigInteger.valueOf(Long.MAX_VALUE);
-  private static final BigInteger MIN_LONG = BigInteger.valueOf(Long.MIN_VALUE);
+  private static final BigInteger MAX_LONG = bigInt(Long.MAX_VALUE);
+  private static final BigInteger MIN_LONG = bigInt(Long.MIN_VALUE);
 
   private static long saturatedCast(BigInteger big) {
     if (big.compareTo(MAX_LONG) > 0) {
@@ -810,7 +819,7 @@ public class LongMathTest extends TestCase {
   public void testIsPrimeSmall() {
     // Check the first 1000 integers
     for (int i = 2; i < 1000; i++) {
-      assertEquals(BigInteger.valueOf(i).isProbablePrime(100), LongMath.isPrime(i));
+      assertEquals(bigInt(i).isProbablePrime(100), LongMath.isPrime(i));
     }
   }
 
@@ -819,7 +828,7 @@ public class LongMathTest extends TestCase {
     // Test the thorough test inputs, which also includes special constants in the Miller-Rabin
     // tests.
     for (long l : POSITIVE_LONG_CANDIDATES) {
-      assertEquals(BigInteger.valueOf(l).isProbablePrime(100), LongMath.isPrime(l));
+      assertEquals(bigInt(l).isProbablePrime(100), LongMath.isPrime(l));
     }
   }
 
@@ -830,7 +839,7 @@ public class LongMathTest extends TestCase {
       for (int i = 0; i < 2000; i++) {
         // A random long between 0 and Long.MAX_VALUE, inclusive.
         long l = rand.nextLong() & ((1L << bits) - 1);
-        assertEquals(BigInteger.valueOf(l).isProbablePrime(100), LongMath.isPrime(l));
+        assertEquals(bigInt(l).isProbablePrime(100), LongMath.isPrime(l));
       }
     }
   }
@@ -905,7 +914,7 @@ public class LongMathTest extends TestCase {
     for (RoundingMode roundingMode : EnumSet.complementOf(EnumSet.of(UNNECESSARY))) {
       for (long candidate : roundToDoubleTestCandidates) {
         assertThat(LongMath.roundToDouble(candidate, roundingMode))
-            .isEqualTo(BigIntegerMath.roundToDouble(BigInteger.valueOf(candidate), roundingMode));
+            .isEqualTo(BigIntegerMath.roundToDouble(bigInt(candidate), roundingMode));
       }
     }
   }
@@ -915,7 +924,7 @@ public class LongMathTest extends TestCase {
     for (long candidate : roundToDoubleTestCandidates) {
       Double expectedDouble = null;
       try {
-        expectedDouble = BigIntegerMath.roundToDouble(BigInteger.valueOf(candidate), UNNECESSARY);
+        expectedDouble = BigIntegerMath.roundToDouble(bigInt(candidate), UNNECESSARY);
       } catch (ArithmeticException expected) {
         // do nothing
       }
@@ -942,5 +951,9 @@ public class LongMathTest extends TestCase {
 
   private static void failFormat(String template, Object... args) {
     assertWithMessage(template, args).fail();
+  }
+
+  private static BigInteger bigInt(long value) {
+    return BigInteger.valueOf(value);
   }
 }
