@@ -19,6 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.util.concurrent.Futures.immediateCancelledFuture;
 import static com.google.common.util.concurrent.Internal.toNanosSaturated;
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
+import static com.google.common.util.concurrent.MoreExecutors.newThread;
 import static com.google.common.util.concurrent.MoreExecutors.renamingDecorator;
 import static com.google.common.util.concurrent.Platform.restoreInterruptIfIsInterruptedException;
 import static java.util.Objects.requireNonNull;
@@ -363,14 +364,8 @@ public abstract class AbstractScheduledService implements Service {
    * fails}.
    */
   protected ScheduledExecutorService executor() {
-    @WeakOuter
-    final class ThreadFactoryImpl implements ThreadFactory {
-      @Override
-      public Thread newThread(Runnable runnable) {
-        return MoreExecutors.newThread(serviceName(), runnable);
-      }
-    }
-    ScheduledExecutorService executor = newSingleThreadScheduledExecutor(new ThreadFactoryImpl());
+    @WeakOuter ThreadFactory threadFactory = runnable -> newThread(serviceName(), runnable);
+    ScheduledExecutorService executor = newSingleThreadScheduledExecutor(threadFactory);
     // Add a listener to shut down the executor after the service is stopped. This ensures that the
     // JVM shutdown will not be prevented from exiting after this service has stopped or failed.
     // Technically this listener is added after start() was called so it is a little gross, but it
