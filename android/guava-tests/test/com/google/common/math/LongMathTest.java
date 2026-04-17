@@ -60,16 +60,24 @@ import org.jspecify.annotations.NullUnmarked;
 public class LongMathTest extends TestCase {
   @SuppressWarnings("ConstantOverflow")
   public void testMaxSignedPowerOfTwo() {
-    assertTrue(LongMath.isPowerOfTwo(LongMath.MAX_SIGNED_POWER_OF_TWO));
-    assertFalse(LongMath.isPowerOfTwo(LongMath.MAX_SIGNED_POWER_OF_TWO * 2));
+    assertThat(LongMath.isPowerOfTwo(LongMath.MAX_SIGNED_POWER_OF_TWO)).isTrue();
+    assertThat(LongMath.isPowerOfTwo(LongMath.MAX_SIGNED_POWER_OF_TWO * 2)).isFalse();
   }
 
   public void testCeilingPowerOfTwo() {
     for (long x : POSITIVE_LONG_CANDIDATES) {
       BigInteger expectedResult = BigIntegerMath.ceilingPowerOfTwo(bigInt(x));
       if (fitsInLong(expectedResult)) {
-        assertEquals(expectedResult.longValue(), LongMath.ceilingPowerOfTwo(x));
-      } else {
+        assertThat(LongMath.ceilingPowerOfTwo(x))
+            .isEqualTo(BigIntegerMath.ceilingPowerOfTwo(bigInt(x)).longValue());
+      }
+    }
+  }
+
+  public void testCeilingPowerOfTwo_overflows() {
+    for (long x : POSITIVE_LONG_CANDIDATES) {
+      BigInteger expectedResult = BigIntegerMath.ceilingPowerOfTwo(bigInt(x));
+      if (!fitsInLong(expectedResult)) {
         assertThrows(ArithmeticException.class, () -> LongMath.ceilingPowerOfTwo(x));
       }
     }
@@ -78,7 +86,7 @@ public class LongMathTest extends TestCase {
   public void testFloorPowerOfTwo() {
     for (long x : POSITIVE_LONG_CANDIDATES) {
       BigInteger expectedResult = BigIntegerMath.floorPowerOfTwo(bigInt(x));
-      assertEquals(expectedResult.longValue(), LongMath.floorPowerOfTwo(x));
+      assertThat(LongMath.floorPowerOfTwo(x)).isEqualTo(expectedResult.longValue());
     }
   }
 
@@ -102,26 +110,27 @@ public class LongMathTest extends TestCase {
     assertThrows(IllegalArgumentException.class, () -> LongMath.floorPowerOfTwo(0L));
   }
 
+  // We want to test that we've defined the constant with the correct value.
+  @SuppressWarnings("TruthConstantAsserts")
   @GwtIncompatible // TODO
   public void testConstantMaxPowerOfSqrt2Unsigned() {
-    assertEquals(
-        BigIntegerMath.sqrt(BigInteger.ZERO.setBit(2 * Long.SIZE - 1), FLOOR).longValue(),
-        LongMath.MAX_POWER_OF_SQRT2_UNSIGNED);
+    assertThat(LongMath.MAX_POWER_OF_SQRT2_UNSIGNED)
+        .isEqualTo(
+            BigIntegerMath.sqrt(BigInteger.ZERO.setBit(2 * Long.SIZE - 1), FLOOR).longValue());
   }
 
   @GwtIncompatible // BigIntegerMath // TODO(cpovirk): GWT-enable BigIntegerMath
   public void testMaxLog10ForLeadingZeros() {
     for (int i = 0; i < Long.SIZE; i++) {
-      assertEquals(
-          BigIntegerMath.log10(BigInteger.ONE.shiftLeft(Long.SIZE - i), FLOOR),
-          LongMath.maxLog10ForLeadingZeros[i]);
+      assertThat(LongMath.maxLog10ForLeadingZeros[i])
+          .isEqualTo(BigIntegerMath.log10(BigInteger.ONE.shiftLeft(Long.SIZE - i), FLOOR));
     }
   }
 
   @GwtIncompatible // TODO
   public void testConstantsPowersOf10() {
     for (int i = 0; i < LongMath.powersOf10.length; i++) {
-      assertEquals(LongMath.checkedPow(10, i), LongMath.powersOf10[i]);
+      assertThat(LongMath.powersOf10[i]).isEqualTo(LongMath.checkedPow(10, i));
     }
     assertThrows(
         ArithmeticException.class, () -> LongMath.checkedPow(10, LongMath.powersOf10.length));
@@ -130,25 +139,26 @@ public class LongMathTest extends TestCase {
   @GwtIncompatible // TODO
   public void testConstantsHalfPowersOf10() {
     for (int i = 0; i < LongMath.halfPowersOf10.length; i++) {
-      assertEquals(
-          BigIntegerMath.sqrt(BigInteger.TEN.pow(2 * i + 1), FLOOR),
-          bigInt(LongMath.halfPowersOf10[i]));
+      assertThat(bigInt(LongMath.halfPowersOf10[i]))
+          .isEqualTo(BigIntegerMath.sqrt(BigInteger.TEN.pow(2 * i + 1), FLOOR));
     }
     BigInteger nextBigger =
         BigIntegerMath.sqrt(BigInteger.TEN.pow(2 * LongMath.halfPowersOf10.length + 1), FLOOR);
     assertThat(nextBigger).isGreaterThan(bigInt(Long.MAX_VALUE));
   }
 
+  // We want to test that we've defined the constant with the correct value.
+  @SuppressWarnings("TruthConstantAsserts")
   @GwtIncompatible // TODO
   public void testConstantsSqrtMaxLong() {
-    assertEquals(sqrt(Long.MAX_VALUE, FLOOR), LongMath.FLOOR_SQRT_MAX_LONG);
+    assertThat(LongMath.FLOOR_SQRT_MAX_LONG).isEqualTo(sqrt(Long.MAX_VALUE, FLOOR));
   }
 
   @GwtIncompatible // TODO
   public void testConstantsFactorials() {
     long expected = 1;
     for (int i = 0; i < LongMath.factorials.length; i++, expected *= i) {
-      assertEquals(expected, LongMath.factorials[i]);
+      assertThat(LongMath.factorials[i]).isEqualTo(expected);
     }
     assertThrows(
         ArithmeticException.class,
@@ -161,15 +171,16 @@ public class LongMathTest extends TestCase {
   @GwtIncompatible // TODO
   public void testConstantsBiggestBinomials() {
     for (int k = 0; k < LongMath.biggestBinomials.length; k++) {
-      assertTrue(fitsInLong(BigIntegerMath.binomial(LongMath.biggestBinomials[k], k)));
-      assertTrue(
-          LongMath.biggestBinomials[k] == Integer.MAX_VALUE
-              || !fitsInLong(BigIntegerMath.binomial(LongMath.biggestBinomials[k] + 1, k)));
+      assertThat(fitsInLong(BigIntegerMath.binomial(LongMath.biggestBinomials[k], k))).isTrue();
+      assertThat(
+              LongMath.biggestBinomials[k] == Integer.MAX_VALUE
+                  || !fitsInLong(BigIntegerMath.binomial(LongMath.biggestBinomials[k] + 1, k)))
+          .isTrue();
       // In the first case, any long is valid; in the second, we want to test that the next-bigger
       // long overflows.
     }
     int k = LongMath.biggestBinomials.length;
-    assertFalse(fitsInLong(BigIntegerMath.binomial(2 * k, k)));
+    assertThat(fitsInLong(BigIntegerMath.binomial(2 * k, k))).isFalse();
     // 2 * k is the smallest value for which we don't replace k with (n-k).
   }
 
@@ -177,7 +188,7 @@ public class LongMathTest extends TestCase {
   public void testConstantsBiggestSimpleBinomials() {
     for (int i = 0; i < LongMath.biggestSimpleBinomials.length; i++) {
       int k = i;
-      assertTrue(LongMath.biggestSimpleBinomials[k] <= LongMath.biggestBinomials[k]);
+      assertThat(LongMath.biggestSimpleBinomials[k]).isAtMost(LongMath.biggestBinomials[k]);
       long unused = simpleBinomial(LongMath.biggestSimpleBinomials[k], k); // mustn't throw
       if (LongMath.biggestSimpleBinomials[k] < Integer.MAX_VALUE) {
         // unless all n are fair game with this k
@@ -194,11 +205,8 @@ public class LongMathTest extends TestCase {
   public void testLessThanBranchFree() {
     for (long x : ALL_LONG_CANDIDATES) {
       for (long y : ALL_LONG_CANDIDATES) {
-        BigInteger difference = bigInt(x).subtract(bigInt(y));
-        if (fitsInLong(difference)) {
-          int expected = (x < y) ? 1 : 0;
-          int actual = LongMath.lessThanBranchFree(x, y);
-          assertEquals(expected, actual);
+        if (fitsInLong(bigInt(x).subtract(bigInt(y)))) {
+          assertThat(LongMath.lessThanBranchFree(x, y)).isEqualTo(x < y ? 1 : 0);
         }
       }
     }
@@ -219,9 +227,7 @@ public class LongMathTest extends TestCase {
   public void testIsPowerOfTwo() {
     for (long x : ALL_LONG_CANDIDATES) {
       // Checks for a single bit set.
-      BigInteger bigX = bigInt(x);
-      boolean expected = (bigX.signum() > 0) && (bigX.bitCount() == 1);
-      assertEquals(expected, LongMath.isPowerOfTwo(x));
+      assertThat(LongMath.isPowerOfTwo(x)).isEqualTo(x > 0 && bigInt(x).bitCount() == 1);
     }
   }
 
@@ -244,21 +250,25 @@ public class LongMathTest extends TestCase {
     for (long x : POSITIVE_LONG_CANDIDATES) {
       for (RoundingMode mode : ALL_SAFE_ROUNDING_MODES) {
         // The BigInteger implementation is tested separately, use it as the reference.
-        assertEquals(BigIntegerMath.log2(bigInt(x), mode), LongMath.log2(x, mode));
+        assertThat(LongMath.log2(x, mode)).isEqualTo(BigIntegerMath.log2(bigInt(x), mode));
       }
     }
   }
 
-  /* Relies on the correctness of isPowerOfTwo(long). */
+  // Relies on the correctness of isPowerOfTwo(long).
   public void testLog2Exact() {
     for (long x : POSITIVE_LONG_CANDIDATES) {
-      // We only expect an exception if x was not a power of 2.
-      boolean isPowerOf2 = LongMath.isPowerOfTwo(x);
-      try {
-        assertEquals(x, 1L << LongMath.log2(x, UNNECESSARY));
-        assertTrue(isPowerOf2);
-      } catch (ArithmeticException e) {
-        assertFalse(isPowerOf2);
+      if (LongMath.isPowerOfTwo(x)) {
+        assertThat(1L << LongMath.log2(x, UNNECESSARY)).isEqualTo(x);
+      }
+    }
+  }
+
+  // Relies on the correctness of isPowerOfTwo(long).
+  public void testLog2Exact_notPowerOfTwo() {
+    for (long x : POSITIVE_LONG_CANDIDATES) {
+      if (!LongMath.isPowerOfTwo(x)) {
+        assertThrows(ArithmeticException.class, () -> LongMath.log2(x, UNNECESSARY));
       }
     }
   }
@@ -284,7 +294,7 @@ public class LongMathTest extends TestCase {
   public void testLog10MatchesBigInteger() {
     for (long x : POSITIVE_LONG_CANDIDATES) {
       for (RoundingMode mode : ALL_SAFE_ROUNDING_MODES) {
-        assertEquals(BigIntegerMath.log10(bigInt(x), mode), LongMath.log10(x, mode));
+        assertThat(LongMath.log10(x, mode)).isEqualTo(BigIntegerMath.log10(bigInt(x), mode));
       }
     }
   }
@@ -296,8 +306,8 @@ public class LongMathTest extends TestCase {
       int floor = LongMath.log10(x, FLOOR);
       boolean expectedSuccess = LongMath.pow(10, floor) == x;
       try {
-        assertEquals(floor, LongMath.log10(x, UNNECESSARY));
-        assertTrue(expectedSuccess);
+        assertThat(LongMath.log10(x, UNNECESSARY)).isEqualTo(floor);
+        assertThat(expectedSuccess).isTrue();
       } catch (ArithmeticException e) {
         if (expectedSuccess) {
           failFormat("expected log10(%s, UNNECESSARY) = %s; got ArithmeticException", x, floor);
@@ -310,7 +320,7 @@ public class LongMathTest extends TestCase {
   public void testLog10TrivialOnPowerOf10() {
     long x = 1000000000000L;
     for (RoundingMode mode : ALL_ROUNDING_MODES) {
-      assertEquals(12, LongMath.log10(x, mode));
+      assertThat(LongMath.log10(x, mode)).isEqualTo(12);
     }
   }
 
@@ -330,7 +340,7 @@ public class LongMathTest extends TestCase {
       for (RoundingMode mode : ALL_SAFE_ROUNDING_MODES) {
         // Promote the long value (rather than using longValue() on the expected value) to avoid
         // any risk of truncation which could lead to a false positive.
-        assertEquals(BigIntegerMath.sqrt(bigInt(x), mode), bigInt(sqrt(x, mode)));
+        assertThat(bigInt(sqrt(x, mode))).isEqualTo(BigIntegerMath.sqrt(bigInt(x), mode));
       }
     }
   }
@@ -343,10 +353,10 @@ public class LongMathTest extends TestCase {
       // We only expect an exception if x was not a perfect square.
       boolean isPerfectSquare = sqrtFloor * sqrtFloor == x;
       try {
-        assertEquals(sqrtFloor, sqrt(x, UNNECESSARY));
-        assertTrue(isPerfectSquare);
+        assertThat(sqrt(x, UNNECESSARY)).isEqualTo(sqrtFloor);
+        assertThat(isPerfectSquare).isTrue();
       } catch (ArithmeticException e) {
-        assertFalse(isPerfectSquare);
+        assertThat(isPerfectSquare).isFalse();
       }
     }
   }
@@ -355,7 +365,7 @@ public class LongMathTest extends TestCase {
   public void testPow() {
     for (long i : ALL_LONG_CANDIDATES) {
       for (int exp : EXPONENTS) {
-        assertEquals(LongMath.pow(i, exp), bigInt(i).pow(exp).longValue());
+        assertThat(LongMath.pow(i, exp)).isEqualTo(bigInt(i).pow(exp).longValue());
       }
     }
   }
@@ -375,9 +385,9 @@ public class LongMathTest extends TestCase {
           }
           // Check the assertions we make in the javadoc.
           if (mode == DOWN) {
-            assertEquals(p / q, LongMath.divide(p, q, mode));
+            assertThat(LongMath.divide(p, q, mode)).isEqualTo(p / q);
           } else if (mode == FLOOR) {
-            assertEquals(Math.floorDiv(p, q), LongMath.divide(p, q, mode));
+            assertThat(LongMath.divide(p, q, mode)).isEqualTo(Math.floorDiv(p, q));
           }
         }
       }
@@ -392,8 +402,8 @@ public class LongMathTest extends TestCase {
         boolean expectedSuccess = (p % q) == 0L;
 
         try {
-          assertEquals(p, LongMath.divide(p, q, UNNECESSARY) * q);
-          assertTrue(expectedSuccess);
+          assertThat(LongMath.divide(p, q, UNNECESSARY) * q).isEqualTo(p);
+          assertThat(expectedSuccess).isTrue();
         } catch (ArithmeticException e) {
           if (expectedSuccess) {
             failFormat(
@@ -408,7 +418,7 @@ public class LongMathTest extends TestCase {
   public void testZeroDivIsAlwaysZero() {
     for (long q : NONZERO_LONG_CANDIDATES) {
       for (RoundingMode mode : ALL_ROUNDING_MODES) {
-        assertEquals(0L, LongMath.divide(0L, q, mode));
+        assertThat(LongMath.divide(0L, q, mode)).isEqualTo(0L);
       }
     }
   }
@@ -426,7 +436,7 @@ public class LongMathTest extends TestCase {
   public void testIntMod() {
     for (long x : ALL_LONG_CANDIDATES) {
       for (int m : POSITIVE_INTEGER_CANDIDATES) {
-        assertEquals(bigInt(x).mod(bigInt(m)).intValue(), LongMath.mod(x, m));
+        assertThat(LongMath.mod(x, m)).isEqualTo(bigInt(x).mod(bigInt(m)).intValue());
       }
     }
   }
@@ -452,7 +462,7 @@ public class LongMathTest extends TestCase {
   public void testMod() {
     for (long x : ALL_LONG_CANDIDATES) {
       for (long m : POSITIVE_LONG_CANDIDATES) {
-        assertEquals(bigInt(x).mod(bigInt(m)).longValue(), LongMath.mod(x, m));
+        assertThat(LongMath.mod(x, m)).isEqualTo(bigInt(x).mod(bigInt(m)).longValue());
       }
     }
   }
@@ -469,7 +479,7 @@ public class LongMathTest extends TestCase {
   public void testGCDExhaustive() {
     for (long a : POSITIVE_LONG_CANDIDATES) {
       for (long b : POSITIVE_LONG_CANDIDATES) {
-        assertEquals(bigInt(a).gcd(bigInt(b)), bigInt(LongMath.gcd(a, b)));
+        assertThat(bigInt(LongMath.gcd(a, b))).isEqualTo(bigInt(a).gcd(bigInt(b)));
       }
     }
   }
@@ -477,10 +487,10 @@ public class LongMathTest extends TestCase {
   @GwtIncompatible // TODO
   public void testGCDZero() {
     for (long a : POSITIVE_LONG_CANDIDATES) {
-      assertEquals(a, LongMath.gcd(a, 0));
-      assertEquals(a, LongMath.gcd(0, a));
+      assertThat(LongMath.gcd(a, 0)).isEqualTo(a);
+      assertThat(LongMath.gcd(0, a)).isEqualTo(a);
     }
-    assertEquals(0, LongMath.gcd(0, 0));
+    assertThat(LongMath.gcd(0, 0)).isEqualTo(0);
   }
 
   @GwtIncompatible // TODO
@@ -508,8 +518,8 @@ public class LongMathTest extends TestCase {
         BigInteger expectedResult = bigInt(a).add(bigInt(b));
         boolean expectedSuccess = fitsInLong(expectedResult);
         try {
-          assertEquals(a + b, checkedAdd(a, b));
-          assertTrue(expectedSuccess);
+          assertThat(checkedAdd(a, b)).isEqualTo(a + b);
+          assertThat(expectedSuccess).isTrue();
         } catch (ArithmeticException e) {
           if (expectedSuccess) {
             failFormat(
@@ -529,8 +539,8 @@ public class LongMathTest extends TestCase {
         BigInteger expectedResult = bigInt(a).subtract(bigInt(b));
         boolean expectedSuccess = fitsInLong(expectedResult);
         try {
-          assertEquals(a - b, checkedSubtract(a, b));
-          assertTrue(expectedSuccess);
+          assertThat(checkedSubtract(a, b)).isEqualTo(a - b);
+          assertThat(expectedSuccess).isTrue();
         } catch (ArithmeticException e) {
           if (expectedSuccess) {
             failFormat(
@@ -562,8 +572,8 @@ public class LongMathTest extends TestCase {
         BigInteger expectedResult = bigInt(a).multiply(bigInt(b));
         boolean expectedSuccess = fitsInLong(expectedResult);
         try {
-          assertEquals(a * b, checkedMultiply(a, b));
-          assertTrue(expectedSuccess);
+          assertThat(checkedMultiply(a, b)).isEqualTo(a * b);
+          assertThat(expectedSuccess).isTrue();
         } catch (ArithmeticException e) {
           if (expectedSuccess) {
             failFormat(
@@ -582,8 +592,8 @@ public class LongMathTest extends TestCase {
         BigInteger expectedResult = bigInt(b).pow(exp);
         boolean expectedSuccess = fitsInLong(expectedResult);
         try {
-          assertEquals(expectedResult.longValue(), LongMath.checkedPow(b, exp));
-          assertTrue(expectedSuccess);
+          assertThat(LongMath.checkedPow(b, exp)).isEqualTo(expectedResult.longValue());
+          assertThat(expectedSuccess).isTrue();
         } catch (ArithmeticException e) {
           if (expectedSuccess) {
             failFormat(
@@ -658,7 +668,7 @@ public class LongMathTest extends TestCase {
     for (int n = 0; n <= 50; n++) {
       BigInteger expectedBig = BigIntegerMath.factorial(n);
       long expectedLong = fitsInLong(expectedBig) ? expectedBig.longValue() : Long.MAX_VALUE;
-      assertEquals(expectedLong, LongMath.factorial(n));
+      assertThat(LongMath.factorial(n)).isEqualTo(expectedLong);
     }
   }
 
@@ -675,7 +685,7 @@ public class LongMathTest extends TestCase {
       for (int k = 0; k <= n; k++) {
         BigInteger expectedBig = BigIntegerMath.binomial(n, k);
         long expectedLong = fitsInLong(expectedBig) ? expectedBig.longValue() : Long.MAX_VALUE;
-        assertEquals(expectedLong, LongMath.binomial(n, k));
+        assertThat(LongMath.binomial(n, k)).isEqualTo(expectedLong);
       }
     }
   }
@@ -687,7 +697,7 @@ public class LongMathTest extends TestCase {
     // tested in the previous method, for k >= 3.
     for (int k = 3; k < LongMath.biggestBinomials.length; k++) {
       for (int n = 70; n <= LongMath.biggestBinomials[k]; n++) {
-        assertEquals(BigIntegerMath.binomial(n, k).longValue(), LongMath.binomial(n, k));
+        assertThat(LongMath.binomial(n, k)).isEqualTo(BigIntegerMath.binomial(n, k).longValue());
       }
     }
   }
@@ -713,13 +723,13 @@ public class LongMathTest extends TestCase {
     // This takes just over a minute on my machine.
     for (long n = 0; n <= LongMath.FLOOR_SQRT_MAX_LONG; n++) {
       long actual = (long) Math.sqrt((double) (n * n));
-      assertTrue(actual == n);
+      assertThat(actual).isEqualTo(n);
     }
   }
 
   public void testSqrtOfLongIsAtMostFloorSqrtMaxLong() {
     long sqrtMaxLong = (long) Math.sqrt(Long.MAX_VALUE);
-    assertTrue(sqrtMaxLong <= LongMath.FLOOR_SQRT_MAX_LONG);
+    assertThat(sqrtMaxLong).isAtMost(LongMath.FLOOR_SQRT_MAX_LONG);
   }
 
   @AndroidIncompatible // slow
@@ -759,10 +769,9 @@ public class LongMathTest extends TestCase {
 
   /** Helper method that asserts the arithmetic mean of x and y is equal to the expectedMean. */
   private static void assertMean(long expectedMean, long x, long y) {
-    assertEquals(
-        "The expectedMean should be the same as computeMeanSafely",
-        expectedMean,
-        computeMeanSafely(x, y));
+    assertWithMessage("The expectedMean should be the same as computeMeanSafely")
+        .that(computeMeanSafely(x, y))
+        .isEqualTo(expectedMean);
     assertMean(x, y);
   }
 
@@ -772,9 +781,10 @@ public class LongMathTest extends TestCase {
    */
   private static void assertMean(long x, long y) {
     long expectedMean = computeMeanSafely(x, y);
-    assertEquals(expectedMean, LongMath.mean(x, y));
-    assertEquals(
-        "The mean of x and y should equal the mean of y and x", expectedMean, LongMath.mean(y, x));
+    assertThat(LongMath.mean(x, y)).isEqualTo(expectedMean);
+    assertWithMessage("The mean of x and y should equal the mean of y and x")
+        .that(LongMath.mean(y, x))
+        .isEqualTo(expectedMean);
   }
 
   /**
@@ -784,7 +794,8 @@ public class LongMathTest extends TestCase {
   private static long computeMeanSafely(long x, long y) {
     BigInteger bigX = bigInt(x);
     BigInteger bigY = bigInt(y);
-    BigDecimal two = BigDecimal.valueOf(2); // Android doesn't have BigDecimal.TWO yet
+    @SuppressWarnings("ConstantTwo") // Android doesn't have BigDecimal.TWO yet
+    BigDecimal two = BigDecimal.valueOf(2);
     BigDecimal bigMean = new BigDecimal(bigX.add(bigY)).divide(two, RoundingMode.FLOOR);
     return bigMean.longValueExact();
   }
@@ -819,7 +830,7 @@ public class LongMathTest extends TestCase {
   public void testIsPrimeSmall() {
     // Check the first 1000 integers
     for (int i = 2; i < 1000; i++) {
-      assertEquals(bigInt(i).isProbablePrime(100), LongMath.isPrime(i));
+      assertThat(LongMath.isPrime(i)).isEqualTo(bigInt(i).isProbablePrime(100));
     }
   }
 
@@ -828,7 +839,7 @@ public class LongMathTest extends TestCase {
     // Test the thorough test inputs, which also includes special constants in the Miller-Rabin
     // tests.
     for (long l : POSITIVE_LONG_CANDIDATES) {
-      assertEquals(bigInt(l).isProbablePrime(100), LongMath.isPrime(l));
+      assertThat(LongMath.isPrime(l)).isEqualTo(bigInt(l).isProbablePrime(100));
     }
   }
 
@@ -839,7 +850,7 @@ public class LongMathTest extends TestCase {
       for (int i = 0; i < 2000; i++) {
         // A random long between 0 and Long.MAX_VALUE, inclusive.
         long l = rand.nextLong() & ((1L << bits) - 1);
-        assertEquals(bigInt(l).isProbablePrime(100), LongMath.isPrime(l));
+        assertThat(LongMath.isPrime(l)).isEqualTo(bigInt(l).isProbablePrime(100));
       }
     }
   }
@@ -850,7 +861,7 @@ public class LongMathTest extends TestCase {
     for (int bits = 10; bits < 63; bits++) {
       for (int i = 0; i < 100; i++) {
         long p = BigInteger.probablePrime(bits, rand).longValue();
-        assertTrue(LongMath.isPrime(p));
+        assertThat(LongMath.isPrime(p)).isTrue();
       }
     }
   }
@@ -862,7 +873,7 @@ public class LongMathTest extends TestCase {
       for (int i = 0; i < 100; i++) {
         long p = BigInteger.probablePrime(bits, rand).longValue();
         long q = BigInteger.probablePrime(bits, rand).longValue();
-        assertFalse(LongMath.isPrime(p * q));
+        assertThat(LongMath.isPrime(p * q)).isFalse();
       }
     }
   }
@@ -939,14 +950,14 @@ public class LongMathTest extends TestCase {
   }
 
   public void testSaturatedAbs() {
-    assertEquals(Long.MAX_VALUE, LongMath.saturatedAbs(Long.MIN_VALUE));
-    assertEquals(Long.MAX_VALUE, LongMath.saturatedAbs(Long.MAX_VALUE));
-    assertEquals(Long.MAX_VALUE, LongMath.saturatedAbs(-Long.MAX_VALUE));
-    assertEquals(0, LongMath.saturatedAbs(0));
-    assertEquals(1, LongMath.saturatedAbs(1));
-    assertEquals(1, LongMath.saturatedAbs(-1));
-    assertEquals(10, LongMath.saturatedAbs(10));
-    assertEquals(10, LongMath.saturatedAbs(-10));
+    assertThat(LongMath.saturatedAbs(Long.MIN_VALUE)).isEqualTo(Long.MAX_VALUE);
+    assertThat(LongMath.saturatedAbs(Long.MAX_VALUE)).isEqualTo(Long.MAX_VALUE);
+    assertThat(LongMath.saturatedAbs(-Long.MAX_VALUE)).isEqualTo(Long.MAX_VALUE);
+    assertThat(LongMath.saturatedAbs(0)).isEqualTo(0);
+    assertThat(LongMath.saturatedAbs(1)).isEqualTo(1);
+    assertThat(LongMath.saturatedAbs(-1)).isEqualTo(1);
+    assertThat(LongMath.saturatedAbs(10)).isEqualTo(10);
+    assertThat(LongMath.saturatedAbs(-10)).isEqualTo(10);
   }
 
   private static void failFormat(String template, Object... args) {
