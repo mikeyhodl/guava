@@ -23,6 +23,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.shuffle;
 import static org.junit.Assert.assertThrows;
 
+import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableTable;
@@ -53,6 +54,7 @@ import org.jspecify.annotations.NullUnmarked;
  */
 @NullUnmarked
 public class HashingTest extends TestCase {
+  @J2ktIncompatible
   public void testMd5() {
     HashTestUtils.checkAvalanche(Hashing.md5(), 100, 0.4);
     HashTestUtils.checkNo2BitCharacteristics(Hashing.md5());
@@ -61,6 +63,7 @@ public class HashingTest extends TestCase {
     assertThat(Hashing.md5().toString()).isEqualTo("Hashing.md5()");
   }
 
+  @J2ktIncompatible
   public void testSha1() {
     HashTestUtils.checkAvalanche(Hashing.sha1(), 100, 0.4);
     HashTestUtils.checkNo2BitCharacteristics(Hashing.sha1());
@@ -69,6 +72,7 @@ public class HashingTest extends TestCase {
     assertThat(Hashing.sha1().toString()).isEqualTo("Hashing.sha1()");
   }
 
+  @J2ktIncompatible
   public void testSha256() {
     HashTestUtils.checkAvalanche(Hashing.sha256(), 100, 0.4);
     HashTestUtils.checkNo2BitCharacteristics(Hashing.sha256());
@@ -77,6 +81,7 @@ public class HashingTest extends TestCase {
     assertThat(Hashing.sha256().toString()).isEqualTo("Hashing.sha256()");
   }
 
+  @J2ktIncompatible
   public void testSha384() {
     HashTestUtils.checkAvalanche(Hashing.sha384(), 100, 0.4);
     HashTestUtils.checkNo2BitCharacteristics(Hashing.sha384());
@@ -85,6 +90,7 @@ public class HashingTest extends TestCase {
     assertThat(Hashing.sha384().toString()).isEqualTo("Hashing.sha384()");
   }
 
+  @J2ktIncompatible
   public void testSha512() {
     HashTestUtils.checkAvalanche(Hashing.sha512(), 100, 0.4);
     HashTestUtils.checkNo2BitCharacteristics(Hashing.sha512());
@@ -93,16 +99,19 @@ public class HashingTest extends TestCase {
     assertThat(Hashing.sha512().toString()).isEqualTo("Hashing.sha512()");
   }
 
+  @J2ktIncompatible
   public void testCrc32() {
     HashTestUtils.assertInvariants(Hashing.crc32());
     assertThat(Hashing.crc32().toString()).isEqualTo("Hashing.crc32()");
   }
 
+  @J2ktIncompatible
   public void testAdler32() {
     HashTestUtils.assertInvariants(Hashing.adler32());
     assertThat(Hashing.adler32().toString()).isEqualTo("Hashing.adler32()");
   }
 
+  @J2ktIncompatible
   public void testMurmur3_128() {
     HashTestUtils.check2BitAvalanche(Hashing.murmur3_128(), 250, 0.20);
     HashTestUtils.checkAvalanche(Hashing.murmur3_128(), 250, 0.17);
@@ -112,6 +121,7 @@ public class HashingTest extends TestCase {
     assertThat(Hashing.murmur3_128().toString()).isEqualTo("Hashing.murmur3_128(0)");
   }
 
+  @J2ktIncompatible
   public void testMurmur3_32() {
     HashTestUtils.check2BitAvalanche(Hashing.murmur3_32(), 250, 0.20);
     HashTestUtils.checkAvalanche(Hashing.murmur3_32(), 250, 0.17);
@@ -121,6 +131,7 @@ public class HashingTest extends TestCase {
     assertThat(Hashing.murmur3_32().toString()).isEqualTo("Hashing.murmur3_32(0)");
   }
 
+  @J2ktIncompatible
   public void testSipHash24() {
     HashTestUtils.check2BitAvalanche(Hashing.sipHash24(), 250, 0.14);
     HashTestUtils.checkAvalanche(Hashing.sipHash24(), 250, 0.10);
@@ -131,6 +142,7 @@ public class HashingTest extends TestCase {
         .isEqualTo("Hashing.sipHash24(506097522914230528, 1084818905618843912)");
   }
 
+  @J2ktIncompatible
   public void testFingerprint2011() {
     HashTestUtils.check2BitAvalanche(Hashing.fingerprint2011(), 100, 0.4);
     HashTestUtils.checkAvalanche(Hashing.fingerprint2011(), 100, 0.4);
@@ -141,6 +153,7 @@ public class HashingTest extends TestCase {
   }
 
   @AndroidIncompatible // slow TODO(cpovirk): Maybe just reduce iterations under Android.
+  @J2ktIncompatible
   public void testGoodFastHash() {
     for (int i = 1; i < 200; i += 17) {
       HashFunction hasher = Hashing.goodFastHash(i);
@@ -150,6 +163,7 @@ public class HashingTest extends TestCase {
   }
 
   // goodFastHash(32) uses Murmur3_32. Use the same epsilon bounds.
+  @J2ktIncompatible
   public void testGoodFastHash32() {
     HashTestUtils.check2BitAvalanche(Hashing.goodFastHash(32), 250, 0.20);
     HashTestUtils.checkAvalanche(Hashing.goodFastHash(32), 250, 0.17);
@@ -159,6 +173,7 @@ public class HashingTest extends TestCase {
   }
 
   // goodFastHash(128) uses Murmur3_128. Use the same epsilon bounds.
+  @J2ktIncompatible
   public void testGoodFastHash128() {
     HashTestUtils.check2BitAvalanche(Hashing.goodFastHash(128), 250, 0.20);
     HashTestUtils.checkAvalanche(Hashing.goodFastHash(128), 500, 0.17);
@@ -168,6 +183,7 @@ public class HashingTest extends TestCase {
   }
 
   // goodFastHash(256) uses Murmur3_128. Use the same epsilon bounds.
+  @J2ktIncompatible
   public void testGoodFastHash256() {
     HashTestUtils.check2BitAvalanche(Hashing.goodFastHash(256), 250, 0.20);
     HashTestUtils.checkAvalanche(Hashing.goodFastHash(256), 500, 0.17);
@@ -176,6 +192,7 @@ public class HashingTest extends TestCase {
     HashTestUtils.assertInvariants(Hashing.goodFastHash(256));
   }
 
+  @J2ktIncompatible
   public void testConsistentHash_correctness() {
     long[] interestingValues = {-1, 0, 1, 2, Long.MAX_VALUE, Long.MIN_VALUE};
     for (long h : interestingValues) {
@@ -187,6 +204,7 @@ public class HashingTest extends TestCase {
     }
   }
 
+  @J2ktIncompatible
   private void checkConsistentHashCorrectness(long hashCode) {
     int last = 0;
     for (int shards = 1; shards <= 100000; shards++) {
@@ -198,6 +216,7 @@ public class HashingTest extends TestCase {
     }
   }
 
+  @J2ktIncompatible
   public void testConsistentHash_probabilities() {
     AtomicLongMap<Integer> map = AtomicLongMap.create();
     Random r = new Random(9);
@@ -210,6 +229,7 @@ public class HashingTest extends TestCase {
     }
   }
 
+  @J2ktIncompatible
   private void countRemaps(long h, AtomicLongMap<Integer> map) {
     int last = 0;
     for (int shards = 2; shards <= MAX_SHARDS; shards++) {
@@ -224,16 +244,19 @@ public class HashingTest extends TestCase {
   private static final int ITERS = 10000;
   private static final int MAX_SHARDS = 500;
 
+  @J2ktIncompatible
   public void testConsistentHash_outOfRange() {
     assertThrows(IllegalArgumentException.class, () -> Hashing.consistentHash(5L, 0));
   }
 
+  @J2ktIncompatible
   public void testConsistentHash_ofHashCode() {
     checkSameResult(HashCode.fromLong(1), 1);
     checkSameResult(HashCode.fromLong(0x9999999999999999L), 0x9999999999999999L);
     checkSameResult(HashCode.fromInt(0x99999999), 0x0000000099999999L);
   }
 
+  @J2ktIncompatible
   public void checkSameResult(HashCode hashCode, long equivLong) {
     assertEquals(Hashing.consistentHash(equivLong, 5555), Hashing.consistentHash(hashCode, 5555));
   }
@@ -242,6 +265,7 @@ public class HashingTest extends TestCase {
    * Check a few "golden" values to see that implementations across languages are equivalent.
    *
    */
+  @J2ktIncompatible
   public void testConsistentHash_linearCongruentialGeneratorCompatibility() {
     int[] golden100 = {
       0, 55, 62, 8, 45, 59, 86, 97, 82, 59,
@@ -261,12 +285,14 @@ public class HashingTest extends TestCase {
   private static final double MAX_PERCENT_SPREAD = 0.5;
   private static final long RANDOM_SEED = 177L;
 
+  @J2ktIncompatible
   public void testCombineOrdered_empty() {
     assertThrows(
         IllegalArgumentException.class,
         () -> Hashing.combineOrdered(Collections.<HashCode>emptySet()));
   }
 
+  @J2ktIncompatible
   public void testCombineOrdered_differentBitLengths() {
     assertThrows(
         IllegalArgumentException.class,
@@ -277,6 +303,7 @@ public class HashingTest extends TestCase {
         });
   }
 
+  @J2ktIncompatible
   public void testCombineOrdered() {
     HashCode hash31 = HashCode.fromInt(31);
     HashCode hash32 = HashCode.fromInt(32);
@@ -292,6 +319,7 @@ public class HashingTest extends TestCase {
             .equals(Hashing.combineOrdered(ImmutableList.of(hash32, hash31))));
   }
 
+  @J2ktIncompatible
   public void testCombineOrdered_randomHashCodes() {
     Random random = new Random(7);
     List<HashCode> hashCodes = new ArrayList<>();
@@ -305,12 +333,14 @@ public class HashingTest extends TestCase {
     assertFalse(hashCode1.equals(hashCode2));
   }
 
+  @J2ktIncompatible
   public void testCombineUnordered_empty() {
     assertThrows(
         IllegalArgumentException.class,
         () -> Hashing.combineUnordered(Collections.<HashCode>emptySet()));
   }
 
+  @J2ktIncompatible
   public void testCombineUnordered_differentBitLengths() {
     assertThrows(
         IllegalArgumentException.class,
@@ -321,6 +351,7 @@ public class HashingTest extends TestCase {
         });
   }
 
+  @J2ktIncompatible
   public void testCombineUnordered() {
     HashCode hash31 = HashCode.fromInt(31);
     HashCode hash32 = HashCode.fromInt(32);
@@ -333,6 +364,7 @@ public class HashingTest extends TestCase {
         Hashing.combineUnordered(ImmutableList.of(hash32, hash31)));
   }
 
+  @J2ktIncompatible
   public void testCombineUnordered_randomHashCodes() {
     Random random = new Random(RANDOM_SEED);
     List<HashCode> hashCodes = new ArrayList<>();
@@ -347,6 +379,7 @@ public class HashingTest extends TestCase {
   }
 
   // This isn't specified by contract, but it'll still be nice to know if this behavior changes.
+  @J2ktIncompatible
   public void testConcatenating_equals() {
     new EqualsTester()
         .addEqualityGroup(Hashing.concatenating(asList(Hashing.md5())))
@@ -363,6 +396,7 @@ public class HashingTest extends TestCase {
         .testEquals();
   }
 
+  @J2ktIncompatible
   public void testConcatenatingIterable_bits() {
     assertEquals(
         Hashing.md5().bits() + Hashing.md5().bits(),
@@ -376,6 +410,7 @@ public class HashingTest extends TestCase {
             .bits());
   }
 
+  @J2ktIncompatible
   public void testConcatenatingVarArgs_bits() {
     assertEquals(
         Hashing.md5().bits() + Hashing.md5().bits(),
@@ -388,6 +423,7 @@ public class HashingTest extends TestCase {
         Hashing.concatenating(Hashing.md5(), Hashing.murmur3_32(), Hashing.murmur3_128()).bits());
   }
 
+  @J2ktIncompatible
   public void testConcatenatingHashFunction_makeHash() {
     byte[] md5Hash = Hashing.md5().hashLong(42L).asBytes();
     byte[] murmur3Hash = Hashing.murmur3_32().hashLong(42L).asBytes();
@@ -403,6 +439,7 @@ public class HashingTest extends TestCase {
         expected, Hashing.concatenating(asList(Hashing.md5(), Hashing.murmur3_32())).hashLong(42L));
   }
 
+  @J2ktIncompatible
   public void testHashIntReverseBytesVsHashBytesIntsToByteArray() {
     int input = 42;
     assertEquals(
@@ -410,6 +447,7 @@ public class HashingTest extends TestCase {
         Hashing.md5().hashInt(Integer.reverseBytes(input)));
   }
 
+  @J2ktIncompatible
   public void testHashIntVsForLoop() {
     int input = 42;
     HashCode expected = Hashing.md5().hashInt(input);
@@ -426,6 +464,8 @@ public class HashingTest extends TestCase {
   private static final String TQBFJOTLD = "The quick brown fox jumps over the lazy dog";
   private static final String TQBFJOTLDP = "The quick brown fox jumps over the lazy dog.";
 
+  // TODO: b/484953702 - Put a list in TestPlatform so that J2KT can omit some of these.
+  // (And un-@J2ktIncompatible any tests above for algorithms that it does support!)
   private static final ImmutableTable<HashFunction, String, String> KNOWN_HASHES =
       ImmutableTable.<HashFunction, String, String>builder()
           .put(Hashing.adler32(), "", "01000000")
@@ -505,6 +545,7 @@ public class HashingTest extends TestCase {
           .put(Hashing.fingerprint2011(), TQBFJOTLDP, "a714d70f1d569cd0")
           .build();
 
+  @J2ktIncompatible
   public void testAllHashFunctionsHaveKnownHashes() throws Exception {
     for (Method method : Hashing.class.getDeclaredMethods()) {
       if (shouldHaveKnownHashes(method)) {
@@ -527,6 +568,7 @@ public class HashingTest extends TestCase {
     }
   }
 
+  @J2ktIncompatible
   public void testNullPointers() {
     NullPointerTester tester =
         new NullPointerTester()
@@ -535,10 +577,12 @@ public class HashingTest extends TestCase {
     tester.testAllPublicStaticMethods(Hashing.class);
   }
 
+  @J2ktIncompatible
   public void testSeedlessHashFunctionEquals() throws Exception {
     assertSeedlessHashFunctionEquals(Hashing.class);
   }
 
+  @J2ktIncompatible
   public void testSeededHashFunctionEquals() throws Exception {
     assertSeededHashFunctionEquals(Hashing.class);
   }
@@ -550,6 +594,7 @@ public class HashingTest extends TestCase {
    * different parameters can be equal. That fact is a problem for {@code
    * testSeededHashFunctionEquals}.
    */
+  @J2ktIncompatible
   public void testGoodFastHashEquals() throws Exception {
     HashFunction hashFunction1a = Hashing.goodFastHash(1);
     HashFunction hashFunction1b = Hashing.goodFastHash(32);
@@ -573,6 +618,7 @@ public class HashingTest extends TestCase {
     assertThat(hashFunction4b.toString()).isEqualTo(hashFunction4a.toString());
   }
 
+  @J2ktIncompatible
   static void assertSeedlessHashFunctionEquals(Class<?> clazz) throws Exception {
     for (Method method : clazz.getDeclaredMethods()) {
       if (shouldHaveKnownHashes(method)) {
@@ -589,6 +635,7 @@ public class HashingTest extends TestCase {
     }
   }
 
+  @J2ktIncompatible
   private static boolean shouldHaveKnownHashes(Method method) {
     // The following legacy hashing function methods have been covered by unit testing already.
     ImmutableSet<String> legacyHashingMethodNames =
@@ -599,6 +646,7 @@ public class HashingTest extends TestCase {
         && !legacyHashingMethodNames.contains(method.getName());
   }
 
+  @J2ktIncompatible
   static void assertSeededHashFunctionEquals(Class<?> clazz) throws Exception {
     Random random = new Random(RANDOM_SEED);
     for (Method method : clazz.getDeclaredMethods()) {

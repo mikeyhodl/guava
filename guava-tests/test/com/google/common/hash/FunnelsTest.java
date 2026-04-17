@@ -32,6 +32,7 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.testing.EqualsTester;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
@@ -45,6 +46,7 @@ import org.mockito.InOrder;
  *
  * @author Dimitris Andreou
  */
+@J2ktIncompatible
 @NullUnmarked
 public class FunnelsTest extends TestCase {
   public void testForBytes() {

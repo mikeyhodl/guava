@@ -21,6 +21,7 @@ import static java.nio.charset.StandardCharsets.UTF_16LE;
 import static java.util.Collections.singleton;
 import static org.junit.Assert.assertThrows;
 
+import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.collect.Iterables;
 import com.google.common.hash.HashTestUtils.RandomHasherAction;
 import java.io.ByteArrayOutputStream;
@@ -38,6 +39,9 @@ import org.jspecify.annotations.NullUnmarked;
  *
  * @author Dimitris Andreou
  */
+// All tests use Sink, which uses the currently J2KT-incompatible AbstractStreamingHasher
+// (Plus, testString in particular requires UTF_16LE support.)
+@J2ktIncompatible
 @NullUnmarked
 public class AbstractStreamingHasherTest extends TestCase {
   public void testBytes() {

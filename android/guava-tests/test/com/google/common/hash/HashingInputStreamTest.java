@@ -21,6 +21,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.testing.NullPointerTester;
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
@@ -33,6 +34,7 @@ import org.jspecify.annotations.NullUnmarked;
  * @author Qian Huang
  */
 @NullUnmarked
+@J2ktIncompatible
 public class HashingInputStreamTest extends TestCase {
   private Hasher hasher;
   private HashFunction hashFunction;

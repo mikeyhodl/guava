@@ -21,6 +21,7 @@ import static java.lang.Math.log;
 import static java.lang.Math.max;
 
 import com.google.common.annotations.Beta;
+import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Predicate;
 import com.google.common.hash.BloomFilterStrategies.LockFreeBitArray;
@@ -69,6 +70,7 @@ import org.jspecify.annotations.Nullable;
  * @author Kevin Bourrillion
  * @since 11.0 (thread-safe since 23.0)
  */
+@J2ktIncompatible
 @Beta
 public final class BloomFilter<T extends @Nullable Object> implements Predicate<T>, Serializable {
   /**

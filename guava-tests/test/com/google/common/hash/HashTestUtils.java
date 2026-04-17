@@ -636,6 +636,7 @@ final class HashTestUtils {
     assertEquals(hashFunction.hashLong(l), hashFunction.newHasher().putLong(l).hash());
   }
 
+  // TODO: b/484953702 - Put a list in TestPlatform so that J2KT can omit some of these.
   private static final ImmutableSet<Charset> CHARSETS =
       ImmutableSet.of(ISO_8859_1, US_ASCII, UTF_16, UTF_16BE, UTF_16LE, UTF_8);
 

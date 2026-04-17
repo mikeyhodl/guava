@@ -16,6 +16,7 @@
 
 package com.google.common.hash;
 
+import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashTestUtils.RandomHasherAction;
 import java.io.ByteArrayOutputStream;
@@ -34,6 +35,7 @@ public class AbstractNonStreamingHashFunctionTest extends TestCase {
    * and checks that their results are identical, no matter which newHasher version we used.
    */
   public void testExhaustive() {
+    // TODO: b/484953702 - Split test so we can avoid StreamingVersion under J2KT.
     List<Hasher> hashers =
         ImmutableList.of(
             new StreamingVersion().newHasher(),
@@ -93,6 +95,7 @@ public class AbstractNonStreamingHashFunctionTest extends TestCase {
     assertEquals(h1.hash(), h2.hash());
   }
 
+  @J2ktIncompatible // AbstractStreamingHasher
   static class StreamingVersion extends AbstractHashFunction {
     @Override
     public int bits() {

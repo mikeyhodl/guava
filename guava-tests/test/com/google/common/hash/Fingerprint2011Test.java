@@ -8,6 +8,7 @@ import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
 
+import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Ordering;
@@ -21,6 +22,7 @@ import org.jspecify.annotations.NullUnmarked;
  * @author kylemaddison@google.com (Kyle Maddison)
  */
 @NullUnmarked
+@J2ktIncompatible
 public class Fingerprint2011Test extends TestCase {
 
   // Length of the sample string to produce

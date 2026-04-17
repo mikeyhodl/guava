@@ -48,6 +48,7 @@ public class MessageDigestHashFunctionTest extends TestCase {
   //  - For example, the "SHA-1" algorithm might be referred to as "SHA1".
   //  - The algorithm name is not case-sensitive.
   @SuppressWarnings("deprecation") // We still need to test our deprecated APIs.
+  // TODO: b/484953702 - Put a list in TestPlatform so that J2KT can omit some of these.
   private static final ImmutableMap<String, HashFunction> ALGORITHMS =
       new ImmutableMap.Builder<String, HashFunction>()
           .put("MD5", md5())

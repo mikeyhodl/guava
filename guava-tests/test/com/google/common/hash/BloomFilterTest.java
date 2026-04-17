@@ -29,6 +29,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.Assert.assertThrows;
 
+import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.hash.BloomFilterStrategies.LockFreeBitArray;
@@ -54,6 +55,7 @@ import org.jspecify.annotations.Nullable;
  * @author Dimitris Andreou
  */
 @NullUnmarked
+@J2ktIncompatible
 public class BloomFilterTest extends TestCase {
   private static final int NUM_PUTS = 100_000;
   private static final ThreadLocal<Random> random =
