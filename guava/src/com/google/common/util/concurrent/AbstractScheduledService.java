@@ -148,7 +148,7 @@ public abstract class AbstractScheduledService implements Service {
       checkArgument(delay > 0, "delay must be > 0, found %s", delay);
       return new Scheduler() {
         @Override
-        public Cancellable schedule(
+        Cancellable schedule(
             AbstractService service, ScheduledExecutorService executor, Runnable task) {
           return new FutureAsCancellable(
               executor.scheduleWithFixedDelay(task, initialDelay, delay, unit));
@@ -183,7 +183,7 @@ public abstract class AbstractScheduledService implements Service {
       checkArgument(period > 0, "period must be > 0, found %s", period);
       return new Scheduler() {
         @Override
-        public Cancellable schedule(
+        Cancellable schedule(
             AbstractService service, ScheduledExecutorService executor, Runnable task) {
           return new FutureAsCancellable(
               executor.scheduleAtFixedRate(task, initialDelay, period, unit));
