@@ -32,7 +32,6 @@ import com.google.j2objc.annotations.WeakOuter;
 import java.io.Serializable;
 import java.util.AbstractCollection;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -265,10 +264,8 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable Object, V extends @N
     return unmodifiableCollectionSubclass(output);
   }
 
-  <E extends @Nullable Object> Collection<E> unmodifiableCollectionSubclass(
-      Collection<E> collection) {
-    return Collections.unmodifiableCollection(collection);
-  }
+  abstract <E extends @Nullable Object> Collection<E> unmodifiableCollectionSubclass(
+      Collection<E> collection);
 
   @Override
   public void clear() {
@@ -300,9 +297,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable Object, V extends @N
    * Generates a decorated collection that remains consistent with the values in the multimap for
    * the provided key. Changes to the multimap may alter the returned collection, and vice versa.
    */
-  Collection<V> wrapCollection(@ParametricNullness K key, Collection<V> collection) {
-    return new WrappedCollection(key, collection, null);
-  }
+  abstract Collection<V> wrapCollection(@ParametricNullness K key, Collection<V> collection);
 
   final List<V> wrapList(
       @ParametricNullness K key, List<V> list, @Nullable WrappedCollection ancestor) {
