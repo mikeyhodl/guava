@@ -16,6 +16,7 @@
 
 package com.google.common.math;
 
+import static com.google.common.math.BigIntegerMath.sqrt;
 import static com.google.common.math.IntMath.checkedAdd;
 import static com.google.common.math.IntMath.checkedMultiply;
 import static com.google.common.math.IntMath.checkedSubtract;
@@ -114,8 +115,7 @@ public class IntMathTest extends TestCase {
   @GwtIncompatible // BigIntegerMath // TODO(cpovirk): GWT-enable BigIntegerMath
   public void testConstantMaxPowerOfSqrt2Unsigned() {
     assertThat(IntMath.MAX_POWER_OF_SQRT2_UNSIGNED)
-        .isEqualTo(
-            BigIntegerMath.sqrt(BigInteger.ZERO.setBit(2 * Integer.SIZE - 1), FLOOR).intValue());
+        .isEqualTo(sqrt(BigInteger.ZERO.setBit(2 * Integer.SIZE - 1), FLOOR).intValue());
   }
 
   @GwtIncompatible // pow()
@@ -136,10 +136,7 @@ public class IntMathTest extends TestCase {
   @GwtIncompatible // BigIntegerMath // TODO(cpovirk): GWT-enable BigIntegerMath
   public void testConstantsHalfPowersOf10() {
     for (int i = 0; i < IntMath.halfPowersOf10.length; i++) {
-      assertThat(
-              min(
-                  Integer.MAX_VALUE,
-                  BigIntegerMath.sqrt(BigInteger.TEN.pow(2 * i + 1), FLOOR).longValue()))
+      assertThat(min(Integer.MAX_VALUE, sqrt(BigInteger.TEN.pow(2 * i + 1), FLOOR).longValue()))
           .isEqualTo(IntMath.halfPowersOf10[i]);
     }
   }
@@ -304,7 +301,7 @@ public class IntMathTest extends TestCase {
         // The BigInteger implementation is tested separately, use it as the reference.
         // Promote the int value (rather than using intValue() on the expected value) to avoid
         // any risk of truncation which could lead to a false positive.
-        assertThat(bigInt(sqrt(x, mode))).isEqualTo(BigIntegerMath.sqrt(bigInt(x), mode));
+        assertThat(bigInt(sqrt(x, mode))).isEqualTo(sqrt(bigInt(x), mode));
       }
     }
   }

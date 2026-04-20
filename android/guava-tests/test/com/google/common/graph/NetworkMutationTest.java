@@ -16,6 +16,7 @@
 
 package com.google.common.graph;
 
+import static com.google.common.graph.AbstractNetworkTest.validateNetwork;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Collections.shuffle;
 
@@ -57,7 +58,7 @@ public final class NetworkMutationTest {
 
       assertThat(network.nodes()).isEmpty();
       assertThat(network.edges()).isEmpty();
-      AbstractNetworkTest.validateNetwork(network);
+      validateNetwork(network);
 
       while (network.nodes().size() < NUM_NODES) {
         network.addNode(gen.nextInt(NODE_POOL_SIZE));
@@ -74,7 +75,7 @@ public final class NetworkMutationTest {
 
       assertThat(network.nodes()).hasSize(NUM_NODES);
       assertThat(network.edges()).hasSize(NUM_EDGES);
-      AbstractNetworkTest.validateNetwork(network);
+      validateNetwork(network);
 
       shuffle(edgeList, gen);
       int numEdgesToRemove = gen.nextInt(NUM_EDGES);
@@ -85,7 +86,7 @@ public final class NetworkMutationTest {
 
       assertThat(network.nodes()).hasSize(NUM_NODES);
       assertThat(network.edges()).hasSize(NUM_EDGES - numEdgesToRemove);
-      AbstractNetworkTest.validateNetwork(network);
+      validateNetwork(network);
 
       shuffle(nodeList, gen);
       int numNodesToRemove = gen.nextInt(NUM_NODES);
@@ -95,7 +96,7 @@ public final class NetworkMutationTest {
 
       assertThat(network.nodes()).hasSize(NUM_NODES - numNodesToRemove);
       // Number of edges remaining is unknown (node's incident edges have been removed).
-      AbstractNetworkTest.validateNetwork(network);
+      validateNetwork(network);
 
       for (int i = numNodesToRemove; i < NUM_NODES; ++i) {
         assertThat(network.removeNode(nodeList.get(i))).isTrue();
@@ -103,7 +104,7 @@ public final class NetworkMutationTest {
 
       assertThat(network.nodes()).isEmpty();
       assertThat(network.edges()).isEmpty(); // no edges can remain if there's no nodes
-      AbstractNetworkTest.validateNetwork(network);
+      validateNetwork(network);
 
       shuffle(nodeList, gen);
       for (Integer node : nodeList) {
@@ -119,7 +120,7 @@ public final class NetworkMutationTest {
 
       assertThat(network.nodes()).hasSize(NUM_NODES);
       assertThat(network.edges()).hasSize(NUM_EDGES);
-      AbstractNetworkTest.validateNetwork(network);
+      validateNetwork(network);
     }
   }
 

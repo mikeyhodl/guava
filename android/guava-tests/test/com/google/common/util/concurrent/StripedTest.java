@@ -17,6 +17,7 @@
 package com.google.common.util.concurrent;
 
 import static com.google.common.collect.Iterables.concat;
+import static com.google.common.collect.Sets.newIdentityHashSet;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 
@@ -184,7 +185,7 @@ public class StripedTest extends TestCase {
   }
 
   private static void assertBasicInvariants(Striped<?> striped) {
-    Set<Object> observed = Sets.newIdentityHashSet(); // for the sake of weakly referenced locks.
+    Set<Object> observed = newIdentityHashSet(); // for the sake of weakly referenced locks.
     // this gets the stripes with #getAt(index)
     for (int i = 0; i < striped.size(); i++) {
       Object object = striped.getAt(i);

@@ -19,6 +19,8 @@ package com.google.common.graph;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.collect.Iterators.concat;
+import static com.google.common.collect.Iterators.transform;
 import static com.google.common.graph.GraphConstants.INNER_CAPACITY;
 import static com.google.common.graph.GraphConstants.INNER_LOAD_FACTOR;
 import static com.google.common.graph.Graphs.checkNonNegative;
@@ -28,7 +30,6 @@ import static java.util.Collections.unmodifiableSet;
 import com.google.common.base.Function;
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterators;
 import com.google.common.collect.UnmodifiableIterator;
 import java.util.AbstractSet;
 import java.util.ArrayList;
@@ -371,16 +372,16 @@ final class DirectedGraphConnections<N, V> implements GraphConnections<N, V> {
     Iterator<EndpointPair<N>> resultWithDoubleSelfLoop;
     if (orderedNodeConnections == null) {
       resultWithDoubleSelfLoop =
-          Iterators.concat(
-              Iterators.transform(
+          concat(
+              transform(
                   predecessors().iterator(),
                   (N predecessor) -> EndpointPair.ordered(predecessor, thisNode)),
-              Iterators.transform(
+              transform(
                   successors().iterator(),
                   (N successor) -> EndpointPair.ordered(thisNode, successor)));
     } else {
       resultWithDoubleSelfLoop =
-          Iterators.transform(
+          transform(
               orderedNodeConnections.iterator(),
               (NodeConnection<N> connection) -> {
                 if (connection instanceof NodeConnection.Succ) {

@@ -17,12 +17,12 @@
 package com.google.common.graph;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.collect.Iterators.transform;
 import static com.google.common.graph.GraphConstants.NODE_NOT_IN_GRAPH;
 import static com.google.common.graph.Graphs.TransitiveClosureSelfLoopStrategy.ADD_SELF_LOOPS_ALWAYS;
 import static java.util.Objects.requireNonNull;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.ArrayDeque;
@@ -367,7 +367,7 @@ public final class Graphs extends GraphsBridgeMethods {
       return new IncidentEdgeSet<N>(this, node, IncidentEdgeSet.EdgeType.BOTH) {
         @Override
         public Iterator<EndpointPair<N>> iterator() {
-          return Iterators.transform(
+          return transform(
               delegate().incidentEdges(node).iterator(),
               edge -> EndpointPair.of(delegate(), edge.nodeV(), edge.nodeU()));
         }

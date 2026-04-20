@@ -16,6 +16,7 @@
 
 package com.google.common.math;
 
+import static com.google.common.math.BigIntegerMath.sqrt;
 import static com.google.common.math.LongMath.checkedAdd;
 import static com.google.common.math.LongMath.checkedMultiply;
 import static com.google.common.math.LongMath.checkedSubtract;
@@ -115,8 +116,7 @@ public class LongMathTest extends TestCase {
   @GwtIncompatible // TODO
   public void testConstantMaxPowerOfSqrt2Unsigned() {
     assertThat(LongMath.MAX_POWER_OF_SQRT2_UNSIGNED)
-        .isEqualTo(
-            BigIntegerMath.sqrt(BigInteger.ZERO.setBit(2 * Long.SIZE - 1), FLOOR).longValue());
+        .isEqualTo(sqrt(BigInteger.ZERO.setBit(2 * Long.SIZE - 1), FLOOR).longValue());
   }
 
   @GwtIncompatible // BigIntegerMath // TODO(cpovirk): GWT-enable BigIntegerMath
@@ -140,10 +140,9 @@ public class LongMathTest extends TestCase {
   public void testConstantsHalfPowersOf10() {
     for (int i = 0; i < LongMath.halfPowersOf10.length; i++) {
       assertThat(bigInt(LongMath.halfPowersOf10[i]))
-          .isEqualTo(BigIntegerMath.sqrt(BigInteger.TEN.pow(2 * i + 1), FLOOR));
+          .isEqualTo(sqrt(BigInteger.TEN.pow(2 * i + 1), FLOOR));
     }
-    BigInteger nextBigger =
-        BigIntegerMath.sqrt(BigInteger.TEN.pow(2 * LongMath.halfPowersOf10.length + 1), FLOOR);
+    BigInteger nextBigger = sqrt(BigInteger.TEN.pow(2 * LongMath.halfPowersOf10.length + 1), FLOOR);
     assertThat(nextBigger).isGreaterThan(bigInt(Long.MAX_VALUE));
   }
 
@@ -340,7 +339,7 @@ public class LongMathTest extends TestCase {
       for (RoundingMode mode : ALL_SAFE_ROUNDING_MODES) {
         // Promote the long value (rather than using longValue() on the expected value) to avoid
         // any risk of truncation which could lead to a false positive.
-        assertThat(bigInt(sqrt(x, mode))).isEqualTo(BigIntegerMath.sqrt(bigInt(x), mode));
+        assertThat(bigInt(sqrt(x, mode))).isEqualTo(sqrt(bigInt(x), mode));
       }
     }
   }

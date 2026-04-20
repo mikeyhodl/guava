@@ -17,6 +17,7 @@
 package com.google.common.collect;
 
 import static com.google.common.collect.BoundType.CLOSED;
+import static com.google.common.collect.Sets.newTreeSet;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
@@ -116,7 +117,7 @@ public class TreeMultisetTest extends TestCase {
 
                   @Override
                   public List<String> order(List<String> insertionOrder) {
-                    return new ArrayList<>(Sets.newTreeSet(insertionOrder));
+                    return new ArrayList<>(newTreeSet(insertionOrder));
                   }
                 })
             .named("TreeMultiset[Ordering.natural].elementSet")

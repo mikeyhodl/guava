@@ -16,6 +16,11 @@
 
 package com.google.common.reflect;
 
+import static com.google.common.reflect.Types.newArrayType;
+import static com.google.common.reflect.Types.newArtificialTypeVariable;
+import static com.google.common.reflect.Types.newParameterizedType;
+import static com.google.common.reflect.Types.subtypeOf;
+import static com.google.common.reflect.Types.supertypeOf;
 import static com.google.common.testing.SerializableTester.reserialize;
 import static com.google.common.testing.SerializableTester.reserializeAndAssert;
 import static com.google.common.truth.Truth.assertThat;
@@ -51,8 +56,7 @@ public class TypesTest extends TestCase {
   public void testNewParameterizedType_ownerTypeImplied() throws Exception {
     ParameterizedType jvmType =
         (ParameterizedType) new TypeCapture<Entry<String, Integer>>() {}.capture();
-    ParameterizedType ourType =
-        Types.newParameterizedType(Entry.class, String.class, Integer.class);
+    ParameterizedType ourType = newParameterizedType(Entry.class, String.class, Integer.class);
     assertEquals(jvmType, ourType);
     assertEquals(Map.class, ourType.getOwnerType());
   }
@@ -60,8 +64,7 @@ public class TypesTest extends TestCase {
   public void testNewParameterizedType() {
     ParameterizedType jvmType =
         (ParameterizedType) new TypeCapture<HashMap<String, int[][]>>() {}.capture();
-    ParameterizedType ourType =
-        Types.newParameterizedType(HashMap.class, String.class, int[][].class);
+    ParameterizedType ourType = newParameterizedType(HashMap.class, String.class, int[][].class);
 
     new EqualsTester().addEqualityGroup(jvmType, ourType).testEquals();
     assertThat(ourType.toString()).isEqualTo(jvmType.toString());
@@ -72,7 +75,7 @@ public class TypesTest extends TestCase {
         .containsExactlyElementsIn(asList(jvmType.getActualTypeArguments()))
         .inOrder();
     assertEquals(
-        asList(String.class, Types.newArrayType(Types.newArrayType(int.class))),
+        asList(String.class, newArrayType(newArrayType(int.class))),
         asList(ourType.getActualTypeArguments()));
     assertThat(ourType.getOwnerType()).isNull();
   }
@@ -80,7 +83,7 @@ public class TypesTest extends TestCase {
   public void testNewParameterizedType_nonStaticLocalClass() {
     class LocalClass<T> {}
     Type jvmType = new LocalClass<String>() {}.getClass().getGenericSuperclass();
-    Type ourType = Types.newParameterizedType(LocalClass.class, String.class);
+    Type ourType = newParameterizedType(LocalClass.class, String.class);
     assertEquals(jvmType, ourType);
   }
 
@@ -91,7 +94,7 @@ public class TypesTest extends TestCase {
   private static void doTestNewParameterizedTypeStaticLocalClass() {
     class LocalClass<T> {}
     Type jvmType = new LocalClass<String>() {}.getClass().getGenericSuperclass();
-    Type ourType = Types.newParameterizedType(LocalClass.class, String.class);
+    Type ourType = newParameterizedType(LocalClass.class, String.class);
     assertEquals(jvmType, ourType);
   }
 
@@ -116,7 +119,7 @@ public class TypesTest extends TestCase {
   }
 
   public void testNewParameterizedType_serializable() {
-    reserializeAndAssert(Types.newParameterizedType(Entry.class, String.class, Integer.class));
+    reserializeAndAssert(newParameterizedType(Entry.class, String.class, Integer.class));
   }
 
   public void testNewParameterizedType_ownerMismatch() {
@@ -127,7 +130,7 @@ public class TypesTest extends TestCase {
 
   public void testNewParameterizedType_ownerMissing() {
     assertEquals(
-        Types.newParameterizedType(Entry.class, String.class, Integer.class),
+        newParameterizedType(Entry.class, String.class, Integer.class),
         Types.newParameterizedTypeWithOwner(null, Entry.class, String.class, Integer.class));
   }
 
@@ -146,10 +149,10 @@ public class TypesTest extends TestCase {
   public void testNewArrayType() {
     Type jvmType1 = new TypeCapture<List<String>[]>() {}.capture();
     GenericArrayType ourType1 =
-        (GenericArrayType) Types.newArrayType(Types.newParameterizedType(List.class, String.class));
+        (GenericArrayType) newArrayType(newParameterizedType(List.class, String.class));
     @SuppressWarnings("rawtypes") // test of raw types
     Type jvmType2 = new TypeCapture<List[]>() {}.capture();
-    Type ourType2 = Types.newArrayType(List.class);
+    Type ourType2 = newArrayType(List.class);
     new EqualsTester()
         .addEqualityGroup(jvmType1, ourType1)
         .addEqualityGroup(jvmType2, ourType2)
@@ -161,30 +164,30 @@ public class TypesTest extends TestCase {
 
   public void testNewArrayTypeOfArray() {
     Type jvmType = new TypeCapture<int[][]>() {}.capture();
-    Type ourType = Types.newArrayType(int[].class);
+    Type ourType = newArrayType(int[].class);
     assertThat(ourType.toString()).isEqualTo(jvmType.toString());
     new EqualsTester().addEqualityGroup(jvmType, ourType).testEquals();
   }
 
   public void testNewArrayType_primitive() {
     Type jvmType = new TypeCapture<int[]>() {}.capture();
-    Type ourType = Types.newArrayType(int.class);
+    Type ourType = newArrayType(int.class);
     assertThat(ourType.toString()).isEqualTo(jvmType.toString());
     new EqualsTester().addEqualityGroup(jvmType, ourType).testEquals();
   }
 
   public void testNewArrayType_upperBoundedWildcard() {
-    Type wildcard = Types.subtypeOf(Number.class);
-    assertEquals(Types.subtypeOf(Number[].class), Types.newArrayType(wildcard));
+    Type wildcard = subtypeOf(Number.class);
+    assertEquals(subtypeOf(Number[].class), newArrayType(wildcard));
   }
 
   public void testNewArrayType_lowerBoundedWildcard() {
-    Type wildcard = Types.supertypeOf(Number.class);
-    assertEquals(Types.supertypeOf(Number[].class), Types.newArrayType(wildcard));
+    Type wildcard = supertypeOf(Number.class);
+    assertEquals(supertypeOf(Number[].class), newArrayType(wildcard));
   }
 
   public void testNewArrayType_serializable() {
-    reserializeAndAssert(Types.newArrayType(int[].class));
+    reserializeAndAssert(newArrayType(int[].class));
   }
 
   private static class WithWildcardType {
@@ -215,9 +218,9 @@ public class TypesTest extends TestCase {
     WildcardType objectBoundJvmType = WithWildcardType.getWildcardType("withObjectBound");
     WildcardType upperBoundJvmType = WithWildcardType.getWildcardType("withUpperBound");
     WildcardType lowerBoundJvmType = WithWildcardType.getWildcardType("withLowerBound");
-    WildcardType objectBound = Types.subtypeOf(Object.class);
-    WildcardType upperBound = Types.subtypeOf(int[][].class);
-    WildcardType lowerBound = Types.supertypeOf(String[][].class);
+    WildcardType objectBound = subtypeOf(Object.class);
+    WildcardType upperBound = subtypeOf(int[][].class);
+    WildcardType lowerBound = supertypeOf(String[][].class);
 
     assertEqualWildcardType(noBoundJvmType, objectBound);
     assertEqualWildcardType(objectBoundJvmType, objectBound);
@@ -232,13 +235,13 @@ public class TypesTest extends TestCase {
   }
 
   public void testNewWildcardType_primitiveTypeBound() {
-    assertThrows(IllegalArgumentException.class, () -> Types.subtypeOf(int.class));
+    assertThrows(IllegalArgumentException.class, () -> subtypeOf(int.class));
   }
 
   public void testNewWildcardType_serializable() {
-    reserializeAndAssert(Types.supertypeOf(String.class));
-    reserializeAndAssert(Types.subtypeOf(String.class));
-    reserializeAndAssert(Types.subtypeOf(Object.class));
+    reserializeAndAssert(supertypeOf(String.class));
+    reserializeAndAssert(subtypeOf(String.class));
+    reserializeAndAssert(subtypeOf(Object.class));
   }
 
   private static void assertEqualWildcardType(WildcardType expected, WildcardType actual) {
@@ -306,18 +309,17 @@ public class TypesTest extends TestCase {
   public void testNewTypeVariable_primitiveTypeBound() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> Types.newArtificialTypeVariable(List.class, "E", int.class));
+        () -> newArtificialTypeVariable(List.class, "E", int.class));
   }
 
   public void testNewTypeVariable_serializable() throws Exception {
     assertThrows(
-        RuntimeException.class,
-        () -> reserialize(Types.newArtificialTypeVariable(List.class, "E")));
+        RuntimeException.class, () -> reserialize(newArtificialTypeVariable(List.class, "E")));
   }
 
   private static <D extends GenericDeclaration> TypeVariable<D> withBounds(
       TypeVariable<D> typeVariable, Type... bounds) {
-    return Types.newArtificialTypeVariable(
+    return newArtificialTypeVariable(
         typeVariable.getGenericDeclaration(), typeVariable.getName(), bounds);
   }
 
@@ -359,7 +361,7 @@ public class TypesTest extends TestCase {
    */
   public void testNewParameterizedTypeImmutability() {
     Type[] typesIn = {String.class, Integer.class};
-    ParameterizedType parameterizedType = Types.newParameterizedType(Map.class, typesIn);
+    ParameterizedType parameterizedType = newParameterizedType(Map.class, typesIn);
     typesIn[0] = null;
     typesIn[1] = null;
 
@@ -374,7 +376,7 @@ public class TypesTest extends TestCase {
   public void testNewParameterizedTypeWithWrongNumberOfTypeArguments() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> Types.newParameterizedType(Map.class, String.class, Integer.class, Long.class));
+        () -> newParameterizedType(Map.class, String.class, Integer.class, Long.class));
   }
 
   public void testToString() {

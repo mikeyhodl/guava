@@ -49,7 +49,6 @@ import com.google.common.util.concurrent.ExecutionError;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
 import com.google.common.util.concurrent.UncheckedExecutionException;
-import com.google.common.util.concurrent.Uninterruptibles;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import com.google.errorprone.annotations.concurrent.LazyInit;
@@ -2387,7 +2386,7 @@ final class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<
       ListenableFuture<V> result = loadAsync(key, hash, loadingValueReference, loader);
       if (result.isDone()) {
         try {
-          return Uninterruptibles.getUninterruptibly(result);
+          return getUninterruptibly(result);
         } catch (Throwable t) {
           // don't let refresh exceptions propagate; error was already logged
         }

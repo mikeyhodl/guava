@@ -19,6 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.Byte.toUnsignedInt;
 import static java.lang.Math.log;
 import static java.lang.Math.max;
+import static java.lang.Math.round;
 
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.J2ktIncompatible;
@@ -554,7 +555,7 @@ public final class BloomFilter<T extends @Nullable Object> implements Predicate<
   @VisibleForTesting
   static int optimalNumOfHashFunctions(double p) {
     // -log(p) / log(2), ensuring the result is rounded to avoid truncation.
-    return max(1, (int) Math.round(-log(p) / LOG_TWO));
+    return max(1, (int) round(-log(p) / LOG_TWO));
   }
 
   /**

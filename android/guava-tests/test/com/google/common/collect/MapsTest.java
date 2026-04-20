@@ -17,9 +17,11 @@
 package com.google.common.collect;
 
 import static com.google.common.collect.Maps.immutableEntry;
+import static com.google.common.collect.Maps.toMap;
 import static com.google.common.collect.Maps.transformEntries;
 import static com.google.common.collect.Maps.transformValues;
 import static com.google.common.collect.Maps.unmodifiableNavigableMap;
+import static com.google.common.collect.Sets.newTreeSet;
 import static com.google.common.collect.testing.Helpers.mapEntry;
 import static com.google.common.testing.SerializableTester.reserializeAndAssert;
 import static com.google.common.truth.Truth.assertThat;
@@ -698,7 +700,7 @@ public class MapsTest extends TestCase {
   }
 
   private static class NonNavigableSortedSet extends ForwardingSortedSet<String> {
-    private final SortedSet<String> delegate = Sets.newTreeSet();
+    private final SortedSet<String> delegate = newTreeSet();
 
     @Override
     protected SortedSet<String> delegate() {
@@ -773,7 +775,7 @@ public class MapsTest extends TestCase {
 
   @GwtIncompatible // NavigableMap
   public void testAsMapNavigable() {
-    NavigableSet<String> strings = Sets.newTreeSet(asList("one", "two", "three"));
+    NavigableSet<String> strings = newTreeSet(asList("one", "two", "three"));
     NavigableMap<String, Integer> map = Maps.asMap(strings, LENGTH_FUNCTION);
     assertEquals(ImmutableMap.of("one", 3, "two", 3, "three", 5), map);
     assertEquals(Integer.valueOf(5), map.get("three"));
@@ -820,7 +822,7 @@ public class MapsTest extends TestCase {
 
   @GwtIncompatible // NavigableMap
   public void testAsMapNavigableReadsThrough() {
-    NavigableSet<String> strings = Sets.newTreeSet();
+    NavigableSet<String> strings = newTreeSet();
     Collections.addAll(strings, "one", "two", "three");
     NavigableMap<String, Integer> map = Maps.asMap(strings, LENGTH_FUNCTION);
     assertThat(map.comparator()).isNull();
@@ -854,7 +856,7 @@ public class MapsTest extends TestCase {
 
   @GwtIncompatible // NavigableMap
   public void testAsMapNavigableWritesThrough() {
-    NavigableSet<String> strings = Sets.newTreeSet();
+    NavigableSet<String> strings = newTreeSet();
     Collections.addAll(strings, "one", "two", "three");
     NavigableMap<String, Integer> map = Maps.asMap(strings, LENGTH_FUNCTION);
     assertEquals(ImmutableMap.of("one", 3, "two", 3, "three", 5), map);
@@ -891,7 +893,7 @@ public class MapsTest extends TestCase {
 
   public void testToMap() {
     Iterable<String> strings = ImmutableList.of("one", "two", "three");
-    ImmutableMap<String, Integer> map = Maps.toMap(strings, LENGTH_FUNCTION);
+    ImmutableMap<String, Integer> map = toMap(strings, LENGTH_FUNCTION);
     assertEquals(ImmutableMap.of("one", 3, "two", 3, "three", 5), map);
     assertThat(map.entrySet())
         .containsExactly(mapEntry("one", 3), mapEntry("two", 3), mapEntry("three", 5))
@@ -900,7 +902,7 @@ public class MapsTest extends TestCase {
 
   public void testToMapIterator() {
     Iterator<String> strings = ImmutableList.of("one", "two", "three").iterator();
-    ImmutableMap<String, Integer> map = Maps.toMap(strings, LENGTH_FUNCTION);
+    ImmutableMap<String, Integer> map = toMap(strings, LENGTH_FUNCTION);
     assertEquals(ImmutableMap.of("one", 3, "two", 3, "three", 5), map);
     assertThat(map.entrySet())
         .containsExactly(mapEntry("one", 3), mapEntry("two", 3), mapEntry("three", 5))
@@ -909,7 +911,7 @@ public class MapsTest extends TestCase {
 
   public void testToMapWithDuplicateKeys() {
     Iterable<String> strings = ImmutableList.of("one", "two", "three", "two", "one");
-    ImmutableMap<String, Integer> map = Maps.toMap(strings, LENGTH_FUNCTION);
+    ImmutableMap<String, Integer> map = toMap(strings, LENGTH_FUNCTION);
     assertEquals(ImmutableMap.of("one", 3, "two", 3, "three", 5), map);
     assertThat(map.entrySet())
         .containsExactly(mapEntry("one", 3), mapEntry("two", 3), mapEntry("three", 5))
@@ -920,12 +922,12 @@ public class MapsTest extends TestCase {
     Iterable<@Nullable String> strings = asList("one", null, "three");
     assertThrows(
         NullPointerException.class,
-        () -> Maps.toMap((Iterable<String>) strings, Functions.constant("foo")));
+        () -> toMap((Iterable<String>) strings, Functions.constant("foo")));
   }
 
   public void testToMapWithNullValues() {
     Iterable<String> strings = ImmutableList.of("one", "two", "three");
-    assertThrows(NullPointerException.class, () -> Maps.toMap(strings, Functions.constant(null)));
+    assertThrows(NullPointerException.class, () -> toMap(strings, Functions.constant(null)));
   }
 
   private static final ImmutableBiMap<Integer, String> INT_TO_STRING_MAP =

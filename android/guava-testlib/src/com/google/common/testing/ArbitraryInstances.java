@@ -18,6 +18,8 @@ package com.google.common.testing;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Iterators.peekingIterator;
+import static com.google.common.collect.Maps.unmodifiableNavigableMap;
+import static com.google.common.collect.Sets.newTreeSet;
 import static com.google.common.collect.Sets.unmodifiableNavigableSet;
 import static com.google.common.collect.Tables.unmodifiableRowSortedTable;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -63,7 +65,6 @@ import com.google.common.collect.PeekingIterator;
 import com.google.common.collect.Range;
 import com.google.common.collect.RowSortedTable;
 import com.google.common.collect.SetMultimap;
-import com.google.common.collect.Sets;
 import com.google.common.collect.SortedMapDifference;
 import com.google.common.collect.SortedMultiset;
 import com.google.common.collect.SortedSetMultimap;
@@ -254,12 +255,12 @@ public final class ArbitraryInstances {
           .put(ImmutableSet.class, ImmutableSet.of())
           .put(SortedSet.class, ImmutableSortedSet.of())
           .put(ImmutableSortedSet.class, ImmutableSortedSet.of())
-          .put(NavigableSet.class, unmodifiableNavigableSet(Sets.newTreeSet()))
+          .put(NavigableSet.class, unmodifiableNavigableSet(newTreeSet()))
           .put(Map.class, ImmutableMap.of())
           .put(ImmutableMap.class, ImmutableMap.of())
           .put(SortedMap.class, ImmutableSortedMap.of())
           .put(ImmutableSortedMap.class, ImmutableSortedMap.of())
-          .put(NavigableMap.class, Maps.unmodifiableNavigableMap(Maps.newTreeMap()))
+          .put(NavigableMap.class, unmodifiableNavigableMap(Maps.newTreeMap()))
           .put(Multimap.class, ImmutableMultimap.of())
           .put(ImmutableMultimap.class, ImmutableMultimap.of())
           .put(ListMultimap.class, ImmutableListMultimap.of())

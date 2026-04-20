@@ -22,6 +22,8 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
+import static com.google.common.util.concurrent.Uninterruptibles.awaitUninterruptibly;
+import static com.google.common.util.concurrent.Uninterruptibles.sleepUninterruptibly;
 import static java.util.Arrays.asList;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -92,7 +94,7 @@ public class ServiceManagerTest extends TestCase {
       new Thread() {
         @Override
         public void run() {
-          Uninterruptibles.sleepUninterruptibly(delay, MILLISECONDS);
+          sleepUninterruptibly(delay, MILLISECONDS);
           notifyStarted();
         }
       }.start();
@@ -103,7 +105,7 @@ public class ServiceManagerTest extends TestCase {
       new Thread() {
         @Override
         public void run() {
-          Uninterruptibles.sleepUninterruptibly(delay, MILLISECONDS);
+          sleepUninterruptibly(delay, MILLISECONDS);
           notifyStopped();
         }
       }.start();
@@ -173,7 +175,7 @@ public class ServiceManagerTest extends TestCase {
           protected void doStart() {
             super.doStart();
             // This will delay service listener execution at least 150 milliseconds
-            Uninterruptibles.sleepUninterruptibly(150, MILLISECONDS);
+            sleepUninterruptibly(150, MILLISECONDS);
           }
         };
     Service a =
@@ -490,7 +492,7 @@ public class ServiceManagerTest extends TestCase {
                 // We need to wait for the main thread to leave the ServiceManager.startAsync call
                 // to
                 // ensure that the thread running the failure callbacks is not the main thread.
-                Uninterruptibles.awaitUninterruptibly(afterStarted);
+                awaitUninterruptibly(afterStarted);
                 notifyFailed(new Exception("boom"));
               }
             }.start();
@@ -508,7 +510,7 @@ public class ServiceManagerTest extends TestCase {
           public void failure(Service service) {
             failEnter.countDown();
             // block until after the service manager is shutdown
-            Uninterruptibles.awaitUninterruptibly(failLeave);
+            awaitUninterruptibly(failLeave);
           }
         },
         directExecutor());

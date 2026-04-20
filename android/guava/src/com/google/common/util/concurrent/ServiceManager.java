@@ -21,6 +21,7 @@ import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.base.Predicates.in;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.not;
+import static com.google.common.collect.Lists.newArrayListWithCapacity;
 import static com.google.common.collect.Maps.immutableEntry;
 import static com.google.common.collect.Multimaps.filterKeys;
 import static com.google.common.util.concurrent.Internal.toNanosSaturated;
@@ -45,7 +46,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.MultimapBuilder;
 import com.google.common.collect.Multiset;
@@ -648,7 +648,7 @@ public final class ServiceManager implements ServiceManagerBridge {
       List<Entry<Service, Long>> loadTimes;
       monitor.enter();
       try {
-        loadTimes = Lists.newArrayListWithCapacity(startupTimers.size());
+        loadTimes = newArrayListWithCapacity(startupTimers.size());
         // N.B. There will only be an entry in the map if the service has started
         for (Entry<Service, Stopwatch> entry : startupTimers.entrySet()) {
           Service service = entry.getKey();

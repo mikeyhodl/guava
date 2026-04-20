@@ -25,6 +25,7 @@ import static com.google.common.testing.SerializableTester.reserialize;
 import static com.google.common.testing.SerializableTester.reserializeAndAssert;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
+import static com.google.common.util.concurrent.Uninterruptibles.joinUninterruptibly;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.Assert.assertThrows;
@@ -37,7 +38,6 @@ import com.google.common.math.LongMath;
 import com.google.common.primitives.Ints;
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.NullPointerTester;
-import com.google.common.util.concurrent.Uninterruptibles;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.math.RoundingMode;
@@ -602,7 +602,7 @@ public class BloomFilterTest extends TestCase {
       t.start();
     }
     for (Thread t : threads) {
-      Uninterruptibles.joinUninterruptibly(t);
+      joinUninterruptibly(t);
     }
     return exceptions;
   }

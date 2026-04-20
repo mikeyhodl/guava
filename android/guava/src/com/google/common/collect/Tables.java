@@ -18,7 +18,9 @@ package com.google.common.collect;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Iterators.transform;
 import static com.google.common.collect.NullnessCasts.uncheckedCastNullableTToT;
+import static java.util.Collections.unmodifiableCollection;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.Collections.unmodifiableSortedMap;
@@ -319,7 +321,7 @@ public final class Tables {
 
     @Override
     Iterator<Cell<C, R, V>> cellIterator() {
-      return Iterators.transform(original.cellSet().iterator(), Tables::transposeCell);
+      return transform(original.cellSet().iterator(), Tables::transposeCell);
     }
   }
 
@@ -482,7 +484,7 @@ public final class Tables {
 
     @Override
     Iterator<Cell<R, C, V2>> cellIterator() {
-      return Iterators.transform(fromTable.cellSet().iterator(), this::applyToValue);
+      return transform(fromTable.cellSet().iterator(), this::applyToValue);
     }
 
     @Override
@@ -604,7 +606,7 @@ public final class Tables {
 
     @Override
     public Collection<V> values() {
-      return Collections.unmodifiableCollection(super.values());
+      return unmodifiableCollection(super.values());
     }
 
     @GwtIncompatible @J2ktIncompatible private static final long serialVersionUID = 0;

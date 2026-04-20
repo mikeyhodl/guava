@@ -18,11 +18,14 @@ package com.google.common.collect;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.compose;
 import static com.google.common.collect.CollectPreconditions.checkEntryNotNull;
 import static com.google.common.collect.CollectPreconditions.checkNonnegative;
 import static com.google.common.collect.Iterables.any;
+import static com.google.common.collect.Iterables.removeFirstMatching;
 import static com.google.common.collect.Iterators.filter;
+import static com.google.common.collect.Iterators.transform;
 import static com.google.common.collect.NullnessCasts.uncheckedCastNullableTToT;
 import static com.google.common.collect.Sets.unmodifiableNavigableSet;
 import static java.lang.Math.ceil;
@@ -38,7 +41,6 @@ import com.google.common.base.Equivalence;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.MapDifference.ValueDifference;
 import com.google.common.primitives.Ints;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
@@ -2162,8 +2164,7 @@ public final class Maps {
 
     @Override
     Iterator<Entry<K, V2>> entryIterator() {
-      return Iterators.transform(
-          fromMap.entrySet().iterator(), asEntryToEntryFunction(transformer));
+      return transform(fromMap.entrySet().iterator(), asEntryToEntryFunction(transformer));
     }
 
     @Override
@@ -2772,7 +2773,7 @@ public final class Maps {
    */
   private static <K extends @Nullable Object, V extends @Nullable Object> Map<K, V> filterFiltered(
       AbstractFilteredMap<K, V> map, Predicate<? super Entry<K, V>> entryPredicate) {
-    return new FilteredEntryMap<>(map.unfiltered, Predicates.and(map.predicate, entryPredicate));
+    return new FilteredEntryMap<>(map.unfiltered, and(map.predicate, entryPredicate));
   }
 
   /**
@@ -2782,7 +2783,7 @@ public final class Maps {
   private static <K extends @Nullable Object, V extends @Nullable Object>
       SortedMap<K, V> filterFiltered(
           FilteredEntrySortedMap<K, V> map, Predicate<? super Entry<K, V>> entryPredicate) {
-    Predicate<Entry<K, V>> predicate = Predicates.and(map.predicate, entryPredicate);
+    Predicate<Entry<K, V>> predicate = and(map.predicate, entryPredicate);
     return new FilteredEntrySortedMap<>(map.sortedMap(), predicate);
   }
 
@@ -2794,7 +2795,7 @@ public final class Maps {
   private static <K extends @Nullable Object, V extends @Nullable Object>
       NavigableMap<K, V> filterFiltered(
           FilteredEntryNavigableMap<K, V> map, Predicate<? super Entry<K, V>> entryPredicate) {
-    Predicate<Entry<K, V>> predicate = Predicates.and(map.entryPredicate, entryPredicate);
+    Predicate<Entry<K, V>> predicate = and(map.entryPredicate, entryPredicate);
     return new FilteredEntryNavigableMap<>(map.unfiltered, predicate);
   }
 
@@ -2805,7 +2806,7 @@ public final class Maps {
   private static <K extends @Nullable Object, V extends @Nullable Object>
       BiMap<K, V> filterFiltered(
           FilteredEntryBiMap<K, V> map, Predicate<? super Entry<K, V>> entryPredicate) {
-    Predicate<Entry<K, V>> predicate = Predicates.and(map.predicate, entryPredicate);
+    Predicate<Entry<K, V>> predicate = and(map.predicate, entryPredicate);
     return new FilteredEntryBiMap<>(map.unfiltered(), predicate);
   }
 
@@ -3292,12 +3293,12 @@ public final class Maps {
 
     @Override
     public @Nullable Entry<K, V> pollFirstEntry() {
-      return Iterables.removeFirstMatching(unfiltered.entrySet(), entryPredicate);
+      return removeFirstMatching(unfiltered.entrySet(), entryPredicate);
     }
 
     @Override
     public @Nullable Entry<K, V> pollLastEntry() {
-      return Iterables.removeFirstMatching(unfiltered.descendingMap().entrySet(), entryPredicate);
+      return removeFirstMatching(unfiltered.descendingMap().entrySet(), entryPredicate);
     }
 
     @Override

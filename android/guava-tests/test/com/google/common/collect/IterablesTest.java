@@ -19,6 +19,7 @@ package com.google.common.collect;
 import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.collect.Iterables.all;
 import static com.google.common.collect.Iterables.any;
+import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.elementsEqual;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.find;
@@ -370,7 +371,7 @@ public class IterablesTest extends TestCase {
 
     List<List<Integer>> input = newArrayList(list1, list2);
 
-    Iterable<Integer> result = Iterables.concat(input);
+    Iterable<Integer> result = concat(input);
     assertEquals(asList(1, 4), newArrayList(result));
 
     // Now change the inputs and see result dynamically change as well
@@ -389,7 +390,7 @@ public class IterablesTest extends TestCase {
     List<Integer> list3 = newArrayList(7, 8);
     List<Integer> list4 = newArrayList(9);
     List<Integer> list5 = newArrayList(10);
-    Iterable<Integer> result = Iterables.concat(list1, list2, list3, list4, list5);
+    Iterable<Integer> result = concat(list1, list2, list3, list4, list5);
     assertEquals(asList(1, 4, 7, 8, 9, 10), newArrayList(result));
     assertThat(result.toString()).isEqualTo("[1, 4, 7, 8, 9, 10]");
   }
@@ -398,13 +399,13 @@ public class IterablesTest extends TestCase {
     List<Integer> list1 = newArrayList(1);
     List<Integer> list2 = newArrayList(4);
 
-    assertThrows(NullPointerException.class, () -> Iterables.concat(list1, null, list2));
+    assertThrows(NullPointerException.class, () -> concat(list1, null, list2));
   }
 
   public void testConcatPeformingFiniteCycle() {
     Iterable<Integer> iterable = asList(1, 2, 3);
     int n = 4;
-    Iterable<Integer> repeated = Iterables.concat(nCopies(n, iterable));
+    Iterable<Integer> repeated = concat(nCopies(n, iterable));
     assertThat(repeated).containsExactly(1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3).inOrder();
   }
 

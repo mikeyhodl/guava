@@ -16,6 +16,7 @@
 
 package com.google.common.util.concurrent;
 
+import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.all;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
@@ -26,7 +27,6 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import java.util.ArrayList;
@@ -307,7 +307,7 @@ public class WrappingExecutorServiceTest extends TestCase {
     }
 
     private static <T> void assertTaskWrapped(Collection<? extends Callable<T>> tasks) {
-      Predicate<Object> p = Predicates.instanceOf(WrappedCallable.class);
+      Predicate<Object> p = instanceOf(WrappedCallable.class);
       assertTrue(all(tasks, p));
     }
   }

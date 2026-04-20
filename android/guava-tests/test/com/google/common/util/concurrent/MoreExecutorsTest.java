@@ -36,6 +36,7 @@ import static com.google.common.util.concurrent.MoreExecutors.listeningDecorator
 import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
 import static com.google.common.util.concurrent.MoreExecutors.renamingDecorator;
 import static com.google.common.util.concurrent.MoreExecutors.shutdownAndAwaitTermination;
+import static com.google.common.util.concurrent.Uninterruptibles.joinUninterruptibly;
 import static java.util.Collections.nCopies;
 import static java.util.concurrent.TimeUnit.DAYS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -223,7 +224,7 @@ public class MoreExecutorsTest extends JSR166TestCase {
     waiter.start();
     awaitTimedWaiting(waiter);
     service.shutdown();
-    Uninterruptibles.joinUninterruptibly(waiter, 10, SECONDS);
+    joinUninterruptibly(waiter, 10, SECONDS);
     if (waiter.isAlive()) {
       waiter.interrupt();
       fail("awaitTermination failed to trigger after shutdown()");

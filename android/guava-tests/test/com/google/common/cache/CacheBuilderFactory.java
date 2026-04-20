@@ -19,12 +19,12 @@ import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 import static com.google.common.collect.Lists.transform;
 import static com.google.common.collect.Sets.cartesianProduct;
 import static com.google.common.collect.Sets.newHashSet;
+import static com.google.common.collect.Sets.newLinkedHashSet;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.cache.LocalCache.Strength;
-import com.google.common.collect.Sets;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -136,7 +136,7 @@ class CacheBuilderFactory {
   private Iterable<List<Object>> buildCartesianProduct(Set<?>... sets) {
     List<Set<Optional<?>>> optionalSets = newArrayListWithExpectedSize(sets.length);
     for (Set<?> set : sets) {
-      Set<Optional<?>> optionalSet = Sets.newLinkedHashSet(transform(set, Optional::fromNullable));
+      Set<Optional<?>> optionalSet = newLinkedHashSet(transform(set, Optional::fromNullable));
       optionalSets.add(optionalSet);
     }
     Set<List<Optional<?>>> cartesianProduct = cartesianProduct(optionalSets);

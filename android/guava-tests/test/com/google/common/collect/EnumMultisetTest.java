@@ -16,6 +16,7 @@
 
 package com.google.common.collect;
 
+import static com.google.common.collect.Sets.newIdentityHashSet;
 import static com.google.common.testing.SerializableTester.reserialize;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
@@ -148,7 +149,7 @@ public class EnumMultisetTest extends TestCase {
     ms.add(Color.YELLOW, 1);
     ms.add(Color.RED, 2);
 
-    Set<Object> uniqueEntries = Sets.newIdentityHashSet();
+    Set<Object> uniqueEntries = newIdentityHashSet();
     uniqueEntries.addAll(ms.entrySet());
     assertEquals(3, uniqueEntries.size());
   }

@@ -18,6 +18,7 @@ package com.google.common.collect;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Predicates.and;
 import static com.google.common.collect.CollectPreconditions.checkNonnegative;
 import static com.google.common.collect.Iterables.any;
 import static java.lang.Math.min;
@@ -26,7 +27,6 @@ import static java.util.Objects.requireNonNull;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.math.IntMath;
 import com.google.common.primitives.Ints;
 import java.util.AbstractCollection;
@@ -128,7 +128,7 @@ public final class Collections2 {
     }
 
     FilteredCollection<E> createCombined(Predicate<? super E> newPredicate) {
-      return new FilteredCollection<>(unfiltered, Predicates.and(predicate, newPredicate));
+      return new FilteredCollection<>(unfiltered, and(predicate, newPredicate));
     }
 
     @Override

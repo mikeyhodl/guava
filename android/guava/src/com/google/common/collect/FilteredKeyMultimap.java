@@ -16,6 +16,7 @@ package com.google.common.collect;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkPositionIndex;
+import static com.google.common.collect.Maps.filterKeys;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 
@@ -217,7 +218,7 @@ class FilteredKeyMultimap<K extends @Nullable Object, V extends @Nullable Object
 
   @Override
   Map<K, Collection<V>> createAsMap() {
-    return Maps.filterKeys(unfiltered.asMap(), keyPredicate);
+    return filterKeys(unfiltered.asMap(), keyPredicate);
   }
 
   @Override

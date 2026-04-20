@@ -17,13 +17,16 @@
 package com.google.common.collect;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Predicates.and;
 import static com.google.common.collect.CollectPreconditions.checkNonnegative;
 import static com.google.common.collect.CollectPreconditions.checkRemove;
 import static com.google.common.collect.Maps.immutableEntry;
 import static com.google.common.collect.Maps.safeGet;
+import static com.google.common.collect.Maps.unmodifiableEntrySet;
 import static com.google.common.collect.Multisets.unmodifiableMultiset;
 import static com.google.common.collect.NullnessCasts.uncheckedCastNullableTToT;
 import static com.google.common.collect.Sets.unmodifiableNavigableSet;
+import static java.util.Collections.unmodifiableCollection;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
@@ -35,7 +38,6 @@ import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Maps.EntryTransformer;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
@@ -49,7 +51,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.AbstractCollection;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -256,7 +257,7 @@ public final class Multimaps {
       } else if (collection instanceof List) {
         return unmodifiableList((List<E>) collection);
       } else {
-        return Collections.unmodifiableCollection(collection);
+        return unmodifiableCollection(collection);
       }
     }
 
@@ -782,7 +783,7 @@ public final class Multimaps {
     public Collection<V> values() {
       Collection<V> result = values;
       if (result == null) {
-        values = result = Collections.unmodifiableCollection(delegate.values());
+        values = result = unmodifiableCollection(delegate.values());
       }
       return result;
     }
@@ -843,7 +844,7 @@ public final class Multimaps {
 
     @Override
     public Set<Map.Entry<K, V>> entries() {
-      return Maps.unmodifiableEntrySet(delegate().entries());
+      return unmodifiableEntrySet(delegate().entries());
     }
 
     @Override
@@ -1045,7 +1046,7 @@ public final class Multimaps {
     } else if (collection instanceof List) {
       return unmodifiableList((List<V>) collection);
     }
-    return Collections.unmodifiableCollection(collection);
+    return unmodifiableCollection(collection);
   }
 
   /**
@@ -1059,9 +1060,9 @@ public final class Multimaps {
   private static <K extends @Nullable Object, V extends @Nullable Object>
       Collection<Entry<K, V>> unmodifiableEntries(Collection<Entry<K, V>> entries) {
     if (entries instanceof Set) {
-      return Maps.unmodifiableEntrySet((Set<Entry<K, V>>) entries);
+      return unmodifiableEntrySet((Set<Entry<K, V>>) entries);
     }
-    return new Maps.UnmodifiableEntries<>(Collections.unmodifiableCollection(entries));
+    return new Maps.UnmodifiableEntries<>(unmodifiableCollection(entries));
   }
 
   /**
@@ -1951,8 +1952,7 @@ public final class Multimaps {
       return filterKeys((ListMultimap<K, V>) unfiltered, keyPredicate);
     } else if (unfiltered instanceof FilteredKeyMultimap) {
       FilteredKeyMultimap<K, V> prev = (FilteredKeyMultimap<K, V>) unfiltered;
-      return new FilteredKeyMultimap<>(
-          prev.unfiltered, Predicates.and(prev.keyPredicate, keyPredicate));
+      return new FilteredKeyMultimap<>(prev.unfiltered, and(prev.keyPredicate, keyPredicate));
     } else if (unfiltered instanceof FilteredMultimap) {
       FilteredMultimap<K, V> prev = (FilteredMultimap<K, V>) unfiltered;
       return filterFiltered(prev, Maps.keyPredicateOnEntries(keyPredicate));
@@ -1993,8 +1993,7 @@ public final class Multimaps {
           SetMultimap<K, V> unfiltered, Predicate<? super K> keyPredicate) {
     if (unfiltered instanceof FilteredKeySetMultimap) {
       FilteredKeySetMultimap<K, V> prev = (FilteredKeySetMultimap<K, V>) unfiltered;
-      return new FilteredKeySetMultimap<>(
-          prev.unfiltered(), Predicates.and(prev.keyPredicate, keyPredicate));
+      return new FilteredKeySetMultimap<>(prev.unfiltered(), and(prev.keyPredicate, keyPredicate));
     } else if (unfiltered instanceof FilteredSetMultimap) {
       FilteredSetMultimap<K, V> prev = (FilteredSetMultimap<K, V>) unfiltered;
       return filterFiltered(prev, Maps.keyPredicateOnEntries(keyPredicate));
@@ -2035,8 +2034,7 @@ public final class Multimaps {
           ListMultimap<K, V> unfiltered, Predicate<? super K> keyPredicate) {
     if (unfiltered instanceof FilteredKeyListMultimap) {
       FilteredKeyListMultimap<K, V> prev = (FilteredKeyListMultimap<K, V>) unfiltered;
-      return new FilteredKeyListMultimap<>(
-          prev.unfiltered(), Predicates.and(prev.keyPredicate, keyPredicate));
+      return new FilteredKeyListMultimap<>(prev.unfiltered(), and(prev.keyPredicate, keyPredicate));
     } else {
       return new FilteredKeyListMultimap<>(unfiltered, keyPredicate);
     }
@@ -2187,7 +2185,7 @@ public final class Multimaps {
   private static <K extends @Nullable Object, V extends @Nullable Object>
       Multimap<K, V> filterFiltered(
           FilteredMultimap<K, V> multimap, Predicate<? super Entry<K, V>> entryPredicate) {
-    Predicate<Entry<K, V>> predicate = Predicates.and(multimap.entryPredicate(), entryPredicate);
+    Predicate<Entry<K, V>> predicate = and(multimap.entryPredicate(), entryPredicate);
     return new FilteredEntryMultimap<>(multimap.unfiltered(), predicate);
   }
 
@@ -2200,7 +2198,7 @@ public final class Multimaps {
   private static <K extends @Nullable Object, V extends @Nullable Object>
       SetMultimap<K, V> filterFiltered(
           FilteredSetMultimap<K, V> multimap, Predicate<? super Entry<K, V>> entryPredicate) {
-    Predicate<Entry<K, V>> predicate = Predicates.and(multimap.entryPredicate(), entryPredicate);
+    Predicate<Entry<K, V>> predicate = and(multimap.entryPredicate(), entryPredicate);
     return new FilteredEntrySetMultimap<>(multimap.unfiltered(), predicate);
   }
 

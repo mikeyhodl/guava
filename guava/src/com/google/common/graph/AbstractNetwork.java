@@ -18,6 +18,7 @@ package com.google.common.graph;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Iterators.transform;
 import static com.google.common.graph.GraphConstants.EDGE_REMOVED_FROM_GRAPH;
 import static com.google.common.graph.GraphConstants.ENDPOINTS_MISMATCH;
 import static com.google.common.graph.GraphConstants.MULTIPLE_EDGES_CONNECTING;
@@ -27,7 +28,6 @@ import static java.util.Collections.unmodifiableSet;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.math.IntMath;
@@ -72,8 +72,7 @@ public abstract class AbstractNetwork<N, E> implements Network<N, E> {
         return new AbstractSet<EndpointPair<N>>() {
           @Override
           public Iterator<EndpointPair<N>> iterator() {
-            return Iterators.transform(
-                AbstractNetwork.this.edges().iterator(), edge -> incidentNodes(edge));
+            return transform(AbstractNetwork.this.edges().iterator(), edge -> incidentNodes(edge));
           }
 
           @Override

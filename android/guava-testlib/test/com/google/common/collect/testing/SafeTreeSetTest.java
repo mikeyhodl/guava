@@ -16,6 +16,7 @@
 
 package com.google.common.collect.testing;
 
+import static com.google.common.collect.Sets.newTreeSet;
 import static com.google.common.testing.SerializableTester.reserialize;
 import static com.google.common.testing.SerializableTester.reserializeAndAssert;
 import static java.util.Arrays.asList;
@@ -23,7 +24,6 @@ import static java.util.Arrays.asList;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Ordering;
-import com.google.common.collect.Sets;
 import com.google.common.collect.testing.features.CollectionFeature;
 import com.google.common.collect.testing.features.CollectionSize;
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class SafeTreeSetTest extends TestCase {
 
                   @Override
                   public List<String> order(List<String> insertionOrder) {
-                    return new ArrayList<>(Sets.newTreeSet(insertionOrder));
+                    return new ArrayList<>(newTreeSet(insertionOrder));
                   }
                 })
             .withFeatures(
@@ -73,7 +73,7 @@ public class SafeTreeSetTest extends TestCase {
 
                   @Override
                   public List<String> order(List<String> insertionOrder) {
-                    return new ArrayList<>(Sets.newTreeSet(insertionOrder));
+                    return new ArrayList<>(newTreeSet(insertionOrder));
                   }
                 })
             .withFeatures(

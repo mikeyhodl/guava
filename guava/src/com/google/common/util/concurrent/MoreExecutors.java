@@ -16,6 +16,7 @@ package com.google.common.util.concurrent;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Lists.newArrayListWithCapacity;
 import static com.google.common.util.concurrent.Callables.threadRenaming;
 import static com.google.common.util.concurrent.Internal.toNanosSaturated;
 import static com.google.common.util.concurrent.SneakyThrows.sneakyThrow;
@@ -31,7 +32,6 @@ import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Supplier;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ForwardingListenableFuture.SimpleForwardingListenableFuture;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
@@ -719,7 +719,7 @@ public final class MoreExecutors {
     checkNotNull(unit);
     int ntasks = tasks.size();
     checkArgument(ntasks > 0);
-    List<Future<T>> futures = Lists.newArrayListWithCapacity(ntasks);
+    List<Future<T>> futures = newArrayListWithCapacity(ntasks);
     BlockingQueue<Future<T>> futureQueue = Queues.newLinkedBlockingQueue();
     long timeoutNanos = unit.toNanos(timeout);
 

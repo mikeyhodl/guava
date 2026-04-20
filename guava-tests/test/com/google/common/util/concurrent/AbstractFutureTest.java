@@ -19,6 +19,7 @@ package com.google.common.util.concurrent;
 import static com.google.common.base.StandardSystemProperty.JAVA_SPECIFICATION_VERSION;
 import static com.google.common.base.StandardSystemProperty.OS_NAME;
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static com.google.common.collect.Sets.newIdentityHashSet;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.common.util.concurrent.Futures.immediateCancelledFuture;
@@ -26,6 +27,8 @@ import static com.google.common.util.concurrent.Futures.immediateFailedFuture;
 import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 import static com.google.common.util.concurrent.SneakyThrows.sneakyThrow;
+import static com.google.common.util.concurrent.Uninterruptibles.awaitUninterruptibly;
+import static com.google.common.util.concurrent.Uninterruptibles.getUninterruptibly;
 import static java.util.Arrays.asList;
 import static java.util.Collections.shuffle;
 import static java.util.Collections.singletonList;
@@ -40,7 +43,6 @@ import static org.junit.Assert.assertThrows;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.collect.Range;
-import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 import com.google.common.util.concurrent.internal.InternalFutureFailureAccess;
 import java.util.ArrayList;
@@ -504,11 +506,11 @@ public class AbstractFutureTest extends TestCase {
             return null;
           }
         };
-    Set<Object> finalResults = synchronizedSet(Sets.newIdentityHashSet());
+    Set<Object> finalResults = synchronizedSet(newIdentityHashSet());
     Runnable collectResultsRunnable =
         () -> {
           try {
-            String result = Uninterruptibles.getUninterruptibly(currentFuture.get());
+            String result = getUninterruptibly(currentFuture.get());
             finalResults.add(result);
           } catch (ExecutionException e) {
             finalResults.add(e.getCause());
@@ -523,7 +525,7 @@ public class AbstractFutureTest extends TestCase {
           Future<String> future = currentFuture.get();
           while (true) {
             try {
-              String result = Uninterruptibles.getUninterruptibly(future, 0, SECONDS);
+              String result = getUninterruptibly(future, 0, SECONDS);
               finalResults.add(result);
               break;
             } catch (ExecutionException e) {
@@ -619,11 +621,11 @@ public class AbstractFutureTest extends TestCase {
           setFutureCompletionSuccess.set(future.set("hello-async-world"));
           awaitUnchecked(barrier);
         };
-    Set<Object> finalResults = synchronizedSet(Sets.newIdentityHashSet());
+    Set<Object> finalResults = synchronizedSet(newIdentityHashSet());
     Runnable collectResultsRunnable =
         () -> {
           try {
-            String result = Uninterruptibles.getUninterruptibly(currentFuture.get());
+            String result = getUninterruptibly(currentFuture.get());
             finalResults.add(result);
           } catch (ExecutionException e) {
             finalResults.add(e.getCause());
@@ -638,7 +640,7 @@ public class AbstractFutureTest extends TestCase {
           Future<String> future = currentFuture.get();
           while (true) {
             try {
-              String result = Uninterruptibles.getUninterruptibly(future, 0, SECONDS);
+              String result = getUninterruptibly(future, 0, SECONDS);
               finalResults.add(result);
               break;
             } catch (ExecutionException e) {
@@ -736,11 +738,11 @@ public class AbstractFutureTest extends TestCase {
             return null;
           }
         };
-    Set<Object> finalResults = synchronizedSet(Sets.newIdentityHashSet());
+    Set<Object> finalResults = synchronizedSet(newIdentityHashSet());
     Runnable collectResultsRunnable =
         () -> {
           try {
-            String result = Uninterruptibles.getUninterruptibly(currentFuture.get());
+            String result = getUninterruptibly(currentFuture.get());
             finalResults.add(result);
           } catch (ExecutionException e) {
             finalResults.add(e.getCause());
@@ -1255,7 +1257,7 @@ public class AbstractFutureTest extends TestCase {
     }
 
     void awaitInLoop() {
-      Uninterruptibles.awaitUninterruptibly(completedIteration);
+      awaitUninterruptibly(completedIteration);
     }
   }
 

@@ -25,6 +25,7 @@ import static com.google.common.base.CharMatcher.isNot;
 import static com.google.common.base.CharMatcher.noneOf;
 import static com.google.common.base.CharMatcher.whitespace;
 import static com.google.common.base.Predicates.equalTo;
+import static com.google.common.base.Strings.repeat;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.sort;
 import static org.junit.Assert.assertThrows;
@@ -293,8 +294,8 @@ public class CharMatcherTest extends TestCase {
     assertTrue(matcher.matchesAllOf(s));
     assertFalse(matcher.matchesNoneOf(s));
     assertThat(matcher.removeFrom(s)).isEqualTo("");
-    assertThat(matcher.replaceFrom(s, 'z')).isEqualTo(Strings.repeat("z", s.length()));
-    assertThat(matcher.replaceFrom(s, "ZZ")).isEqualTo(Strings.repeat("ZZ", s.length()));
+    assertThat(matcher.replaceFrom(s, 'z')).isEqualTo(repeat("z", s.length()));
+    assertThat(matcher.replaceFrom(s, "ZZ")).isEqualTo(repeat("ZZ", s.length()));
     assertThat(matcher.trimFrom(s)).isEqualTo("");
     assertEquals(s.length(), matcher.countIn(s));
   }

@@ -18,6 +18,7 @@ package com.google.common.collect;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Predicates.and;
 import static com.google.common.collect.CollectPreconditions.checkNonnegative;
 import static com.google.common.collect.CollectPreconditions.checkRemove;
 import static java.lang.Math.max;
@@ -31,7 +32,6 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.Multiset.Entry;
 import com.google.common.math.IntMath;
 import com.google.common.primitives.Ints;
@@ -315,7 +315,7 @@ public final class Multisets {
       // Support clear(), removeAll(), and retainAll() when filtering a filtered
       // collection.
       FilteredMultiset<E> filtered = (FilteredMultiset<E>) unfiltered;
-      Predicate<E> combinedPredicate = Predicates.and(filtered.predicate, predicate);
+      Predicate<E> combinedPredicate = and(filtered.predicate, predicate);
       return new FilteredMultiset<>(filtered.unfiltered, combinedPredicate);
     }
     return new FilteredMultiset<>(unfiltered, predicate);

@@ -17,6 +17,7 @@ package com.google.common.reflect;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.reflect.Types.newArrayType;
 import static java.lang.Math.max;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
@@ -1027,7 +1028,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
       return canonicalizeWildcardsInParameterizedType((ParameterizedType) type);
     }
     if (type instanceof GenericArrayType) {
-      return Types.newArrayType(
+      return newArrayType(
           canonicalizeWildcardsInType(((GenericArrayType) type).getGenericComponentType()));
     }
     return type;
@@ -1167,7 +1168,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
   static <T> TypeToken<? extends T> toGenericType(Class<T> cls) {
     if (cls.isArray()) {
       Type arrayOfGenericType =
-          Types.newArrayType(
+          newArrayType(
               // If we are passed with int[].class, don't turn it to GenericArrayType
               toGenericType(cls.getComponentType()).runtimeType);
       @SuppressWarnings("unchecked") // array is covariant

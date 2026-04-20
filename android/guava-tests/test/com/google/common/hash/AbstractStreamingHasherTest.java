@@ -16,13 +16,13 @@
 
 package com.google.common.hash;
 
+import static com.google.common.collect.Iterables.concat;
 import static com.google.common.truth.Truth.assertThat;
 import static java.nio.charset.StandardCharsets.UTF_16LE;
 import static java.util.Collections.singleton;
 import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.J2ktIncompatible;
-import com.google.common.collect.Iterables;
 import com.google.common.hash.HashTestUtils.RandomHasherAction;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
@@ -150,7 +150,7 @@ public class AbstractStreamingHasherTest extends TestCase {
       Control control = new Control();
       Hasher controlSink = control.newHasher(1024);
 
-      Iterable<Hasher> sinksAndControl = Iterables.concat(sinks, singleton(controlSink));
+      Iterable<Hasher> sinksAndControl = concat(sinks, singleton(controlSink));
       for (int insertion = 0; insertion < totalInsertions; insertion++) {
         RandomHasherAction.pickAtRandom(random).performAction(random, sinksAndControl);
       }

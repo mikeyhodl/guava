@@ -17,6 +17,7 @@
 package com.google.common.collect;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Lists.newArrayListWithCapacity;
 import static java.util.Collections.shuffle;
 
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ class CollectionBenchmarkSampleData {
   }
 
   private Element[] createQueries(Set<Element> elementsInSet, int numQueries) {
-    List<Element> queryList = Lists.newArrayListWithCapacity(numQueries);
+    List<Element> queryList = newArrayListWithCapacity(numQueries);
 
     int numGoodQueries = (int) (numQueries * hitRate + 0.5);
 

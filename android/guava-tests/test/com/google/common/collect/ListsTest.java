@@ -21,6 +21,7 @@ import static com.google.common.collect.Iterables.elementsEqual;
 import static com.google.common.collect.Lists.cartesianProduct;
 import static com.google.common.collect.Lists.charactersOf;
 import static com.google.common.collect.Lists.computeArrayListCapacity;
+import static com.google.common.collect.Lists.newArrayListWithCapacity;
 import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 import static com.google.common.collect.Lists.partition;
 import static com.google.common.collect.Lists.transform;
@@ -335,15 +336,15 @@ public class ListsTest extends TestCase {
   }
 
   public void testNewArrayListWithCapacity() {
-    ArrayList<Integer> list = Lists.newArrayListWithCapacity(0);
+    ArrayList<Integer> list = newArrayListWithCapacity(0);
     assertEquals(emptyList(), list);
 
-    ArrayList<Integer> bigger = Lists.newArrayListWithCapacity(256);
+    ArrayList<Integer> bigger = newArrayListWithCapacity(256);
     assertEquals(emptyList(), bigger);
   }
 
   public void testNewArrayListWithCapacity_negative() {
-    assertThrows(IllegalArgumentException.class, () -> Lists.newArrayListWithCapacity(-1));
+    assertThrows(IllegalArgumentException.class, () -> newArrayListWithCapacity(-1));
   }
 
   public void testNewArrayListWithExpectedSize() {

@@ -2,6 +2,7 @@
 
 package com.google.common.hash;
 
+import static com.google.common.base.Strings.repeat;
 import static com.google.common.hash.Hashing.fingerprint2011;
 import static com.google.common.truth.Truth.assertThat;
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
@@ -9,7 +10,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
 
 import com.google.common.annotations.J2ktIncompatible;
-import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Ordering;
 import com.google.common.primitives.UnsignedLong;
@@ -67,9 +67,9 @@ public class Fingerprint2011Test extends TestCase {
   public void testReallySimpleFingerprints() {
     assertEquals(8473225671271759044L, fingerprint("test".getBytes(UTF_8)));
     // 32 characters long
-    assertEquals(7345148637025587076L, fingerprint(Strings.repeat("test", 8).getBytes(UTF_8)));
+    assertEquals(7345148637025587076L, fingerprint(repeat("test", 8).getBytes(UTF_8)));
     // 256 characters long
-    assertEquals(4904844928629814570L, fingerprint(Strings.repeat("test", 64).getBytes(UTF_8)));
+    assertEquals(4904844928629814570L, fingerprint(repeat("test", 64).getBytes(UTF_8)));
   }
 
   public void testStringsConsistency() {

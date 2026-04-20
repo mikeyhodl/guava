@@ -16,8 +16,10 @@
 
 package com.google.common.math;
 
+import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
+import static java.lang.Math.round;
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
 import static java.math.RoundingMode.CEILING;
@@ -32,7 +34,6 @@ import static java.util.Arrays.asList;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 import com.google.common.primitives.Doubles;
 import java.math.BigInteger;
 import java.math.RoundingMode;
@@ -86,13 +87,12 @@ public final class MathTesting {
     POSITIVE_INTEGER_CANDIDATES = intValues.build();
     NEGATIVE_INTEGER_CANDIDATES =
         ImmutableList.copyOf(
-            Iterables.concat(
+            concat(
                 transform(POSITIVE_INTEGER_CANDIDATES, x -> -x),
                 ImmutableList.of(Integer.MIN_VALUE)));
     NONZERO_INTEGER_CANDIDATES =
-        ImmutableList.copyOf(
-            Iterables.concat(POSITIVE_INTEGER_CANDIDATES, NEGATIVE_INTEGER_CANDIDATES));
-    ALL_INTEGER_CANDIDATES = Iterables.concat(NONZERO_INTEGER_CANDIDATES, ImmutableList.of(0));
+        ImmutableList.copyOf(concat(POSITIVE_INTEGER_CANDIDATES, NEGATIVE_INTEGER_CANDIDATES));
+    ALL_INTEGER_CANDIDATES = concat(NONZERO_INTEGER_CANDIDATES, ImmutableList.of(0));
   }
 
   /*
@@ -123,10 +123,9 @@ public final class MathTesting {
     longValues.add(194368031998L).add(194368031999L); // sqrt(2^75) rounded up and down
     POSITIVE_LONG_CANDIDATES = longValues.build();
     NEGATIVE_LONG_CANDIDATES =
-        Iterables.concat(
-            transform(POSITIVE_LONG_CANDIDATES, x -> -x), ImmutableList.of(Long.MIN_VALUE));
-    NONZERO_LONG_CANDIDATES = Iterables.concat(POSITIVE_LONG_CANDIDATES, NEGATIVE_LONG_CANDIDATES);
-    ALL_LONG_CANDIDATES = Iterables.concat(NONZERO_LONG_CANDIDATES, ImmutableList.of(0L));
+        concat(transform(POSITIVE_LONG_CANDIDATES, x -> -x), ImmutableList.of(Long.MIN_VALUE));
+    NONZERO_LONG_CANDIDATES = concat(POSITIVE_LONG_CANDIDATES, NEGATIVE_LONG_CANDIDATES);
+    ALL_LONG_CANDIDATES = concat(NONZERO_LONG_CANDIDATES, ImmutableList.of(0L));
   }
 
   /*
@@ -177,9 +176,8 @@ public final class MathTesting {
     POSITIVE_BIGINTEGER_CANDIDATES = bigValues.build();
     NEGATIVE_BIGINTEGER_CANDIDATES = transform(POSITIVE_BIGINTEGER_CANDIDATES, BigInteger::negate);
     NONZERO_BIGINTEGER_CANDIDATES =
-        Iterables.concat(POSITIVE_BIGINTEGER_CANDIDATES, NEGATIVE_BIGINTEGER_CANDIDATES);
-    ALL_BIGINTEGER_CANDIDATES =
-        Iterables.concat(NONZERO_BIGINTEGER_CANDIDATES, ImmutableList.of(ZERO));
+        concat(POSITIVE_BIGINTEGER_CANDIDATES, NEGATIVE_BIGINTEGER_CANDIDATES);
+    ALL_BIGINTEGER_CANDIDATES = concat(NONZERO_BIGINTEGER_CANDIDATES, ImmutableList.of(ZERO));
   }
 
   static final ImmutableSet<Double> INTEGRAL_DOUBLE_CANDIDATES;
@@ -228,7 +226,7 @@ public final class MathTesting {
       }
       for (double delta : Doubles.asList(0.01, 0.1, 0.25, 0.499, 0.5, 0.501, 0.7, 0.8)) {
         double x = d + delta;
-        if (x != Math.round(x)) {
+        if (x != round(x)) {
           fractionalBuilder.add(x);
         }
       }
@@ -243,11 +241,10 @@ public final class MathTesting {
       }
     }
     FRACTIONAL_DOUBLE_CANDIDATES = fractionalBuilder.build();
-    FINITE_DOUBLE_CANDIDATES =
-        Iterables.concat(FRACTIONAL_DOUBLE_CANDIDATES, INTEGRAL_DOUBLE_CANDIDATES);
+    FINITE_DOUBLE_CANDIDATES = concat(FRACTIONAL_DOUBLE_CANDIDATES, INTEGRAL_DOUBLE_CANDIDATES);
     POSITIVE_FINITE_DOUBLE_CANDIDATES = filter(FINITE_DOUBLE_CANDIDATES, input -> input > 0.0);
-    DOUBLE_CANDIDATES_EXCEPT_NAN = Iterables.concat(FINITE_DOUBLE_CANDIDATES, INFINITIES);
-    ALL_DOUBLE_CANDIDATES = Iterables.concat(DOUBLE_CANDIDATES_EXCEPT_NAN, asList(Double.NaN));
+    DOUBLE_CANDIDATES_EXCEPT_NAN = concat(FINITE_DOUBLE_CANDIDATES, INFINITIES);
+    ALL_DOUBLE_CANDIDATES = concat(DOUBLE_CANDIDATES_EXCEPT_NAN, asList(Double.NaN));
   }
 
   private MathTesting() {}

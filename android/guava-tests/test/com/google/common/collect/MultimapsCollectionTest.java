@@ -22,6 +22,7 @@ import static com.google.common.collect.Maps.immutableEntry;
 import static com.google.common.collect.Multimaps.filterKeys;
 import static com.google.common.collect.Multimaps.filterValues;
 import static com.google.common.collect.Multimaps.synchronizedListMultimap;
+import static com.google.common.collect.Sets.newLinkedHashSet;
 import static com.google.common.collect.testing.Helpers.mapEntry;
 import static com.google.common.collect.testing.features.CollectionFeature.ALLOWS_NULL_VALUES;
 import static com.google.common.collect.testing.features.CollectionFeature.SUPPORTS_REMOVE;
@@ -524,7 +525,7 @@ public class MultimapsCollectionTest extends TestCase {
 
     @Override
     public Collection<Integer> createCollection(Iterable<? extends Integer> values) {
-      return Sets.newLinkedHashSet(values);
+      return newLinkedHashSet(values);
     }
   }
 

@@ -22,6 +22,7 @@ import static com.google.common.math.MathPreconditions.checkPositive;
 import static com.google.common.math.MathPreconditions.checkRoundingUnnecessary;
 import static java.lang.Math.abs;
 import static java.lang.Math.ceil;
+import static java.lang.Math.floor;
 import static java.lang.Math.min;
 import static java.lang.Math.nextDown;
 import static java.lang.Math.nextUp;
@@ -1299,7 +1300,7 @@ public final class LongMath {
             roundCeilingAsDouble = roundArbitrarily;
             roundCeiling = roundArbitrarilyAsLong;
             roundFloorAsDouble = nextDown(roundArbitrarily);
-            roundFloor = (long) Math.floor(roundFloorAsDouble);
+            roundFloor = (long) floor(roundFloorAsDouble);
           }
 
           long deltaToFloor = x - roundFloor;

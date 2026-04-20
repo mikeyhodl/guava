@@ -18,8 +18,10 @@ package com.google.common.collect;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Predicates.and;
 import static com.google.common.collect.CollectPreconditions.checkNonnegative;
 import static com.google.common.collect.Iterables.find;
+import static com.google.common.collect.Iterables.removeFirstMatching;
 import static com.google.common.collect.Iterators.find;
 import static com.google.common.math.IntMath.saturatedAdd;
 import static java.lang.Math.max;
@@ -31,7 +33,6 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2.FilteredCollection;
 import com.google.common.math.IntMath;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
@@ -1151,7 +1152,7 @@ public final class Sets {
       // Support clear(), removeAll(), and retainAll() when filtering a filtered
       // collection.
       FilteredSet<E> filtered = (FilteredSet<E>) unfiltered;
-      Predicate<E> combinedPredicate = Predicates.and(filtered.predicate, predicate);
+      Predicate<E> combinedPredicate = and(filtered.predicate, predicate);
       return new FilteredSet<>((Set<E>) filtered.unfiltered, combinedPredicate);
     }
 
@@ -1188,7 +1189,7 @@ public final class Sets {
       // Support clear(), removeAll(), and retainAll() when filtering a filtered
       // collection.
       FilteredSet<E> filtered = (FilteredSet<E>) unfiltered;
-      Predicate<E> combinedPredicate = Predicates.and(filtered.predicate, predicate);
+      Predicate<E> combinedPredicate = and(filtered.predicate, predicate);
       return new FilteredSortedSet<>((SortedSet<E>) filtered.unfiltered, combinedPredicate);
     }
 
@@ -1226,7 +1227,7 @@ public final class Sets {
       // Support clear(), removeAll(), and retainAll() when filtering a filtered
       // collection.
       FilteredSet<E> filtered = (FilteredSet<E>) unfiltered;
-      Predicate<E> combinedPredicate = Predicates.and(filtered.predicate, predicate);
+      Predicate<E> combinedPredicate = and(filtered.predicate, predicate);
       return new FilteredNavigableSet<>((NavigableSet<E>) filtered.unfiltered, combinedPredicate);
     }
 
@@ -1331,12 +1332,12 @@ public final class Sets {
 
     @Override
     public @Nullable E pollFirst() {
-      return Iterables.removeFirstMatching(unfiltered(), predicate);
+      return removeFirstMatching(unfiltered(), predicate);
     }
 
     @Override
     public @Nullable E pollLast() {
-      return Iterables.removeFirstMatching(unfiltered().descendingSet(), predicate);
+      return removeFirstMatching(unfiltered().descendingSet(), predicate);
     }
 
     @Override

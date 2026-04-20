@@ -19,6 +19,7 @@ package com.google.common.testing;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.throwIfUnchecked;
+import static com.google.common.collect.Lists.newArrayListWithCapacity;
 import static com.google.common.testing.NullPointerTester.isNullable;
 import static com.google.common.testing.SerializableTester.reserialize;
 import static com.google.common.testing.SerializableTester.reserializeAndAssert;
@@ -578,8 +579,8 @@ public final class ClassSanityTester {
           InvocationTargetException,
           FactoryMethodReturnsNullException {
     List<Parameter> params = factory.getParameters();
-    List<FreshValueGenerator> argGenerators = Lists.newArrayListWithCapacity(params.size());
-    List<@Nullable Object> args = Lists.newArrayListWithCapacity(params.size());
+    List<FreshValueGenerator> argGenerators = newArrayListWithCapacity(params.size());
+    List<@Nullable Object> args = newArrayListWithCapacity(params.size());
     for (Parameter param : params) {
       FreshValueGenerator generator = newFreshValueGenerator();
       argGenerators.add(generator);

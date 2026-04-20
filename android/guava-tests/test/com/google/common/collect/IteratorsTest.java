@@ -21,6 +21,7 @@ import static com.google.common.collect.CollectPreconditions.checkRemove;
 import static com.google.common.collect.Iterators.advance;
 import static com.google.common.collect.Iterators.all;
 import static com.google.common.collect.Iterators.any;
+import static com.google.common.collect.Iterators.concat;
 import static com.google.common.collect.Iterators.elementsEqual;
 import static com.google.common.collect.Iterators.emptyIterator;
 import static com.google.common.collect.Iterators.filter;
@@ -32,6 +33,7 @@ import static com.google.common.collect.Iterators.getOnlyElement;
 import static com.google.common.collect.Iterators.mergeSorted;
 import static com.google.common.collect.Iterators.peekingIterator;
 import static com.google.common.collect.Iterators.singletonIterator;
+import static com.google.common.collect.Iterators.transform;
 import static com.google.common.collect.Iterators.tryFind;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.testing.IteratorFeature.MODIFIABLE;
@@ -42,6 +44,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
+import static java.util.Comparator.comparing;
 import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
@@ -425,7 +428,7 @@ public class IteratorsTest extends TestCase {
   public void testTransform() {
     Iterator<String> input = asList("1", "2", "3").iterator();
     Iterator<Integer> result =
-        Iterators.transform(
+        transform(
             input,
             new Function<String, Integer>() {
               @Override
@@ -443,7 +446,7 @@ public class IteratorsTest extends TestCase {
     List<String> list = Lists.newArrayList("1", "2", "3");
     Iterator<String> input = list.iterator();
     Iterator<Integer> iterator =
-        Iterators.transform(
+        transform(
             input,
             new Function<String, Integer>() {
               @Override
@@ -461,7 +464,7 @@ public class IteratorsTest extends TestCase {
   public void testPoorlyBehavedTransform() {
     Iterator<String> input = asList("1", "not a number", "3").iterator();
     Iterator<Integer> result =
-        Iterators.transform(
+        transform(
             input,
             new Function<String, Integer>() {
               @Override
@@ -477,7 +480,7 @@ public class IteratorsTest extends TestCase {
   public void testNullFriendlyTransform() {
     Iterator<@Nullable Integer> input = Arrays.<@Nullable Integer>asList(1, 2, null, 3).iterator();
     Iterator<String> result =
-        Iterators.transform(
+        transform(
             input,
             new Function<@Nullable Integer, String>() {
               @Override
@@ -668,7 +671,7 @@ public class IteratorsTest extends TestCase {
     new EmptyIteratorTester() {
       @Override
       protected Iterator<Integer> newTargetIterator() {
-        return Iterators.concat();
+        return concat();
       }
     }.test();
   }
@@ -678,7 +681,7 @@ public class IteratorsTest extends TestCase {
     new EmptyIteratorTester() {
       @Override
       protected Iterator<Integer> newTargetIterator() {
-        return Iterators.concat(iterateOver());
+        return concat(iterateOver());
       }
     }.test();
   }
@@ -688,7 +691,7 @@ public class IteratorsTest extends TestCase {
     new EmptyIteratorTester() {
       @Override
       protected Iterator<Integer> newTargetIterator() {
-        return Iterators.concat(iterateOver(), iterateOver());
+        return concat(iterateOver(), iterateOver());
       }
     }.test();
   }
@@ -698,7 +701,7 @@ public class IteratorsTest extends TestCase {
     new SingletonIteratorTester() {
       @Override
       protected Iterator<Integer> newTargetIterator() {
-        return Iterators.concat(iterateOver(1));
+        return concat(iterateOver(1));
       }
     }.test();
   }
@@ -708,7 +711,7 @@ public class IteratorsTest extends TestCase {
     new SingletonIteratorTester() {
       @Override
       protected Iterator<Integer> newTargetIterator() {
-        return Iterators.concat(iterateOver(), iterateOver(1), iterateOver());
+        return concat(iterateOver(), iterateOver(1), iterateOver());
       }
     }.test();
   }
@@ -718,7 +721,7 @@ public class IteratorsTest extends TestCase {
     new DoubletonIteratorTester() {
       @Override
       protected Iterator<Integer> newTargetIterator() {
-        return Iterators.concat(iterateOver(1), iterateOver(2));
+        return concat(iterateOver(1), iterateOver(2));
       }
     }.test();
   }
@@ -728,7 +731,7 @@ public class IteratorsTest extends TestCase {
     new DoubletonIteratorTester() {
       @Override
       protected Iterator<Integer> newTargetIterator() {
-        return Iterators.concat(iterateOver(1), iterateOver(), iterateOver(), iterateOver(2));
+        return concat(iterateOver(1), iterateOver(), iterateOver(), iterateOver(2));
       }
     }.test();
   }
@@ -739,26 +742,26 @@ public class IteratorsTest extends TestCase {
         5, UNMODIFIABLE, asList(1, 2), IteratorTester.KnownOrder.KNOWN_ORDER) {
       @Override
       protected Iterator<Integer> newTargetIterator() {
-        return Iterators.concat(
+        return concat(
             asList(1).iterator(), Arrays.<Integer>asList().iterator(), asList(2).iterator());
       }
     }.test();
   }
 
   public void testConcatPartiallyAdvancedSecond() {
-    Iterator<String> itr1 = Iterators.concat(singletonIterator("a"), Iterators.forArray("b", "c"));
+    Iterator<String> itr1 = concat(singletonIterator("a"), Iterators.forArray("b", "c"));
     assertThat(itr1.next()).isEqualTo("a");
     assertThat(itr1.next()).isEqualTo("b");
-    Iterator<String> itr2 = Iterators.concat(singletonIterator("d"), itr1);
+    Iterator<String> itr2 = concat(singletonIterator("d"), itr1);
     assertThat(itr2.next()).isEqualTo("d");
     assertThat(itr2.next()).isEqualTo("c");
   }
 
   public void testConcatPartiallyAdvancedFirst() {
-    Iterator<String> itr1 = Iterators.concat(singletonIterator("a"), Iterators.forArray("b", "c"));
+    Iterator<String> itr1 = concat(singletonIterator("a"), Iterators.forArray("b", "c"));
     assertThat(itr1.next()).isEqualTo("a");
     assertThat(itr1.next()).isEqualTo("b");
-    Iterator<String> itr2 = Iterators.concat(itr1, singletonIterator("d"));
+    Iterator<String> itr2 = concat(itr1, singletonIterator("d"));
     assertThat(itr2.next()).isEqualTo("c");
     assertThat(itr2.next()).isEqualTo("d");
   }
@@ -769,7 +772,7 @@ public class IteratorsTest extends TestCase {
         (Iterator<Iterator<Integer>>)
             Arrays.<@Nullable Iterator<Integer>>asList(iterateOver(1, 2), null, iterateOver(3))
                 .iterator();
-    Iterator<Integer> result = Iterators.concat(input);
+    Iterator<Integer> result = concat(input);
     assertEquals(1, (int) result.next());
     assertEquals(2, (int) result.next());
     assertThrows(NullPointerException.class, () -> result.hasNext());
@@ -780,16 +783,14 @@ public class IteratorsTest extends TestCase {
   public void testConcatVarArgsContainingNull() {
     assertThrows(
         NullPointerException.class,
-        () ->
-            Iterators.concat(
-                iterateOver(1, 2), null, iterateOver(3), iterateOver(4), iterateOver(5)));
+        () -> concat(iterateOver(1, 2), null, iterateOver(3), iterateOver(4), iterateOver(5)));
   }
 
   public void testConcatNested_appendToEnd() {
     int nestingDepth = 128;
     Iterator<Integer> iterator = iterateOver();
     for (int i = 0; i < nestingDepth; i++) {
-      iterator = Iterators.concat(iterator, iterateOver(1));
+      iterator = concat(iterator, iterateOver(1));
     }
     assertEquals(nestingDepth, Iterators.size(iterator));
   }
@@ -798,7 +799,7 @@ public class IteratorsTest extends TestCase {
     int nestingDepth = 128;
     Iterator<Integer> iterator = iterateOver();
     for (int i = 0; i < nestingDepth; i++) {
-      iterator = Iterators.concat(iterateOver(1), iterator);
+      iterator = concat(iterateOver(1), iterator);
     }
     assertEquals(nestingDepth, Iterators.size(iterator));
   }
@@ -1555,7 +1556,7 @@ public class IteratorsTest extends TestCase {
     ImmutableList<TestDatum> left = ImmutableList.of(new TestDatum("B", 1), new TestDatum("C", 1));
     ImmutableList<TestDatum> right = ImmutableList.of(new TestDatum("A", 2), new TestDatum("C", 2));
 
-    Comparator<TestDatum> comparator = Comparator.comparing(d -> d.letter);
+    Comparator<TestDatum> comparator = comparing(d -> d.letter);
 
     // When elements compare as equal (both C's have same letter), our merge should always return C1
     // before C2, since C1 is from the first iterator.
@@ -1579,7 +1580,7 @@ public class IteratorsTest extends TestCase {
     ImmutableList<TestDatum> second =
         ImmutableList.of(new TestDatum("A", 3), new TestDatum("A", 4));
 
-    Comparator<TestDatum> comparator = Comparator.comparing(d -> d.letter);
+    Comparator<TestDatum> comparator = comparing(d -> d.letter);
     Iterator<TestDatum> merged =
         mergeSorted(ImmutableList.of(first.iterator(), second.iterator()), comparator);
 

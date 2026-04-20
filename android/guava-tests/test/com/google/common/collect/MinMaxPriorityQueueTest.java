@@ -16,6 +16,7 @@
 
 package com.google.common.collect;
 
+import static com.google.common.collect.Lists.newArrayListWithCapacity;
 import static com.google.common.collect.Platform.reduceExponentIfGwt;
 import static com.google.common.collect.Platform.reduceIterationsIfGwt;
 import static com.google.common.collect.Sets.newHashSet;
@@ -358,7 +359,7 @@ public class MinMaxPriorityQueueTest extends TestCase {
     q.remove(10);
     // Now we're in the critical state: [1, 15, 13, 8, 14]
     // Removing 8 while iterating caused duplicates in iteration result.
-    List<Integer> result = Lists.newArrayListWithCapacity(initial.size());
+    List<Integer> result = newArrayListWithCapacity(initial.size());
     for (Iterator<Integer> iter = q.iterator(); iter.hasNext(); ) {
       Integer value = iter.next();
       result.add(value);
@@ -696,7 +697,7 @@ public class MinMaxPriorityQueueTest extends TestCase {
     List<Integer> expected = createOrderedList(size);
     for (Collection<Integer> perm : Collections2.permutations(expected)) {
       MinMaxPriorityQueue<Integer> q = MinMaxPriorityQueue.create(perm);
-      List<Integer> elements = Lists.newArrayListWithCapacity(size);
+      List<Integer> elements = newArrayListWithCapacity(size);
       while (!q.isEmpty()) {
         Integer next = q.pollFirst();
         for (int i = 0; i <= size; i++) {
@@ -717,7 +718,7 @@ public class MinMaxPriorityQueueTest extends TestCase {
     List<Integer> expected = createOrderedList(size);
     MinMaxPriorityQueue<Integer> q = MinMaxPriorityQueue.create(expected);
     List<Integer> contents = new ArrayList<>(expected);
-    List<Integer> elements = Lists.newArrayListWithCapacity(size);
+    List<Integer> elements = newArrayListWithCapacity(size);
     while (!q.isEmpty()) {
       assertThat(q).containsExactlyElementsIn(contents);
       Integer next = q.pollFirst();

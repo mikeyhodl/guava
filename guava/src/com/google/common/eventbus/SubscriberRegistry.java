@@ -16,6 +16,8 @@ package com.google.common.eventbus;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Iterators.concat;
+import static com.google.common.collect.Lists.newArrayListWithCapacity;
 import static java.util.Arrays.asList;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -26,8 +28,6 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.primitives.Primitives;
@@ -125,8 +125,7 @@ final class SubscriberRegistry {
   Iterator<Subscriber> getSubscribers(Object event) {
     ImmutableSet<Class<?>> eventTypes = flattenHierarchy(event.getClass());
 
-    List<Iterator<Subscriber>> subscriberIterators =
-        Lists.newArrayListWithCapacity(eventTypes.size());
+    List<Iterator<Subscriber>> subscriberIterators = newArrayListWithCapacity(eventTypes.size());
 
     for (Class<?> eventType : eventTypes) {
       CopyOnWriteArraySet<Subscriber> eventSubscribers = subscribers.get(eventType);
@@ -136,7 +135,7 @@ final class SubscriberRegistry {
       }
     }
 
-    return Iterators.concat(subscriberIterators.iterator());
+    return concat(subscriberIterators.iterator());
   }
 
   /**
