@@ -803,7 +803,7 @@ public final class Ints extends IntsMethodsForWeb {
 
   /**
    * Parses the specified string as a signed decimal integer value. The ASCII character {@code '-'}
-   * (<code>'&#92;u002D'</code>) is recognized as the minus sign.
+   * (U+002D) is recognized as the minus sign.
    *
    * <p>Unlike {@link Integer#parseInt(String)}, this method returns {@code null} instead of
    * throwing an exception if parsing fails. Additionally, this method only accepts ASCII digits,
@@ -824,7 +824,7 @@ public final class Ints extends IntsMethodsForWeb {
 
   /**
    * Parses the specified string as a signed integer value using the specified radix. The ASCII
-   * character {@code '-'} (<code>'&#92;u002D'</code>) is recognized as the minus sign.
+   * character {@code '-'} (U+002D) is recognized as the minus sign.
    *
    * <p>Unlike {@link Integer#parseInt(String, int)}, this method returns {@code null} instead of
    * throwing an exception if parsing fails. Additionally, this method only accepts ASCII digits,

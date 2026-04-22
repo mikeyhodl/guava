@@ -752,7 +752,7 @@ public final class Doubles extends DoublesMethodsForWeb {
 
   /**
    * Parses the specified string as a double-precision floating point value. The ASCII character
-   * {@code '-'} (<code>'&#92;u002D'</code>) is recognized as the minus sign.
+   * {@code '-'} (U+002D) is recognized as the minus sign.
    *
    * <p>Unlike {@link Double#parseDouble(String)}, this method returns {@code null} instead of
    * throwing an exception if parsing fails. Valid inputs are exactly those accepted by {@link

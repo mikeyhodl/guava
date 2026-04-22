@@ -357,8 +357,8 @@ public final class Longs {
   }
 
   /**
-   * Parses the specified string as a signed decimal long value. The ASCII character {@code '-'} (
-   * <code>'&#92;u002D'</code>) is recognized as the minus sign.
+   * Parses the specified string as a signed decimal long value. The ASCII character {@code '-'}
+   * (U+002D) is recognized as the minus sign.
    *
    * <p>Unlike {@link Long#parseLong(String)}, this method returns {@code null} instead of throwing
    * an exception if parsing fails. Additionally, this method only accepts ASCII digits, and returns
@@ -379,7 +379,7 @@ public final class Longs {
 
   /**
    * Parses the specified string as a signed long value using the specified radix. The ASCII
-   * character {@code '-'} (<code>'&#92;u002D'</code>) is recognized as the minus sign.
+   * character {@code '-'} (U+002D) is recognized as the minus sign.
    *
    * <p>Unlike {@link Long#parseLong(String, int)}, this method returns {@code null} instead of
    * throwing an exception if parsing fails. Additionally, this method only accepts ASCII digits,
