@@ -17,7 +17,11 @@
 package com.google.common.testing;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Predicates.alwaysTrue;
 import static com.google.common.collect.Iterators.peekingIterator;
+import static com.google.common.collect.Maps.difference;
+import static com.google.common.collect.Maps.newConcurrentMap;
+import static com.google.common.collect.Maps.newTreeMap;
 import static com.google.common.collect.Maps.unmodifiableNavigableMap;
 import static com.google.common.collect.Sets.newTreeSet;
 import static com.google.common.collect.Sets.unmodifiableNavigableSet;
@@ -34,7 +38,6 @@ import com.google.common.base.Defaults;
 import com.google.common.base.Equivalence;
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.base.Splitter;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Ticker;
@@ -56,7 +59,6 @@ import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MapDifference;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import com.google.common.collect.Multiset;
@@ -219,7 +221,7 @@ public final class ArbitraryInstances {
           .put(Joiner.class, Joiner.on(','))
           .put(Splitter.class, Splitter.on(','))
           .put(com.google.common.base.Optional.class, com.google.common.base.Optional.absent())
-          .put(Predicate.class, Predicates.alwaysTrue())
+          .put(Predicate.class, alwaysTrue())
           .put(Equivalence.class, Equivalence.equals())
           .put(Ticker.class, Ticker.systemTicker())
           .put(Stopwatch.class, Stopwatch.createUnstarted())
@@ -260,7 +262,7 @@ public final class ArbitraryInstances {
           .put(ImmutableMap.class, ImmutableMap.of())
           .put(SortedMap.class, ImmutableSortedMap.of())
           .put(ImmutableSortedMap.class, ImmutableSortedMap.of())
-          .put(NavigableMap.class, unmodifiableNavigableMap(Maps.newTreeMap()))
+          .put(NavigableMap.class, unmodifiableNavigableMap(newTreeMap()))
           .put(Multimap.class, ImmutableMultimap.of())
           .put(ImmutableMultimap.class, ImmutableMultimap.of())
           .put(ListMultimap.class, ImmutableListMultimap.of())
@@ -285,10 +287,10 @@ public final class ArbitraryInstances {
           .put(Comparator.class, AlwaysEqual.INSTANCE)
           .put(Ordering.class, AlwaysEqual.INSTANCE)
           .put(Range.class, Range.all())
-          .put(MapDifference.class, Maps.difference(ImmutableMap.of(), ImmutableMap.of()))
+          .put(MapDifference.class, difference(ImmutableMap.of(), ImmutableMap.of()))
           .put(
               SortedMapDifference.class,
-              Maps.difference(ImmutableSortedMap.of(), ImmutableSortedMap.of()))
+              difference(ImmutableSortedMap.of(), ImmutableSortedMap.of()))
           // reflect
           .put(AnnotatedElement.class, Object.class)
           .put(GenericDeclaration.class, Object.class)
@@ -299,7 +301,7 @@ public final class ArbitraryInstances {
    * type → implementation. Inherently mutable interfaces and abstract classes are mapped to their
    * default implementations and are "new"d upon get().
    */
-  private static final ConcurrentMap<Class<?>, Class<?>> implementations = Maps.newConcurrentMap();
+  private static final ConcurrentMap<Class<?>, Class<?>> implementations = newConcurrentMap();
 
   private static <T> void setImplementation(Class<T> type, Class<? extends T> implementation) {
     checkArgument(type != implementation, "Don't register %s to itself!", type);

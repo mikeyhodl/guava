@@ -16,6 +16,7 @@
 
 package com.google.common.collect;
 
+import static com.google.common.collect.Maps.newTreeMap;
 import static com.google.common.collect.Maps.transformValues;
 
 import com.google.common.annotations.GwtCompatible;
@@ -39,7 +40,7 @@ public class MapsSortedTransformValuesTest extends AbstractMapsTransformValuesTe
 
   @Override
   protected SortedMap<String, String> makePopulatedMap() {
-    SortedMap<String, Integer> underlying = Maps.newTreeMap();
+    SortedMap<String, Integer> underlying = newTreeMap();
     underlying.put("a", 1);
     underlying.put("b", 2);
     underlying.put("c", 3);

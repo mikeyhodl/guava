@@ -19,6 +19,7 @@ package com.google.common.util.concurrent;
 import static com.google.common.base.StandardSystemProperty.JAVA_SPECIFICATION_VERSION;
 import static com.google.common.base.StandardSystemProperty.OS_NAME;
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static com.google.common.collect.Sets.newConcurrentHashSet;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
@@ -33,7 +34,6 @@ import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 import com.google.common.testing.NullPointerTester;
 import com.google.common.testing.TestLogHandler;
 import com.google.common.util.concurrent.Service.State;
@@ -682,7 +682,7 @@ public class ServiceManagerTest extends TestCase {
   private static final class RecordingListener extends ServiceManager.Listener {
     volatile boolean healthyCalled;
     volatile boolean stoppedCalled;
-    final Set<Service> failedServices = Sets.newConcurrentHashSet();
+    final Set<Service> failedServices = newConcurrentHashSet();
 
     @Override
     public void healthy() {

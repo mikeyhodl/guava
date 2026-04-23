@@ -21,6 +21,7 @@ import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.base.Predicates.in;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.not;
+import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Lists.newArrayListWithCapacity;
 import static com.google.common.collect.Maps.immutableEntry;
 import static com.google.common.collect.Multimaps.filterKeys;
@@ -40,7 +41,6 @@ import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Stopwatch;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -443,7 +443,7 @@ public final class ServiceManager implements ServiceManagerBridge {
   @Override
   public String toString() {
     return MoreObjects.toStringHelper(ServiceManager.class)
-        .add("services", Collections2.filter(services, not(instanceOf(NoOpService.class))))
+        .add("services", filter(services, not(instanceOf(NoOpService.class))))
         .toString();
   }
 

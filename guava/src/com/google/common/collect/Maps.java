@@ -22,11 +22,20 @@ import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.compose;
 import static com.google.common.collect.CollectPreconditions.checkEntryNotNull;
 import static com.google.common.collect.CollectPreconditions.checkNonnegative;
+import static com.google.common.collect.Collections2.newStringBuilderForCollection;
+import static com.google.common.collect.Collections2.safeContains;
+import static com.google.common.collect.Collections2.transform;
 import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.removeFirstMatching;
+import static com.google.common.collect.Iterators.contains;
 import static com.google.common.collect.Iterators.filter;
 import static com.google.common.collect.Iterators.transform;
+import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.NullnessCasts.uncheckedCastNullableTToT;
+import static com.google.common.collect.Sets.filter;
+import static com.google.common.collect.Sets.hashCodeImpl;
+import static com.google.common.collect.Sets.newHashSetWithExpectedSize;
+import static com.google.common.collect.Sets.removeAllImpl;
 import static com.google.common.collect.Sets.unmodifiableNavigableSet;
 import static java.lang.Math.ceil;
 import static java.util.Collections.singletonMap;
@@ -882,7 +891,7 @@ public final class Maps {
 
     @Override
     Collection<V> createValues() {
-      return Collections2.transform(set, function);
+      return transform(set, function);
     }
 
     @Override
@@ -902,7 +911,7 @@ public final class Maps {
 
     @Override
     public @Nullable V getOrDefault(@Nullable Object key, @Nullable V defaultValue) {
-      if (Collections2.safeContains(backingSet(), key)) {
+      if (safeContains(backingSet(), key)) {
         @SuppressWarnings("unchecked") // unsafe, but Javadoc warns about it
         K k = (K) key;
         return function.apply(k);
@@ -1060,7 +1069,7 @@ public final class Maps {
 
     @Override
     public @Nullable V getOrDefault(@Nullable Object key, @Nullable V defaultValue) {
-      if (Collections2.safeContains(set, key)) {
+      if (safeContains(set, key)) {
         @SuppressWarnings("unchecked") // unsafe, but Javadoc warns about it
         K k = (K) key;
         return function.apply(k);
@@ -1572,7 +1581,7 @@ public final class Maps {
 
     @Override
     public int hashCode() {
-      return Sets.hashCodeImpl(this);
+      return hashCodeImpl(this);
     }
   }
 
@@ -2927,13 +2936,13 @@ public final class Maps {
     @Override
     public @Nullable Object[] toArray() {
       // creating an ArrayList so filtering happens once
-      return Lists.newArrayList(iterator()).toArray();
+      return newArrayList(iterator()).toArray();
     }
 
     @Override
     @SuppressWarnings("nullness") // b/192354773 in our checker affects toArray declarations
     public <T extends @Nullable Object> T[] toArray(T[] array) {
-      return Lists.newArrayList(iterator()).toArray(array);
+      return newArrayList(iterator()).toArray(array);
     }
   }
 
@@ -2951,12 +2960,12 @@ public final class Maps {
 
     @Override
     protected Set<Entry<K, V>> createEntrySet() {
-      return Sets.filter(unfiltered.entrySet(), predicate);
+      return filter(unfiltered.entrySet(), predicate);
     }
 
     @Override
     Set<K> createKeySet() {
-      return Sets.filter(unfiltered.keySet(), keyPredicate);
+      return filter(unfiltered.keySet(), keyPredicate);
     }
 
     // The cast is called only when the key is in the unfiltered map, implying
@@ -2978,7 +2987,7 @@ public final class Maps {
 
     FilteredEntryMap(Map<K, V> unfiltered, Predicate<? super Entry<K, V>> entryPredicate) {
       super(unfiltered, entryPredicate);
-      filteredEntrySet = Sets.filter(unfiltered.entrySet(), predicate);
+      filteredEntrySet = filter(unfiltered.entrySet(), predicate);
     }
 
     @Override
@@ -3077,13 +3086,13 @@ public final class Maps {
       @Override
       public @Nullable Object[] toArray() {
         // creating an ArrayList so filtering happens once
-        return Lists.newArrayList(iterator()).toArray();
+        return newArrayList(iterator()).toArray();
       }
 
       @Override
       @SuppressWarnings("nullness") // b/192354773 in our checker affects toArray declarations
       public <T extends @Nullable Object> T[] toArray(T[] array) {
-        return Lists.newArrayList(iterator()).toArray(array);
+        return newArrayList(iterator()).toArray(array);
       }
     }
   }
@@ -3801,12 +3810,12 @@ public final class Maps {
 
   /** An admittedly inefficient implementation of {@link Map#containsKey}. */
   static boolean containsKeyImpl(Map<?, ?> map, @Nullable Object key) {
-    return Iterators.contains(keyIterator(map.entrySet().iterator()), key);
+    return contains(keyIterator(map.entrySet().iterator()), key);
   }
 
   /** An implementation of {@link Map#containsValue}. */
   static boolean containsValueImpl(Map<?, ?> map, @Nullable Object value) {
-    return Iterators.contains(valueIterator(map.entrySet().iterator()), value);
+    return contains(valueIterator(map.entrySet().iterator()), value);
   }
 
   /**
@@ -3861,7 +3870,7 @@ public final class Maps {
 
   /** An implementation of {@link Map#toString}. */
   static String toStringImpl(Map<?, ?> map) {
-    StringBuilder sb = Collections2.newStringBuilderForCollection(map.size()).append('{');
+    StringBuilder sb = newStringBuilderForCollection(map.size()).append('{');
     boolean first = true;
     for (Entry<?, ?> entry : map.entrySet()) {
       if (!first) {
@@ -4213,7 +4222,7 @@ public final class Maps {
         return super.removeAll(checkNotNull(c));
       } catch (UnsupportedOperationException e) {
         // if the iterators don't support remove
-        return Sets.removeAllImpl(this, c.iterator());
+        return removeAllImpl(this, c.iterator());
       }
     }
 
@@ -4223,7 +4232,7 @@ public final class Maps {
         return super.retainAll(checkNotNull(c));
       } catch (UnsupportedOperationException e) {
         // if the iterators don't support remove
-        Set<@Nullable Object> keys = Sets.newHashSetWithExpectedSize(c.size());
+        Set<@Nullable Object> keys = newHashSetWithExpectedSize(c.size());
         for (Object o : c) {
           /*
            * `o instanceof Entry` is guaranteed by `contains`, but we check it here to satisfy our

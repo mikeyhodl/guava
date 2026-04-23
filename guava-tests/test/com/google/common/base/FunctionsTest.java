@@ -16,6 +16,9 @@
 
 package com.google.common.base;
 
+import static com.google.common.base.Predicates.alwaysFalse;
+import static com.google.common.base.Predicates.alwaysTrue;
+import static com.google.common.base.Predicates.compose;
 import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.testing.SerializableTester.reserialize;
 import static com.google.common.testing.SerializableTester.reserializeAndAssert;
@@ -301,8 +304,8 @@ public class FunctionsTest extends TestCase {
     Function<? super String, Integer> g = new HashCodeFunction();
     Function<Float, String> f = Functions.forMap(m, "F");
 
-    Predicate<Float> p1 = Predicates.compose(Predicates.compose(h, g), f);
-    Predicate<Float> p2 = Predicates.compose(h, Functions.compose(g, f));
+    Predicate<Float> p1 = compose(compose(h, g), f);
+    Predicate<Float> p2 = compose(h, Functions.compose(g, f));
 
     // Might be nice (eventually) to have:
     //     assertEquals(p1, p2);
@@ -315,14 +318,14 @@ public class FunctionsTest extends TestCase {
   }
 
   public void testForPredicate() {
-    Function<Object, Boolean> alwaysTrue = Functions.forPredicate(Predicates.alwaysTrue());
-    Function<Object, Boolean> alwaysFalse = Functions.forPredicate(Predicates.alwaysFalse());
+    Function<Object, Boolean> alwaysTrue = Functions.forPredicate(alwaysTrue());
+    Function<Object, Boolean> alwaysFalse = Functions.forPredicate(alwaysFalse());
 
     assertTrue(alwaysTrue.apply(0));
     assertFalse(alwaysFalse.apply(0));
 
     new EqualsTester()
-        .addEqualityGroup(alwaysTrue, Functions.forPredicate(Predicates.alwaysTrue()))
+        .addEqualityGroup(alwaysTrue, Functions.forPredicate(alwaysTrue()))
         .addEqualityGroup(alwaysFalse)
         .addEqualityGroup(Functions.identity())
         .testEquals();

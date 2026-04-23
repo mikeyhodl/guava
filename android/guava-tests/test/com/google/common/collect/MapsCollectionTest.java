@@ -18,11 +18,13 @@ package com.google.common.collect;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Maps.asMap;
 import static com.google.common.collect.Maps.filterEntries;
 import static com.google.common.collect.Maps.filterKeys;
 import static com.google.common.collect.Maps.filterValues;
 import static com.google.common.collect.Maps.transformEntries;
 import static com.google.common.collect.Maps.transformValues;
+import static com.google.common.collect.Maps.unmodifiableBiMap;
 import static com.google.common.collect.Maps.unmodifiableNavigableMap;
 import static com.google.common.collect.Sets.newTreeSet;
 import static com.google.common.collect.testing.Helpers.mapEntry;
@@ -100,7 +102,7 @@ public class MapsCollectionTest extends TestCase {
                       checkArgument(!bimap.containsKey(entry.getKey()));
                       bimap.put(entry.getKey(), entry.getValue());
                     }
-                    return Maps.unmodifiableBiMap(bimap);
+                    return unmodifiableBiMap(bimap);
                   }
                 })
             .named("unmodifiableBiMap[HashBiMap]")
@@ -133,7 +135,7 @@ public class MapsCollectionTest extends TestCase {
                       checkNotNull(entry.getValue());
                       set.add((String) checkNotNull(entry.getKey()));
                     }
-                    return Maps.asMap(
+                    return asMap(
                         set,
                         new Function<String, Integer>() {
                           @Override
@@ -202,7 +204,7 @@ public class MapsCollectionTest extends TestCase {
                       checkNotNull(entry.getValue());
                       set.add((String) checkNotNull(entry.getKey()));
                     }
-                    return Maps.asMap(
+                    return asMap(
                         set,
                         new Function<String, Integer>() {
                           @Override
@@ -269,7 +271,7 @@ public class MapsCollectionTest extends TestCase {
                       checkNotNull(entry.getValue());
                       set.add((String) checkNotNull(entry.getKey()));
                     }
-                    return Maps.asMap(
+                    return asMap(
                         set,
                         new Function<String, Integer>() {
                           @Override

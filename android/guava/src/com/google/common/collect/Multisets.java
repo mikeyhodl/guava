@@ -21,6 +21,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Predicates.and;
 import static com.google.common.collect.CollectPreconditions.checkNonnegative;
 import static com.google.common.collect.CollectPreconditions.checkRemove;
+import static com.google.common.collect.Iterators.addAll;
+import static com.google.common.collect.Iterators.unmodifiableIterator;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.util.Arrays.asList;
@@ -169,7 +171,7 @@ public final class Multisets {
 
     @Override
     public Iterator<E> iterator() {
-      return Iterators.unmodifiableIterator(delegate.iterator());
+      return unmodifiableIterator(delegate.iterator());
     }
 
     @Override
@@ -898,7 +900,7 @@ public final class Multisets {
     } else if (elements.isEmpty()) {
       return false;
     } else {
-      return Iterators.addAll(self, elements.iterator());
+      return addAll(self, elements.iterator());
     }
   }
 

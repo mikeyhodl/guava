@@ -16,7 +16,10 @@ package com.google.common.collect;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkPositionIndex;
+import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Maps.filterKeys;
+import static com.google.common.collect.Maps.keyPredicateOnEntries;
+import static com.google.common.collect.Sets.filter;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 
@@ -55,7 +58,7 @@ class FilteredKeyMultimap<K extends @Nullable Object, V extends @Nullable Object
 
   @Override
   public Predicate<? super Entry<K, V>> entryPredicate() {
-    return Maps.keyPredicateOnEntries(keyPredicate);
+    return keyPredicateOnEntries(keyPredicate);
   }
 
   @Override
@@ -98,7 +101,7 @@ class FilteredKeyMultimap<K extends @Nullable Object, V extends @Nullable Object
 
   @Override
   Set<K> createKeySet() {
-    return Sets.filter(unfiltered.keySet(), keyPredicate);
+    return filter(unfiltered.keySet(), keyPredicate);
   }
 
   @Override
@@ -193,7 +196,7 @@ class FilteredKeyMultimap<K extends @Nullable Object, V extends @Nullable Object
   class Entries extends ForwardingCollection<Entry<K, V>> {
     @Override
     protected Collection<Entry<K, V>> delegate() {
-      return Collections2.filter(unfiltered.entries(), entryPredicate());
+      return filter(unfiltered.entries(), entryPredicate());
     }
 
     @Override

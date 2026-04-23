@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Predicates.and;
 import static com.google.common.collect.CollectPreconditions.checkNonnegative;
 import static com.google.common.collect.Iterables.any;
+import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Math.min;
 import static java.util.Objects.requireNonNull;
 
@@ -230,13 +231,13 @@ public final class Collections2 {
     @Override
     public @Nullable Object[] toArray() {
       // creating an ArrayList so filtering happens once
-      return Lists.newArrayList(iterator()).toArray();
+      return newArrayList(iterator()).toArray();
     }
 
     @Override
     @SuppressWarnings("nullness") // b/192354773 in our checker affects toArray declarations
     public <T extends @Nullable Object> T[] toArray(T[] array) {
-      return Lists.newArrayList(iterator()).toArray(array);
+      return newArrayList(iterator()).toArray(array);
     }
   }
 

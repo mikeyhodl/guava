@@ -17,13 +17,17 @@
 package com.google.common.collect;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Predicates.in;
 import static com.google.common.collect.Maps.immutableEntry;
+import static com.google.common.collect.Maps.newEnumMap;
+import static com.google.common.collect.Maps.newTreeMap;
 import static com.google.common.collect.Multimaps.filterKeys;
 import static com.google.common.collect.Multimaps.synchronizedListMultimap;
 import static com.google.common.collect.Multimaps.synchronizedMultimap;
 import static com.google.common.collect.Multimaps.synchronizedSetMultimap;
 import static com.google.common.collect.Multimaps.synchronizedSortedSetMultimap;
 import static com.google.common.collect.Sets.newHashSet;
+import static com.google.common.collect.Sets.newTreeSet;
 import static com.google.common.collect.testing.Helpers.nefariousMapEntry;
 import static com.google.common.collect.testing.IteratorFeature.MODIFIABLE;
 import static com.google.common.truth.Truth.assertThat;
@@ -38,7 +42,6 @@ import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
-import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Maps.EntryTransformer;
 import com.google.common.collect.testing.IteratorTester;
@@ -435,9 +438,9 @@ public class MultimapsTest extends TestCase {
     assertEquals(map.keySet(), multimapView.keys().elementSet());
     assertThat(multimapView.keys()).contains("foo");
     assertThat(multimapView.values()).contains(1);
-    assertThat(multimapView.entries()).contains(Maps.immutableEntry("foo", 1));
+    assertThat(multimapView.entries()).contains(immutableEntry("foo", 1));
     assertThat(multimapView.asMap().entrySet())
-        .contains(Maps.immutableEntry("foo", (Collection<Integer>) singleton(1)));
+        .contains(immutableEntry("foo", (Collection<Integer>) singleton(1)));
     multimapView.clear();
     assertFalse(multimapView.containsKey("foo"));
     assertFalse(map.containsKey("foo"));
@@ -488,15 +491,15 @@ public class MultimapsTest extends TestCase {
     Set<Entry<String, Collection<Integer>>> entries = asMap.entrySet();
     assertFalse(entries.contains((Object) 4.5));
     assertFalse(entries.remove((Object) 4.5));
-    assertFalse(entries.contains(Maps.immutableEntry("foo", singletonList(1))));
-    assertFalse(entries.remove(Maps.immutableEntry("foo", singletonList(1))));
-    assertFalse(entries.contains(Maps.immutableEntry("foo", new LinkedHashSet<>(asList(1, 2)))));
-    assertFalse(entries.remove(Maps.immutableEntry("foo", new LinkedHashSet<>(asList(1, 2)))));
-    assertFalse(entries.contains(Maps.immutableEntry("foo", singleton(2))));
-    assertFalse(entries.remove(Maps.immutableEntry("foo", singleton(2))));
+    assertFalse(entries.contains(immutableEntry("foo", singletonList(1))));
+    assertFalse(entries.remove(immutableEntry("foo", singletonList(1))));
+    assertFalse(entries.contains(immutableEntry("foo", new LinkedHashSet<>(asList(1, 2)))));
+    assertFalse(entries.remove(immutableEntry("foo", new LinkedHashSet<>(asList(1, 2)))));
+    assertFalse(entries.contains(immutableEntry("foo", singleton(2))));
+    assertFalse(entries.remove(immutableEntry("foo", singleton(2))));
     assertTrue(map.containsKey("foo"));
-    assertTrue(entries.contains(Maps.immutableEntry("foo", singleton(1))));
-    assertTrue(entries.remove(Maps.immutableEntry("foo", singleton(1))));
+    assertTrue(entries.contains(immutableEntry("foo", singleton(1))));
+    assertTrue(entries.remove(immutableEntry("foo", singleton(1))));
     assertFalse(map.containsKey("foo"));
   }
 
@@ -583,21 +586,21 @@ public class MultimapsTest extends TestCase {
           }
         };
 
-    Map<Color, Collection<Integer>> map = Maps.newEnumMap(Color.class);
+    Map<Color, Collection<Integer>> map = newEnumMap(Color.class);
     Multimap<Color, Integer> multimap = Multimaps.newMultimap(map, factory);
     assertThrows(IllegalArgumentException.class, () -> multimap.put(Color.BLUE, -1));
     multimap.put(Color.RED, 1);
     multimap.put(Color.BLUE, 2);
     assertThrows(IllegalArgumentException.class, () -> multimap.put(Color.GREEN, -1));
     assertThat(multimap.entries())
-        .containsExactly(Maps.immutableEntry(Color.RED, 1), Maps.immutableEntry(Color.BLUE, 2));
+        .containsExactly(immutableEntry(Color.RED, 1), immutableEntry(Color.BLUE, 2));
   }
 
   public void testNewMultimap() {
     // The ubiquitous EnumLinkedListMultimap
     CountingSupplier<Queue<Integer>> factory = new QueueSupplier();
 
-    Map<Color, Collection<Integer>> map = Maps.newEnumMap(Color.class);
+    Map<Color, Collection<Integer>> map = newEnumMap(Color.class);
     Multimap<Color, Integer> multimap = Multimaps.newMultimap(map, factory);
     assertEquals(0, factory.count);
     multimap.putAll(Color.BLUE, asList(3, 1, 4));
@@ -619,14 +622,14 @@ public class MultimapsTest extends TestCase {
 
   public void testNewMultimapValueCollectionMatchesNavigableSet() {
     Supplier<TreeSet<Integer>> factory = new SortedSetSupplier();
-    Map<Color, Collection<Integer>> map = Maps.newEnumMap(Color.class);
+    Map<Color, Collection<Integer>> map = newEnumMap(Color.class);
     Multimap<Color, Integer> multimap = Multimaps.newMultimap(map, factory);
     assertTrue(multimap.get(Color.BLUE) instanceof NavigableSet);
   }
 
   public void testNewMultimapValueCollectionMatchesList() {
     Supplier<LinkedList<Integer>> factory = new ListSupplier();
-    Map<Color, Collection<Integer>> map = Maps.newEnumMap(Color.class);
+    Map<Color, Collection<Integer>> map = newEnumMap(Color.class);
     Multimap<Color, Integer> multimap = Multimaps.newMultimap(map, factory);
     assertTrue(multimap.get(Color.BLUE) instanceof List);
   }
@@ -635,7 +638,7 @@ public class MultimapsTest extends TestCase {
   @GwtIncompatible // SerializableTester
   public void testNewMultimapSerialization() {
     CountingSupplier<Queue<Integer>> factory = new QueueSupplier();
-    Map<Color, Collection<Integer>> map = Maps.newEnumMap(Color.class);
+    Map<Color, Collection<Integer>> map = newEnumMap(Color.class);
     Multimap<Color, Integer> multimap = Multimaps.newMultimap(map, factory);
     multimap.putAll(Color.BLUE, asList(3, 1, 4));
     multimap.putAll(Color.RED, asList(2, 7, 1, 8));
@@ -653,7 +656,7 @@ public class MultimapsTest extends TestCase {
 
   public void testNewListMultimap() {
     CountingSupplier<LinkedList<Integer>> factory = new ListSupplier();
-    Map<Color, Collection<Integer>> map = Maps.newTreeMap();
+    Map<Color, Collection<Integer>> map = newTreeMap();
     ListMultimap<Color, Integer> multimap = Multimaps.newListMultimap(map, factory);
     assertEquals(0, factory.count);
     multimap.putAll(Color.BLUE, asList(3, 1, 4, 1));
@@ -671,7 +674,7 @@ public class MultimapsTest extends TestCase {
   @GwtIncompatible // SerializableTester
   public void testNewListMultimapSerialization() {
     CountingSupplier<LinkedList<Integer>> factory = new ListSupplier();
-    Map<Color, Collection<Integer>> map = Maps.newTreeMap();
+    Map<Color, Collection<Integer>> map = newTreeMap();
     ListMultimap<Color, Integer> multimap = Multimaps.newListMultimap(map, factory);
     multimap.putAll(Color.BLUE, asList(3, 1, 4, 1));
     multimap.putAll(Color.RED, asList(2, 7, 1, 8));
@@ -696,7 +699,7 @@ public class MultimapsTest extends TestCase {
     assertEquals(1, factory.count);
     multimap.putAll(Color.RED, asList(2, 7, 1, 8));
     assertEquals(2, factory.count);
-    assertEquals(Sets.newHashSet(4, 3, 1), multimap.get(Color.BLUE));
+    assertEquals(newHashSet(4, 3, 1), multimap.get(Color.BLUE));
   }
 
   @J2ktIncompatible
@@ -713,7 +716,7 @@ public class MultimapsTest extends TestCase {
   private static class SortedSetSupplier extends CountingSupplier<TreeSet<Integer>> {
     @Override
     public TreeSet<Integer> getImpl() {
-      return Sets.newTreeSet(INT_COMPARATOR);
+      return newTreeSet(INT_COMPARATOR);
     }
 
     @GwtIncompatible @J2ktIncompatible private static final long serialVersionUID = 0;
@@ -721,7 +724,7 @@ public class MultimapsTest extends TestCase {
 
   public void testNewSortedSetMultimap() {
     CountingSupplier<TreeSet<Integer>> factory = new SortedSetSupplier();
-    Map<Color, Collection<Integer>> map = Maps.newEnumMap(Color.class);
+    Map<Color, Collection<Integer>> map = newEnumMap(Color.class);
     SortedSetMultimap<Color, Integer> multimap = Multimaps.newSortedSetMultimap(map, factory);
     // newSortedSetMultimap calls the factory once to determine the comparator.
     assertEquals(1, factory.count);
@@ -737,7 +740,7 @@ public class MultimapsTest extends TestCase {
   @GwtIncompatible // SerializableTester
   public void testNewSortedSetMultimapSerialization() {
     CountingSupplier<TreeSet<Integer>> factory = new SortedSetSupplier();
-    Map<Color, Collection<Integer>> map = Maps.newEnumMap(Color.class);
+    Map<Color, Collection<Integer>> map = newEnumMap(Color.class);
     SortedSetMultimap<Color, Integer> multimap = Multimaps.newSortedSetMultimap(map, factory);
     multimap.putAll(Color.BLUE, asList(3, 1, 4));
     multimap.putAll(Color.RED, asList(2, 7, 1, 8));
@@ -938,8 +941,7 @@ public class MultimapsTest extends TestCase {
     multimap.put("baz", 3);
     multimap.put("bar", 4);
 
-    SetMultimap<String, Integer> filtered =
-        filterKeys(multimap, Predicates.in(ImmutableSet.of("foo", "bar")));
+    SetMultimap<String, Integer> filtered = filterKeys(multimap, in(ImmutableSet.of("foo", "bar")));
 
     assertEquals(ImmutableSet.of(), filtered.replaceValues("baz", ImmutableSet.<Integer>of()));
 
@@ -954,8 +956,7 @@ public class MultimapsTest extends TestCase {
     multimap.put("baz", 3);
     multimap.put("bar", 4);
 
-    SetMultimap<String, Integer> filtered =
-        filterKeys(multimap, Predicates.in(ImmutableSet.of("foo", "bar")));
+    SetMultimap<String, Integer> filtered = filterKeys(multimap, in(ImmutableSet.of("foo", "bar")));
     Set<Integer> bazSet = filtered.get("baz");
     assertThat(bazSet).isEmpty();
     assertThrows(IllegalArgumentException.class, () -> bazSet.add(5));
@@ -970,7 +971,7 @@ public class MultimapsTest extends TestCase {
     multimap.put("bar", 4);
 
     ListMultimap<String, Integer> filtered =
-        filterKeys(multimap, Predicates.in(ImmutableSet.of("foo", "bar")));
+        filterKeys(multimap, in(ImmutableSet.of("foo", "bar")));
     List<Integer> bazList = filtered.get("baz");
     assertThat(bazList).isEmpty();
     assertThrows(IllegalArgumentException.class, () -> bazList.add(5));

@@ -16,7 +16,9 @@
 
 package com.google.common.collect;
 
+import static com.google.common.collect.Iterators.unmodifiableIterator;
 import static com.google.common.collect.Maps.immutableEntry;
+import static com.google.common.collect.Maps.newTreeMap;
 import static com.google.common.collect.Maps.transformValues;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
@@ -73,7 +75,7 @@ public class MapsTransformValuesUnmodifiableIteratorTest extends MapInterfaceTes
 
         @Override
         public Iterator<K> iterator() {
-          return Iterators.unmodifiableIterator(delegate.keySet().iterator());
+          return unmodifiableIterator(delegate.keySet().iterator());
         }
 
         @Override
@@ -98,7 +100,7 @@ public class MapsTransformValuesUnmodifiableIteratorTest extends MapInterfaceTes
 
         @Override
         public Iterator<V> iterator() {
-          return Iterators.unmodifiableIterator(delegate.values().iterator());
+          return unmodifiableIterator(delegate.values().iterator());
         }
 
         @Override
@@ -123,7 +125,7 @@ public class MapsTransformValuesUnmodifiableIteratorTest extends MapInterfaceTes
 
         @Override
         public Iterator<Entry<K, V>> iterator() {
-          return Iterators.unmodifiableIterator(delegate.entrySet().iterator());
+          return unmodifiableIterator(delegate.entrySet().iterator());
         }
 
         @Override
@@ -311,7 +313,7 @@ public class MapsTransformValuesUnmodifiableIteratorTest extends MapInterfaceTes
 
     assertMapsEqual(expected, expected);
 
-    Map<String, Integer> equalToUnderlying = Maps.newTreeMap();
+    Map<String, Integer> equalToUnderlying = newTreeMap();
     equalToUnderlying.putAll(underlying);
     Map<String, Integer> map = transformValues(equalToUnderlying, Functions.<Integer>identity());
     assertMapsEqual(expected, map);

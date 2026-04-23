@@ -17,6 +17,7 @@
 package com.google.common.collect;
 
 import static com.google.common.collect.Maps.immutableEntry;
+import static com.google.common.collect.Maps.newTreeMap;
 import static com.google.common.testing.SerializableTester.reserialize;
 import static com.google.common.testing.SerializableTester.reserializeAndAssert;
 import static com.google.common.truth.Truth.assertThat;
@@ -492,7 +493,7 @@ public class ImmutableSortedMapTest extends TestCase {
   }
 
   public void testCopyOfSortedNatural() {
-    SortedMap<String, Integer> original = Maps.newTreeMap();
+    SortedMap<String, Integer> original = newTreeMap();
     original.put("one", 1);
     original.put("two", 2);
     original.put("three", 3);
@@ -505,7 +506,7 @@ public class ImmutableSortedMapTest extends TestCase {
 
   public void testCopyOfSortedExplicit() {
     Comparator<String> comparator = Ordering.<String>natural().reverse();
-    SortedMap<String, Integer> original = Maps.newTreeMap(comparator);
+    SortedMap<String, Integer> original = newTreeMap(comparator);
     original.put("one", 1);
     original.put("two", 2);
     original.put("three", 3);

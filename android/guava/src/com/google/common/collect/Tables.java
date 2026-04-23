@@ -18,6 +18,7 @@ package com.google.common.collect;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Collections2.transform;
 import static com.google.common.collect.Iterators.transform;
 import static com.google.common.collect.NullnessCasts.uncheckedCastNullableTToT;
 import static java.util.Collections.unmodifiableCollection;
@@ -499,7 +500,7 @@ public final class Tables {
 
     @Override
     Collection<V2> createValues() {
-      return Collections2.transform(fromTable.values(), function);
+      return transform(fromTable.values(), function);
     }
 
     @Override

@@ -15,6 +15,7 @@
 package com.google.common.collect;
 
 import static com.google.common.collect.BoundType.OPEN;
+import static com.google.common.collect.Maps.newTreeMap;
 import static com.google.common.collect.Range.range;
 import static com.google.common.testing.SerializableTester.reserializeAndAssert;
 import static com.google.common.truth.Truth.assertThat;
@@ -101,7 +102,7 @@ public class TreeRangeSetTest extends AbstractRangeSetTest {
 
   private void testRangesByLowerBounds(
       TreeRangeSet<Integer> rangeSet, Iterable<Range<Integer>> expectedRanges) {
-    NavigableMap<Cut<Integer>, Range<Integer>> expectedRangesByLowerBound = Maps.newTreeMap();
+    NavigableMap<Cut<Integer>, Range<Integer>> expectedRangesByLowerBound = newTreeMap();
     for (Range<Integer> range : expectedRanges) {
       expectedRangesByLowerBound.put(range.lowerBound, range);
     }
@@ -352,7 +353,7 @@ public class TreeRangeSetTest extends AbstractRangeSetTest {
         rangeSet.add(range1);
         rangeSet.add(range2);
 
-        NavigableMap<Cut<Integer>, Range<Integer>> expectedRangesByUpperBound = Maps.newTreeMap();
+        NavigableMap<Cut<Integer>, Range<Integer>> expectedRangesByUpperBound = newTreeMap();
         for (Range<Integer> range : rangeSet.asRanges()) {
           expectedRangesByUpperBound.put(range.upperBound, range);
         }

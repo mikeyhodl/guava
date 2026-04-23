@@ -19,6 +19,8 @@ package com.google.common.testing;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.throwIfUnchecked;
 import static com.google.common.collect.Lists.newArrayListWithCapacity;
+import static com.google.common.collect.Maps.newConcurrentMap;
+import static com.google.common.collect.Maps.newTreeMap;
 import static com.google.common.collect.Sets.newTreeSet;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
@@ -54,7 +56,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.LinkedHashMultiset;
 import com.google.common.collect.ListMultimap;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Ordering;
@@ -809,12 +810,12 @@ class FreshValueGenerator {
 
   @Empty
   static <K, V> ConcurrentMap<K, V> generateConcurrentMap() {
-    return Maps.newConcurrentMap();
+    return newConcurrentMap();
   }
 
   @Generates
   static <K, V> ConcurrentMap<K, V> generateConcurrentMap(K key, V value) {
-    ConcurrentMap<K, V> map = Maps.newConcurrentMap();
+    ConcurrentMap<K, V> map = newConcurrentMap();
     map.put(key, value);
     return map;
   }
@@ -834,7 +835,7 @@ class FreshValueGenerator {
   @Generates
   static <K extends Comparable<? super K>, V> TreeMap<K, V> generateTreeMap(
       K key, @Nullable V value) {
-    TreeMap<K, V> map = Maps.newTreeMap();
+    TreeMap<K, V> map = newTreeMap();
     map.put(key, value);
     return map;
   }

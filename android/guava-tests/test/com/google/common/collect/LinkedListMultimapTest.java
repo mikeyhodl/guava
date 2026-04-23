@@ -342,7 +342,7 @@ public class LinkedListMultimapTest extends TestCase {
 
     for (int startIndex : new int[] {0, 3, 5}) {
       List<Entry<String, Integer>> list =
-          Lists.newArrayList(
+          newArrayList(
               immutableEntry("foo", 2),
               immutableEntry("foo", 3),
               immutableEntry("bar", 4),
@@ -403,7 +403,7 @@ public class LinkedListMultimapTest extends TestCase {
           3,
           addItems,
           ImmutableList.of(SUPPORTS_REMOVE, SUPPORTS_SET),
-          Lists.newArrayList(2, 3, 4, 5, 6),
+          newArrayList(2, 3, 4, 5, 6),
           startIndex) {
         private @Nullable LinkedListMultimap<String, Integer> multimap;
 

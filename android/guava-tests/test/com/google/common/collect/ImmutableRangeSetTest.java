@@ -14,6 +14,7 @@
 
 package com.google.common.collect;
 
+import static com.google.common.collect.Sets.powerSet;
 import static com.google.common.testing.SerializableTester.reserializeAndAssert;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
@@ -386,7 +387,7 @@ public class ImmutableRangeSetTest extends AbstractRangeSetTest {
             Range.openClosed(5, 7),
             Range.open(3, 4));
     subsets:
-    for (Set<Range<Integer>> subset : Sets.powerSet(ranges)) {
+    for (Set<Range<Integer>> subset : powerSet(ranges)) {
       assertEquals(TreeRangeSet.create(subset), ImmutableRangeSet.unionOf(subset));
 
       RangeSet<Integer> mutable = TreeRangeSet.create();

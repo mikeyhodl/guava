@@ -16,6 +16,7 @@
 
 package com.google.common.collect;
 
+import static com.google.common.base.Predicates.alwaysFalse;
 import static com.google.common.collect.Maps.filterEntries;
 import static com.google.common.collect.Maps.filterKeys;
 import static com.google.common.collect.Maps.filterValues;
@@ -23,7 +24,6 @@ import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import java.util.Map;
 import java.util.Map.Entry;
 import junit.framework.TestCase;
@@ -174,7 +174,7 @@ abstract class AbstractFilteredMapTest extends TestCase {
     unfiltered.put("cat", 3);
     unfiltered.put("dog", 2);
     unfiltered.put("horse", 5);
-    Predicate<Object> predicate = Predicates.alwaysFalse();
+    Predicate<Object> predicate = alwaysFalse();
     Map<String, Integer> filtered = filterEntries(unfiltered, predicate);
     assertTrue(filtered.isEmpty());
   }

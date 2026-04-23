@@ -16,6 +16,7 @@
 
 package com.google.common.reflect;
 
+import static com.google.common.collect.Lists.asList;
 import static com.google.common.reflect.Types.newArrayType;
 import static com.google.common.reflect.Types.newArtificialTypeVariable;
 import static com.google.common.reflect.Types.newParameterizedType;
@@ -27,7 +28,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertThrows;
 
-import com.google.common.collect.Lists;
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.NullPointerTester;
 import com.google.common.testing.NullPointerTester.Visibility;
@@ -332,7 +332,7 @@ public class TypesTest extends TestCase {
         tester.addEqualityGroup(jvmType);
         tester.addEqualityGroup((Object[]) types);
       } else {
-        tester.addEqualityGroup(Lists.asList(jvmType, types).toArray());
+        tester.addEqualityGroup(asList(jvmType, types).toArray());
       }
       return this;
     }

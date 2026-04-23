@@ -17,6 +17,7 @@
 package com.google.common.collect;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.collect.Maps.synchronizedBiMap;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.collect.Synchronized.SynchronizedBiMap;
@@ -90,7 +91,7 @@ public class SynchronizedBiMapTest extends SynchronizedMapTest {
         checkArgument(!result.containsKey(entry.getKey()));
         result.put(entry.getKey(), entry.getValue());
       }
-      return Maps.synchronizedBiMap(result);
+      return synchronizedBiMap(result);
     }
   }
 

@@ -19,6 +19,8 @@ package com.google.common.collect;
 import static com.google.common.collect.BoundType.CLOSED;
 import static com.google.common.collect.BoundType.OPEN;
 import static com.google.common.collect.DiscreteDomain.integers;
+import static com.google.common.collect.Sets.powerSet;
+import static com.google.common.collect.Sets.union;
 import static com.google.common.collect.testing.features.CollectionFeature.ALLOWS_NULL_QUERIES;
 import static com.google.common.collect.testing.features.CollectionFeature.KNOWN_ORDER;
 import static com.google.common.collect.testing.features.CollectionFeature.NON_STANDARD_TOSTRING;
@@ -291,11 +293,11 @@ public class ContiguousSetTest extends TestCase {
 
   public void testContainsAll() {
     ImmutableSortedSet<Integer> set = ContiguousSet.create(Range.closed(1, 3), integers());
-    for (Set<Integer> subset : Sets.powerSet(ImmutableSet.of(1, 2, 3))) {
+    for (Set<Integer> subset : powerSet(ImmutableSet.of(1, 2, 3))) {
       assertTrue(set.containsAll(subset));
     }
-    for (Set<Integer> subset : Sets.powerSet(ImmutableSet.of(1, 2, 3))) {
-      assertFalse(set.containsAll(Sets.union(subset, ImmutableSet.of(9))));
+    for (Set<Integer> subset : powerSet(ImmutableSet.of(1, 2, 3))) {
+      assertFalse(set.containsAll(union(subset, ImmutableSet.of(9))));
     }
   }
 

@@ -16,9 +16,11 @@
 
 package com.google.common.collect;
 
+import static com.google.common.base.Strings.lenientFormat;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Iterators.emptyIterator;
 import static com.google.common.collect.Iterators.singletonIterator;
+import static com.google.common.collect.Lists.reverse;
 import static com.google.common.collect.Sets.newHashSet;
 import static com.google.common.collect.testing.IteratorFeature.UNMODIFIABLE;
 import static com.google.common.truth.Truth.assertThat;
@@ -29,7 +31,6 @@ import static org.junit.Assert.assertThrows;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
-import com.google.common.base.Strings;
 import com.google.common.collect.testing.IteratorTester;
 import com.google.common.collect.testing.MinimalCollection;
 import com.google.common.collect.testing.MinimalIterable;
@@ -472,7 +473,7 @@ public abstract class AbstractImmutableSetTest extends TestCase {
           Iterables.cycle(
               byAscendingSize
                   ? distinctCandidatesByAscendingSize
-                  : Lists.reverse(distinctCandidatesByAscendingSize));
+                  : reverse(distinctCandidatesByAscendingSize));
       for (int startIndex = 0;
           startIndex < distinctCandidatesByAscendingSize.size();
           startIndex++) {
@@ -489,7 +490,7 @@ public abstract class AbstractImmutableSetTest extends TestCase {
             immutableCopy = copyOf(input);
           } catch (RuntimeException e) {
             throw new RuntimeException(
-                Strings.lenientFormat(
+                lenientFormat(
                     "byAscendingSize %s, startIndex %s, inputIsSet %s",
                     byAscendingSize, startIndex, inputIsSet),
                 e);

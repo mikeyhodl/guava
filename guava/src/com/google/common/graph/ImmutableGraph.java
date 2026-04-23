@@ -17,11 +17,11 @@
 package com.google.common.graph;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Maps.asMap;
 
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import com.google.common.graph.GraphConstants.Presence;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.Immutable;
@@ -97,8 +97,7 @@ public class ImmutableGraph<N> extends ForwardingGraph<N> {
         (Function<N, Presence>) Functions.constant(Presence.EDGE_EXISTS);
     return graph.isDirected()
         ? DirectedGraphConnections.ofImmutable(node, graph.incidentEdges(node), edgeValueFn)
-        : UndirectedGraphConnections.ofImmutable(
-            Maps.asMap(graph.adjacentNodes(node), edgeValueFn));
+        : UndirectedGraphConnections.ofImmutable(asMap(graph.adjacentNodes(node), edgeValueFn));
   }
 
   @Override

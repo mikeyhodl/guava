@@ -19,6 +19,7 @@ package com.google.common.collect;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkElementIndex;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Maps.indexMap;
 import static java.lang.System.arraycopy;
 import static java.util.Collections.emptyMap;
 
@@ -160,8 +161,8 @@ public final class ArrayTable<R, C, V> extends AbstractTable<R, C, @Nullable V>
      * elements but rowKeySet() will be empty and containsRow() won't
      * acknowledge them.
      */
-    rowKeyToIndex = Maps.indexMap(rowList);
-    columnKeyToIndex = Maps.indexMap(columnList);
+    rowKeyToIndex = indexMap(rowList);
+    columnKeyToIndex = indexMap(columnList);
 
     @SuppressWarnings("unchecked")
     @Nullable V[][] tmpArray = (@Nullable V[][]) new Object[rowList.size()][columnList.size()];

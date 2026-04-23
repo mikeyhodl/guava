@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.CollectPreconditions.checkRemove;
+import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.NullnessCasts.uncheckedCastNullableTToT;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
@@ -350,7 +351,7 @@ public final class Iterators {
   @GwtIncompatible // Array.newInstance(Class, int)
   public static <T extends @Nullable Object> T[] toArray(
       Iterator<? extends T> iterator, Class<@NonNull T> type) {
-    List<T> list = Lists.newArrayList(iterator);
+    List<T> list = newArrayList(iterator);
     return Iterables.<T>toArray(list, type);
   }
 
@@ -452,7 +453,7 @@ public final class Iterators {
    */
   @SafeVarargs
   public static <T extends @Nullable Object> Iterator<T> cycle(T... elements) {
-    return cycle(Lists.newArrayList(elements));
+    return cycle(newArrayList(elements));
   }
 
   /**

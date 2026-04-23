@@ -18,6 +18,7 @@ package com.google.common.collect;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Iterators.singletonIterator;
+import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.ObjectArrays.newArray;
 import static com.google.common.collect.testing.Helpers.testComparator;
 import static com.google.common.testing.SerializableTester.reserialize;
@@ -92,15 +93,15 @@ public class OrderingTest extends TestCase {
             .reverse()
             .<Iterable<@Nullable Integer>>nullsLast();
     List<@Nullable Integer> list1 = new ArrayList<>();
-    List<@Nullable Integer> list2 = Lists.newArrayList(1);
-    List<@Nullable Integer> list3 = Lists.newArrayList(1, 1);
-    List<@Nullable Integer> list4 = Lists.newArrayList(1, 2);
-    List<@Nullable Integer> list5 = Lists.newArrayList(1, null, 2);
-    List<@Nullable Integer> list6 = Lists.newArrayList(2);
-    List<@Nullable Integer> list7 = Lists.newArrayList(nullInt);
-    List<@Nullable Integer> list8 = Lists.newArrayList(nullInt, nullInt);
+    List<@Nullable Integer> list2 = newArrayList(1);
+    List<@Nullable Integer> list3 = newArrayList(1, 1);
+    List<@Nullable Integer> list4 = newArrayList(1, 2);
+    List<@Nullable Integer> list5 = newArrayList(1, null, 2);
+    List<@Nullable Integer> list6 = newArrayList(2);
+    List<@Nullable Integer> list7 = newArrayList(nullInt);
+    List<@Nullable Integer> list8 = newArrayList(nullInt, nullInt);
     List<@Nullable List<@Nullable Integer>> list =
-        Lists.newArrayList(list1, list2, list3, list4, list5, list6, list7, list8, null);
+        newArrayList(list1, list2, list3, list4, list5, list6, list7, list8, null);
     List<@Nullable List<@Nullable Integer>> sorted = example.sortedCopy(list);
 
     // [[null, null], [null], [1, null, 2], [1, 1], [1, 2], [1], [2], [], null]
@@ -109,10 +110,10 @@ public class OrderingTest extends TestCase {
             Lists.<@Nullable Integer>newArrayList(nullInt, nullInt),
             Lists.<@Nullable Integer>newArrayList(nullInt),
             Lists.<@Nullable Integer>newArrayList(1, null, 2),
-            Lists.newArrayList(1, 1),
-            Lists.newArrayList(1, 2),
-            Lists.newArrayList(1),
-            Lists.newArrayList(2),
+            newArrayList(1, 1),
+            newArrayList(1, 2),
+            newArrayList(1),
+            newArrayList(2),
             new ArrayList<>(),
             null)
         .inOrder();
@@ -446,7 +447,7 @@ public class OrderingTest extends TestCase {
 
   @SuppressWarnings({"deprecation", "InlineMeInliner"}) // test of a deprecated method
   public void testBinarySearch() {
-    List<Integer> ints = Lists.newArrayList(0, 2, 3, 5, 7, 9);
+    List<Integer> ints = newArrayList(0, 2, 3, 5, 7, 9);
     assertEquals(4, numberOrdering.binarySearch(ints, 7));
   }
 
@@ -749,41 +750,41 @@ public class OrderingTest extends TestCase {
   }
 
   public void testIteratorMinAndMax() {
-    List<Integer> ints = Lists.newArrayList(5, 3, 0, 9);
+    List<Integer> ints = newArrayList(5, 3, 0, 9);
     assertEquals(9, (int) numberOrdering.max(ints.iterator()));
     assertEquals(0, (int) numberOrdering.min(ints.iterator()));
 
     // when the values are the same, the first argument should be returned
     MyInteger a = new MyInteger(4);
     MyInteger b = new MyInteger(4);
-    List<MyInteger> myInts = Lists.newArrayList(a, b, b);
+    List<MyInteger> myInts = newArrayList(a, b, b);
     assertThat(numberOrdering.max(myInts.iterator())).isSameInstanceAs(a);
     assertThat(numberOrdering.min(myInts.iterator())).isSameInstanceAs(a);
   }
 
   public void testIteratorMinExhaustsIterator() {
-    List<Integer> ints = Lists.newArrayList(9, 0, 3, 5);
+    List<Integer> ints = newArrayList(9, 0, 3, 5);
     Iterator<Integer> iterator = ints.iterator();
     assertEquals(0, (int) numberOrdering.min(iterator));
     assertFalse(iterator.hasNext());
   }
 
   public void testIteratorMaxExhaustsIterator() {
-    List<Integer> ints = Lists.newArrayList(9, 0, 3, 5);
+    List<Integer> ints = newArrayList(9, 0, 3, 5);
     Iterator<Integer> iterator = ints.iterator();
     assertEquals(9, (int) numberOrdering.max(iterator));
     assertFalse(iterator.hasNext());
   }
 
   public void testIterableMinAndMax() {
-    List<Integer> ints = Lists.newArrayList(5, 3, 0, 9);
+    List<Integer> ints = newArrayList(5, 3, 0, 9);
     assertEquals(9, (int) numberOrdering.max(ints));
     assertEquals(0, (int) numberOrdering.min(ints));
 
     // when the values are the same, the first argument should be returned
     MyInteger a = new MyInteger(4);
     MyInteger b = new MyInteger(4);
-    List<MyInteger> myInts = Lists.newArrayList(a, b, b);
+    List<MyInteger> myInts = newArrayList(a, b, b);
     assertThat(numberOrdering.max(myInts)).isSameInstanceAs(a);
     assertThat(numberOrdering.min(myInts)).isSameInstanceAs(a);
   }
@@ -1004,7 +1005,7 @@ public class OrderingTest extends TestCase {
     NULLS_FIRST {
       @Override
       <T extends @Nullable Object> Scenario<?> mutate(Scenario<T> scenario) {
-        List<T> newList = Lists.newArrayList((T) null);
+        List<T> newList = newArrayList((T) null);
         for (T t : scenario.strictlyOrderedList) {
           if (t != null) {
             newList.add(t);

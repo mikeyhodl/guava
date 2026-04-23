@@ -14,6 +14,7 @@
 
 package com.google.common.collect;
 
+import static com.google.common.collect.Maps.newTreeMap;
 import static com.google.common.collect.Sets.newTreeSet;
 
 import com.google.common.annotations.GwtCompatible;
@@ -30,7 +31,7 @@ import org.jspecify.annotations.NullMarked;
 public class SortedIterablesTest extends TestCase {
   public void testSameComparator() {
     assertTrue(SortedIterables.hasSameComparator(Ordering.natural(), newTreeSet()));
-    assertTrue(SortedIterables.hasSameComparator(Ordering.natural(), Maps.newTreeMap().keySet()));
+    assertTrue(SortedIterables.hasSameComparator(Ordering.natural(), newTreeMap().keySet()));
     assertTrue(
         SortedIterables.hasSameComparator(
             Ordering.natural().reverse(), newTreeSet(Ordering.natural().reverse())));

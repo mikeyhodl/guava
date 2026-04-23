@@ -20,9 +20,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Predicates.and;
 import static com.google.common.collect.CollectPreconditions.checkNonnegative;
 import static com.google.common.collect.CollectPreconditions.checkRemove;
+import static com.google.common.collect.Maps.asEntryToEntryFunction;
+import static com.google.common.collect.Maps.asMapEntryIterator;
 import static com.google.common.collect.Maps.immutableEntry;
+import static com.google.common.collect.Maps.keyIterator;
+import static com.google.common.collect.Maps.keyPredicateOnEntries;
 import static com.google.common.collect.Maps.safeGet;
 import static com.google.common.collect.Maps.unmodifiableEntrySet;
+import static com.google.common.collect.Maps.valuePredicateOnEntries;
 import static com.google.common.collect.Multisets.unmodifiableMultiset;
 import static com.google.common.collect.NullnessCasts.uncheckedCastNullableTToT;
 import static com.google.common.collect.Sets.unmodifiableNavigableSet;
@@ -1529,7 +1534,7 @@ public final class Multimaps {
     @Override
     Iterator<Entry<K, V2>> entryIterator() {
       return Iterators.transform(
-          fromMultimap.entries().iterator(), Maps.asEntryToEntryFunction(transformer));
+          fromMultimap.entries().iterator(), asEntryToEntryFunction(transformer));
     }
 
     @Override
@@ -1770,7 +1775,7 @@ public final class Multimaps {
 
     @Override
     public Iterator<K> iterator() {
-      return Maps.keyIterator(multimap.entries().iterator());
+      return keyIterator(multimap.entries().iterator());
     }
 
     @Override
@@ -1887,7 +1892,7 @@ public final class Multimaps {
 
       @Override
       public Iterator<Entry<K, Collection<V>>> iterator() {
-        return Maps.asMapEntryIterator(multimap.keySet(), multimap::get);
+        return asMapEntryIterator(multimap.keySet(), multimap::get);
       }
 
       @Override
@@ -1972,7 +1977,7 @@ public final class Multimaps {
       return new FilteredKeyMultimap<>(prev.unfiltered, and(prev.keyPredicate, keyPredicate));
     } else if (unfiltered instanceof FilteredMultimap) {
       FilteredMultimap<K, V> prev = (FilteredMultimap<K, V>) unfiltered;
-      return filterFiltered(prev, Maps.keyPredicateOnEntries(keyPredicate));
+      return filterFiltered(prev, keyPredicateOnEntries(keyPredicate));
     } else {
       return new FilteredKeyMultimap<>(unfiltered, keyPredicate);
     }
@@ -2013,7 +2018,7 @@ public final class Multimaps {
       return new FilteredKeySetMultimap<>(prev.unfiltered(), and(prev.keyPredicate, keyPredicate));
     } else if (unfiltered instanceof FilteredSetMultimap) {
       FilteredSetMultimap<K, V> prev = (FilteredSetMultimap<K, V>) unfiltered;
-      return filterFiltered(prev, Maps.keyPredicateOnEntries(keyPredicate));
+      return filterFiltered(prev, keyPredicateOnEntries(keyPredicate));
     } else {
       return new FilteredKeySetMultimap<>(unfiltered, keyPredicate);
     }
@@ -2086,7 +2091,7 @@ public final class Multimaps {
    */
   public static <K extends @Nullable Object, V extends @Nullable Object>
       Multimap<K, V> filterValues(Multimap<K, V> unfiltered, Predicate<? super V> valuePredicate) {
-    return filterEntries(unfiltered, Maps.valuePredicateOnEntries(valuePredicate));
+    return filterEntries(unfiltered, valuePredicateOnEntries(valuePredicate));
   }
 
   /**
@@ -2119,7 +2124,7 @@ public final class Multimaps {
   public static <K extends @Nullable Object, V extends @Nullable Object>
       SetMultimap<K, V> filterValues(
           SetMultimap<K, V> unfiltered, Predicate<? super V> valuePredicate) {
-    return filterEntries(unfiltered, Maps.valuePredicateOnEntries(valuePredicate));
+    return filterEntries(unfiltered, valuePredicateOnEntries(valuePredicate));
   }
 
   /**

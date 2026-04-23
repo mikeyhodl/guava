@@ -17,6 +17,7 @@
 package com.google.common.base;
 
 import static com.google.common.base.Functions.toStringFunction;
+import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.testing.SerializableTester.reserializeAndAssert;
 import static com.google.common.truth.Truth.assertThat;
 
@@ -24,7 +25,6 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.google.common.primitives.Longs;
 import com.google.common.testing.EqualsTester;
 import java.util.Iterator;
@@ -70,7 +70,7 @@ public class ConverterTest extends TestCase {
   }
 
   public void testConvertAllIsView() {
-    List<String> mutableList = Lists.newArrayList("789", "123");
+    List<String> mutableList = newArrayList("789", "123");
     Iterable<Long> convertedValues = STR_TO_LONG.convertAll(mutableList);
     assertEquals(ImmutableList.of(789L, 123L), ImmutableList.copyOf(convertedValues));
 

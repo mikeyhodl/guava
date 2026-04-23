@@ -16,6 +16,8 @@
 
 package com.google.common.collect;
 
+import static com.google.common.base.Predicates.alwaysFalse;
+import static com.google.common.base.Predicates.alwaysTrue;
 import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.collect.Iterables.all;
 import static com.google.common.collect.Iterables.any;
@@ -30,6 +32,8 @@ import static com.google.common.collect.Iterables.removeIf;
 import static com.google.common.collect.Iterables.skip;
 import static com.google.common.collect.Iterables.tryFind;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Lists.newLinkedList;
+import static com.google.common.collect.Lists.transform;
 import static com.google.common.collect.Sets.newHashSet;
 import static com.google.common.collect.testing.IteratorFeature.MODIFIABLE;
 import static com.google.common.collect.testing.IteratorFeature.UNMODIFIABLE;
@@ -47,7 +51,6 @@ import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.testing.IteratorTester;
 import com.google.common.testing.ClassSanityTester;
 import com.google.common.testing.NullPointerTester;
@@ -249,18 +252,18 @@ public class IterablesTest extends TestCase {
     Iterable<String> list = newArrayList("cool", "pants");
     assertThat(find(list, equalTo("cool"))).isEqualTo("cool");
     assertThat(find(list, equalTo("pants"))).isEqualTo("pants");
-    assertThrows(NoSuchElementException.class, () -> find(list, Predicates.alwaysFalse()));
-    assertThat(find(list, Predicates.alwaysTrue())).isEqualTo("cool");
+    assertThrows(NoSuchElementException.class, () -> find(list, alwaysFalse()));
+    assertThat(find(list, alwaysTrue())).isEqualTo("cool");
     assertCanIterateAgain(list);
   }
 
   public void testFind_withDefault() {
-    Iterable<String> list = Lists.newArrayList("cool", "pants");
+    Iterable<String> list = newArrayList("cool", "pants");
     assertThat(find(list, equalTo("cool"), "woot")).isEqualTo("cool");
     assertThat(find(list, equalTo("pants"), "woot")).isEqualTo("pants");
-    assertThat(find(list, Predicates.alwaysFalse(), "woot")).isEqualTo("woot");
-    assertThat(find(list, Predicates.alwaysFalse(), null)).isNull();
-    assertThat(find(list, Predicates.alwaysTrue(), "woot")).isEqualTo("cool");
+    assertThat(find(list, alwaysFalse(), "woot")).isEqualTo("woot");
+    assertThat(find(list, alwaysFalse(), null)).isNull();
+    assertThat(find(list, alwaysTrue(), "woot")).isEqualTo("cool");
     assertCanIterateAgain(list);
   }
 
@@ -268,8 +271,8 @@ public class IterablesTest extends TestCase {
     Iterable<String> list = newArrayList("cool", "pants");
     assertThat(tryFind(list, equalTo("cool"))).hasValue("cool");
     assertThat(tryFind(list, equalTo("pants"))).hasValue("pants");
-    assertThat(tryFind(list, Predicates.alwaysTrue())).hasValue("cool");
-    assertThat(tryFind(list, Predicates.alwaysFalse())).isAbsent();
+    assertThat(tryFind(list, alwaysTrue())).hasValue("cool");
+    assertThat(tryFind(list, alwaysFalse())).isAbsent();
     assertCanIterateAgain(list);
   }
 
@@ -282,7 +285,7 @@ public class IterablesTest extends TestCase {
   @GwtIncompatible // Iterables.filter(Iterable, Class)
   public void testFilterByType_iterator() throws Exception {
     HasBoth hasBoth = new HasBoth();
-    Iterable<TypeA> alist = Lists.newArrayList(new TypeA(), new TypeA(), hasBoth, new TypeA());
+    Iterable<TypeA> alist = newArrayList(new TypeA(), new TypeA(), hasBoth, new TypeA());
     Iterable<TypeB> blist = filter(alist, TypeB.class);
     assertThat(blist).containsExactly(hasBoth).inOrder();
   }
@@ -1011,7 +1014,7 @@ public class IterablesTest extends TestCase {
   public void testRemoveIf_transformedList() {
     List<String> list = newArrayList("1", "2", "3", "4", "5");
     List<Integer> transformed =
-        Lists.transform(
+        transform(
             list,
             new Function<String, Integer>() {
               @Override
@@ -1196,20 +1199,20 @@ public class IterablesTest extends TestCase {
   }
 
   public void testIndexOf_oneElement() {
-    List<String> list = Lists.newArrayList("bob");
+    List<String> list = newArrayList("bob");
     assertEquals(0, Iterables.indexOf(list, equalTo("bob")));
     assertEquals(-1, Iterables.indexOf(list, equalTo("jack")));
   }
 
   public void testIndexOf_twoElements() {
-    List<String> list = Lists.newArrayList("mary", "bob");
+    List<String> list = newArrayList("mary", "bob");
     assertEquals(0, Iterables.indexOf(list, equalTo("mary")));
     assertEquals(1, Iterables.indexOf(list, equalTo("bob")));
     assertEquals(-1, Iterables.indexOf(list, equalTo("jack")));
   }
 
   public void testIndexOf_withDuplicates() {
-    List<String> list = Lists.newArrayList("mary", "bob", "bob", "bob", "sam");
+    List<String> list = newArrayList("mary", "bob", "bob", "bob", "sam");
     assertEquals(0, Iterables.indexOf(list, equalTo("mary")));
     assertEquals(1, Iterables.indexOf(list, equalTo("bob")));
     assertEquals(4, Iterables.indexOf(list, equalTo("sam")));
@@ -1237,7 +1240,7 @@ public class IterablesTest extends TestCase {
   }
 
   public void testIndexOf_genericPredicate2() {
-    List<String> sequences = Lists.newArrayList("bob", "charlie", "henry", "apple", "lemon");
+    List<String> sequences = newArrayList("bob", "charlie", "henry", "apple", "lemon");
     assertEquals(3, Iterables.indexOf(sequences, STARTSWITH_A));
   }
 
@@ -1321,7 +1324,7 @@ public class IterablesTest extends TestCase {
 
     Iterable<Integer> mergedIterator = mergeSorted(iterables, Ordering.natural());
 
-    assertEquals(Lists.newLinkedList(expected), Lists.newLinkedList(mergedIterator));
+    assertEquals(newLinkedList(expected), newLinkedList(mergedIterator));
   }
 
   public void testMergeSorted_stable_allEqual() {

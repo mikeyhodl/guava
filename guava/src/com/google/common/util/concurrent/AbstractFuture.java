@@ -15,6 +15,7 @@
 package com.google.common.util.concurrent;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Strings.emptyToNull;
 import static com.google.common.util.concurrent.NullnessCasts.uncheckedNull;
 import static com.google.common.util.concurrent.Platform.interruptCurrentThread;
 import static com.google.common.util.concurrent.Platform.rethrowIfErrorOtherThanStackOverflow;
@@ -25,7 +26,6 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.logging.Level.SEVERE;
 
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.base.Strings;
 import com.google.common.util.concurrent.internal.InternalFutureFailureAccess;
 import com.google.common.util.concurrent.internal.InternalFutures;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
@@ -923,7 +923,7 @@ public abstract class AbstractFuture<V extends @Nullable Object> extends Abstrac
     } else {
       String pendingDescription;
       try {
-        pendingDescription = Strings.emptyToNull(pendingToString());
+        pendingDescription = emptyToNull(pendingToString());
       } catch (Throwable e) {
         /*
          * We want to catch (Exception | StackOverflowError), but we can't under environments where

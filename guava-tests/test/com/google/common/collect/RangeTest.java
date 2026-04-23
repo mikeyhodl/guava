@@ -19,6 +19,7 @@ package com.google.common.collect;
 import static com.google.common.collect.BoundType.CLOSED;
 import static com.google.common.collect.BoundType.OPEN;
 import static com.google.common.collect.DiscreteDomain.integers;
+import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.testing.Helpers.testCompareToAndEquals;
 import static com.google.common.testing.SerializableTester.reserializeAndAssert;
 import static com.google.common.truth.Truth.assertThat;
@@ -607,9 +608,9 @@ public class RangeTest extends TestCase {
   }
 
   public void testEncloseAll_nullValue() {
-    List<@Nullable Integer> nullFirst = Lists.newArrayList(null, 0);
+    List<@Nullable Integer> nullFirst = newArrayList(null, 0);
     assertThrows(NullPointerException.class, () -> Range.encloseAll((List<Integer>) nullFirst));
-    List<@Nullable Integer> nullNotFirst = Lists.newArrayList(0, null);
+    List<@Nullable Integer> nullNotFirst = newArrayList(0, null);
     assertThrows(NullPointerException.class, () -> Range.encloseAll((List<Integer>) nullNotFirst));
   }
 

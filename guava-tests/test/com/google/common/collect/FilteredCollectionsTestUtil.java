@@ -17,12 +17,12 @@
 package com.google.common.collect;
 
 import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.in;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.testing.EqualsTester;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,7 +56,7 @@ public final class FilteredCollectionsTestUtil {
         }
       };
 
-  private static final Predicate<Integer> PRIME_DIGIT = Predicates.in(ImmutableSet.of(2, 3, 5, 7));
+  private static final Predicate<Integer> PRIME_DIGIT = in(ImmutableSet.of(2, 3, 5, 7));
 
   private static final ImmutableList<? extends List<Integer>> SAMPLE_INPUTS =
       ImmutableList.of(

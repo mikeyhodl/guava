@@ -22,6 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkPositionIndex;
 import static com.google.common.base.Preconditions.checkPositionIndexes;
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.base.Strings.lenientFormat;
 import static com.google.common.collect.Lists.cartesianProduct;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
@@ -363,7 +364,7 @@ public class PreconditionsTest extends TestCase {
     } else {
       assertThat(throwable)
           .hasMessageThat()
-          .isEqualTo(Strings.lenientFormat("", Arrays.copyOfRange(params, 2, params.length)));
+          .isEqualTo(lenientFormat("", Arrays.copyOfRange(params, 2, params.length)));
     }
   }
 

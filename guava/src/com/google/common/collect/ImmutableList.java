@@ -21,6 +21,9 @@ import static com.google.common.base.Preconditions.checkElementIndex;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkPositionIndexes;
 import static com.google.common.collect.CollectPreconditions.checkNonnegative;
+import static com.google.common.collect.Lists.equalsImpl;
+import static com.google.common.collect.Lists.indexOfImpl;
+import static com.google.common.collect.Lists.lastIndexOfImpl;
 import static com.google.common.collect.ObjectArrays.checkElementsNotNull;
 import static com.google.common.collect.RegularImmutableList.EMPTY;
 import static java.lang.System.arraycopy;
@@ -425,12 +428,12 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
 
   @Override
   public int indexOf(@Nullable Object object) {
-    return (object == null) ? -1 : Lists.indexOfImpl(this, object);
+    return (object == null) ? -1 : indexOfImpl(this, object);
   }
 
   @Override
   public int lastIndexOf(@Nullable Object object) {
-    return (object == null) ? -1 : Lists.lastIndexOfImpl(this, object);
+    return (object == null) ? -1 : lastIndexOfImpl(this, object);
   }
 
   @Override
@@ -712,7 +715,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
 
   @Override
   public boolean equals(@Nullable Object obj) {
-    return Lists.equalsImpl(this, obj);
+    return equalsImpl(this, obj);
   }
 
   @Override

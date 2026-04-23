@@ -18,6 +18,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterators.concat;
 import static com.google.common.collect.Lists.newArrayListWithCapacity;
+import static com.google.common.collect.Maps.newConcurrentMap;
 import static java.util.Arrays.asList;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -28,7 +29,6 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.primitives.Primitives;
 import com.google.common.reflect.TypeToken;
@@ -61,7 +61,7 @@ final class SubscriberRegistry {
    * immutable snapshot of all current subscribers to an event without any locking.
    */
   private final ConcurrentMap<Class<?>, CopyOnWriteArraySet<Subscriber>> subscribers =
-      Maps.newConcurrentMap();
+      newConcurrentMap();
 
   /** The event bus this registry belongs to. */
   @Weak private final EventBus bus;

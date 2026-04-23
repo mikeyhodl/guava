@@ -17,11 +17,11 @@
 package com.google.common.graph;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Maps.asMap;
 import static java.util.Objects.requireNonNull;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.annotations.InlineMe;
@@ -100,7 +100,7 @@ public final class ImmutableValueGraph<N, V> extends StandardValueGraph<N, V> {
         ? DirectedGraphConnections.ofImmutable(
             node, graph.incidentEdges(node), successorNodeToValueFn)
         : UndirectedGraphConnections.ofImmutable(
-            Maps.asMap(graph.adjacentNodes(node), successorNodeToValueFn));
+            asMap(graph.adjacentNodes(node), successorNodeToValueFn));
   }
 
   /**

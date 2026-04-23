@@ -16,6 +16,7 @@
 
 package com.google.common.hash;
 
+import static com.google.common.collect.Sets.newHashSetWithExpectedSize;
 import static com.google.common.truth.Truth.assertThat;
 import static java.lang.Math.log;
 import static java.lang.System.arraycopy;
@@ -29,7 +30,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 import com.google.common.testing.EqualsTester;
 import java.nio.ByteBuffer;
@@ -472,7 +472,7 @@ final class HashTestUtils {
    */
   static void assertInvariants(HashFunction hashFunction) {
     int objects = 100;
-    Set<HashCode> hashcodes = Sets.newHashSetWithExpectedSize(objects);
+    Set<HashCode> hashcodes = newHashSetWithExpectedSize(objects);
     Random random = new Random(314159);
     for (int i = 0; i < objects; i++) {
       int value = random.nextInt();

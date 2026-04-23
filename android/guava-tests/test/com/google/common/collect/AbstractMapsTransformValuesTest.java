@@ -17,6 +17,7 @@
 package com.google.common.collect;
 
 import static com.google.common.collect.Maps.immutableEntry;
+import static com.google.common.collect.Maps.newTreeMap;
 import static com.google.common.collect.Maps.transformValues;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
@@ -202,7 +203,7 @@ abstract class AbstractMapsTransformValuesTest extends MapInterfaceTest<String, 
 
     assertMapsEqual(expected, expected);
 
-    Map<String, Integer> equalToUnderlying = Maps.newTreeMap();
+    Map<String, Integer> equalToUnderlying = newTreeMap();
     equalToUnderlying.putAll(underlying);
     Map<String, Integer> map = transformValues(equalToUnderlying, Functions.<Integer>identity());
     assertMapsEqual(expected, map);

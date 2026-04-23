@@ -17,6 +17,7 @@
 package com.google.common.collect;
 
 import static com.google.common.collect.Maps.filterEntries;
+import static com.google.common.collect.Maps.newTreeMap;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.annotations.GwtCompatible;
@@ -28,7 +29,7 @@ import org.jspecify.annotations.NullMarked;
 public class FilteredSortedMapTest extends AbstractFilteredMapTest {
   @Override
   SortedMap<String, Integer> createUnfiltered() {
-    return Maps.newTreeMap();
+    return newTreeMap();
   }
 
   public void testFirstAndLastKeyFilteredMap() {

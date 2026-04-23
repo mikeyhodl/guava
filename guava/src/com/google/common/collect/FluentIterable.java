@@ -17,6 +17,7 @@ package com.google.common.collect;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.all;
 import static com.google.common.collect.Iterables.any;
+import static com.google.common.collect.Lists.asList;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
@@ -326,7 +327,7 @@ public abstract class FluentIterable<E extends @Nullable Object> implements Iter
    */
   public static <E extends @Nullable Object> FluentIterable<E> of(
       @ParametricNullness E element, E... elements) {
-    return from(Lists.asList(element, elements));
+    return from(asList(element, elements));
   }
 
   /**

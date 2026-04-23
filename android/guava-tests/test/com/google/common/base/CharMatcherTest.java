@@ -26,6 +26,7 @@ import static com.google.common.base.CharMatcher.noneOf;
 import static com.google.common.base.CharMatcher.whitespace;
 import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.base.Strings.repeat;
+import static com.google.common.collect.Sets.newHashSetWithExpectedSize;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.sort;
 import static org.junit.Assert.assertThrows;
@@ -33,7 +34,6 @@ import static org.junit.Assert.assertThrows;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
-import com.google.common.collect.Sets;
 import com.google.common.testing.NullPointerTester;
 import java.util.BitSet;
 import java.util.HashSet;
@@ -729,7 +729,7 @@ public class CharMatcherTest extends TestCase {
   }
 
   static void checkExactMatches(CharMatcher m, char[] chars) {
-    Set<Character> positive = Sets.newHashSetWithExpectedSize(chars.length);
+    Set<Character> positive = newHashSetWithExpectedSize(chars.length);
     for (char c : chars) {
       positive.add(c);
     }

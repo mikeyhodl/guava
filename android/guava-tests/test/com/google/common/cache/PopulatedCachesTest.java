@@ -19,6 +19,7 @@ import static com.google.common.cache.CacheTesting.checkValidState;
 import static com.google.common.cache.TestingCacheLoaders.identityLoader;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Iterators.size;
 import static com.google.common.collect.Maps.immutableEntry;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.concurrent.TimeUnit.DAYS;
@@ -30,7 +31,6 @@ import com.google.common.cache.LocalCache.Strength;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
 import com.google.common.testing.EqualsTester;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -373,6 +373,6 @@ public class PopulatedCachesTest extends TestCase {
       assertThat(collection.isEmpty()).isTrue();
     }
     assertThat(Iterables.size(collection)).isEqualTo(size);
-    assertThat(Iterators.size(collection.iterator())).isEqualTo(size);
+    assertThat(size(collection.iterator())).isEqualTo(size);
   }
 }

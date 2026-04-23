@@ -18,12 +18,12 @@ package com.google.common.graph;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Iterators.transform;
+import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
 import static com.google.common.graph.GraphConstants.NODE_NOT_IN_GRAPH;
 import static com.google.common.graph.Graphs.TransitiveClosureSelfLoopStrategy.ADD_SELF_LOOPS_ALWAYS;
 import static java.util.Objects.requireNonNull;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Maps;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.ArrayDeque;
 import java.util.Collection;
@@ -65,8 +65,7 @@ public final class Graphs extends GraphsBridgeMethods {
       return true; // Optimization for the undirected case: at least one cycle must exist.
     }
 
-    Map<Object, NodeVisitState> visitedNodes =
-        Maps.newHashMapWithExpectedSize(graph.nodes().size());
+    Map<Object, NodeVisitState> visitedNodes = newHashMapWithExpectedSize(graph.nodes().size());
     for (N node : graph.nodes()) {
       if (subgraphHasCycle(graph, visitedNodes, node)) {
         return true;

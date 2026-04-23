@@ -19,6 +19,7 @@ package com.google.common.testing;
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Maps.newTreeMap;
 import static com.google.common.testing.AbstractPackageSanityTests.Chopper.suffix;
 import static com.google.common.testing.SerializableTester.reserialize;
 import static com.google.common.testing.SerializableTester.reserializeAndAssert;
@@ -29,7 +30,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Predicate;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.reflect.ClassPath;
 import com.google.common.testing.NullPointerTester.Visibility;
@@ -340,7 +340,7 @@ public abstract class AbstractPackageSanityTests extends TestCase {
   List<Class<?>> findClassesToTest(
       Iterable<? extends Class<?>> classes, Iterable<String> explicitTestNames) {
     // "a.b.Foo" -> a.b.Foo.class
-    TreeMap<String, Class<?>> classMap = Maps.newTreeMap();
+    TreeMap<String, Class<?>> classMap = newTreeMap();
     for (Class<?> cls : classes) {
       classMap.put(cls.getName(), cls);
     }
