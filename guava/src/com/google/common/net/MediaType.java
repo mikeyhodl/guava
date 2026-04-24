@@ -624,6 +624,14 @@ public final class MediaType {
   public static final MediaType NACL_APPLICATION = createConstant(APPLICATION_TYPE, "x-nacl");
 
   /**
+   * The <a href="https://pki-tutorial.readthedocs.io/en/latest/mime.html">PEM format</a>. See also
+   * <a href="https://github.com/ietf-wg-acme/acme/issues/120">ietf-wg-acme proposal</a>.
+   *
+   * @since NEXT
+   */
+  public static final MediaType PEM = createConstant(APPLICATION_TYPE, "x-pem-file");
+
+  /**
    * NaCl portable applications. For more information see <a
    * href="https://developer.chrome.com/native-client/devguide/coding/application-structure">the
    * Developer Guide for Native Client Application Structure</a>.
