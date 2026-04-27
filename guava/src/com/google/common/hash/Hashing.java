@@ -231,7 +231,6 @@ public final class Hashing {
    *     </ul>
    */
   @Deprecated
-  @J2ktIncompatible
   public static HashFunction md5() {
     return Md5Holder.MD5;
   }
@@ -253,7 +252,6 @@ public final class Hashing {
    *     </ul>
    */
   @Deprecated
-  @J2ktIncompatible
   public static HashFunction sha1() {
     return Sha1Holder.SHA_1;
   }
@@ -263,7 +261,6 @@ public final class Hashing {
   }
 
   /** Returns a hash function implementing the SHA-256 algorithm (256 hash bits). */
-  @J2ktIncompatible
   public static HashFunction sha256() {
     return Sha256Holder.SHA_256;
   }
