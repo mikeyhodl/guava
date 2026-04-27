@@ -948,8 +948,7 @@ public class ImmutableSortedSetTest extends AbstractImmutableSetTest {
 
   public void testLegacyComparable_builder_natural() {
     // Note: IntelliJ wrongly reports an error for this statement
-    ImmutableSortedSet.Builder<LegacyComparable> builder =
-        ImmutableSortedSet.<LegacyComparable>naturalOrder();
+    ImmutableSortedSet.Builder<LegacyComparable> builder = ImmutableSortedSet.naturalOrder();
 
     builder.addAll(LegacyComparable.VALUES_BACKWARD);
     builder.add(LegacyComparable.X);
@@ -961,8 +960,7 @@ public class ImmutableSortedSetTest extends AbstractImmutableSetTest {
 
   public void testLegacyComparable_builder_reverse() {
     // Note: IntelliJ wrongly reports an error for this statement
-    ImmutableSortedSet.Builder<LegacyComparable> builder =
-        ImmutableSortedSet.<LegacyComparable>reverseOrder();
+    ImmutableSortedSet.Builder<LegacyComparable> builder = ImmutableSortedSet.reverseOrder();
 
     builder.addAll(LegacyComparable.VALUES_FORWARD);
     builder.add(LegacyComparable.X);

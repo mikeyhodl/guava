@@ -77,7 +77,7 @@ import org.jspecify.annotations.Nullable;
  *         }
  *       }
  *
- *       TypeToken<List<String>> stringListType = Util.<String>listType();
+ *       TypeToken<List<String>> stringListType = Util.listType();
  *       }
  *   <li>Capture a generic type with a (usually anonymous) subclass and resolve it against a context
  *       class that knows what the type parameters are. For example:

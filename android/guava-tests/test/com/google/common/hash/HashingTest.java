@@ -284,8 +284,7 @@ public class HashingTest extends TestCase {
   @J2ktIncompatible
   public void testCombineOrdered_empty() {
     assertThrows(
-        IllegalArgumentException.class,
-        () -> Hashing.combineOrdered(Collections.<HashCode>emptySet()));
+        IllegalArgumentException.class, () -> Hashing.combineOrdered(Collections.emptySet()));
   }
 
   @J2ktIncompatible
@@ -332,8 +331,7 @@ public class HashingTest extends TestCase {
   @J2ktIncompatible
   public void testCombineUnordered_empty() {
     assertThrows(
-        IllegalArgumentException.class,
-        () -> Hashing.combineUnordered(Collections.<HashCode>emptySet()));
+        IllegalArgumentException.class, () -> Hashing.combineUnordered(Collections.emptySet()));
   }
 
   @J2ktIncompatible
