@@ -234,7 +234,7 @@ public final class ImmutableNetwork<N, E> extends StandardNetwork<N, E> {
      * Builder}.
      */
     public ImmutableNetwork<N, E> build() {
-      return ImmutableNetwork.copyOf(mutableNetwork);
+      return copyOf(mutableNetwork);
     }
   }
 }

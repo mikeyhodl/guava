@@ -830,7 +830,7 @@ public final class LongMath {
           }
           return result;
         } else {
-          int nBits = LongMath.log2(n, RoundingMode.CEILING);
+          int nBits = log2(n, RoundingMode.CEILING);
 
           long result = 1;
           long numerator = n--;

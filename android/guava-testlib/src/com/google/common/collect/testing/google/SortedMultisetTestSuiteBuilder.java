@@ -162,7 +162,7 @@ public class SortedMultisetTestSuiteBuilder<E> extends MultisetTestSuiteBuilder<
     E firstInclusive = samplesList.get(0);
     E lastInclusive = samplesList.get(samplesList.size() - 1);
 
-    return SortedMultisetTestSuiteBuilder.using(
+    return using(
             new ForwardingTestMultisetGenerator<E>(delegate) {
               @Override
               public SortedMultiset<E> create(Object... entries) {
@@ -244,7 +244,7 @@ public class SortedMultisetTestSuiteBuilder<E> extends MultisetTestSuiteBuilder<
       features.remove(SERIALIZABLE);
     }
 
-    return SortedMultisetTestSuiteBuilder.using(
+    return using(
             new ForwardingTestMultisetGenerator<E>(delegate) {
               @Override
               public SortedMultiset<E> create(Object... entries) {
@@ -270,7 +270,7 @@ public class SortedMultisetTestSuiteBuilder<E> extends MultisetTestSuiteBuilder<
     features.remove(SERIALIZABLE);
     features.remove(SERIALIZABLE_INCLUDING_VIEWS);
 
-    return SortedMultisetTestSuiteBuilder.using(
+    return using(
             new ForwardingTestMultisetGenerator<E>(delegate) {
               @Override
               public SortedMultiset<E> create(Object... entries) {

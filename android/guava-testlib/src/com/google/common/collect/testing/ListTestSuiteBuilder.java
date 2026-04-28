@@ -109,8 +109,7 @@ public final class ListTestSuiteBuilder<E>
 
     if (parentBuilder.getFeatures().contains(SERIALIZABLE)) {
       derivedSuites.add(
-          ListTestSuiteBuilder.using(
-                  new ReserializedListGenerator<E>(parentBuilder.getSubjectGenerator()))
+          using(new ReserializedListGenerator<E>(parentBuilder.getSubjectGenerator()))
               .named(getName() + " reserialized")
               .withFeatures(computeReserializedCollectionFeatures(parentBuilder.getFeatures()))
               .suppressing(parentBuilder.getSuppressedTests())

@@ -386,7 +386,7 @@ public final class BloomFilter<T extends @Nullable Object> implements Predicate<
     checkArgument(fpp > 0.0, "False positive probability (%s) must be > 0.0", fpp);
     checkArgument(fpp < 1.0, "False positive probability (%s) must be < 1.0", fpp);
     return Collector.of(
-        () -> BloomFilter.create(funnel, expectedInsertions, fpp),
+        () -> create(funnel, expectedInsertions, fpp),
         BloomFilter::put,
         (bf1, bf2) -> {
           bf1.putAll(bf2);

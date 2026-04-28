@@ -321,7 +321,7 @@ public abstract class FluentIterable<E extends @Nullable Object> implements Iter
    */
   @SuppressWarnings("EmptyList") // ImmutableList doesn't support nullable element types
   public static <E extends @Nullable Object> FluentIterable<E> of() {
-    return FluentIterable.from(emptyList());
+    return from(emptyList());
   }
 
   /**
@@ -401,7 +401,7 @@ public abstract class FluentIterable<E extends @Nullable Object> implements Iter
    * @since 18.0
    */
   public final FluentIterable<E> append(Iterable<? extends E> other) {
-    return FluentIterable.concat(getDelegate(), other);
+    return concat(getDelegate(), other);
   }
 
   /**
@@ -413,7 +413,7 @@ public abstract class FluentIterable<E extends @Nullable Object> implements Iter
    * @since 18.0
    */
   public final FluentIterable<E> append(E... elements) {
-    return FluentIterable.concat(getDelegate(), asList(elements));
+    return concat(getDelegate(), asList(elements));
   }
 
   /**
@@ -507,7 +507,7 @@ public abstract class FluentIterable<E extends @Nullable Object> implements Iter
    */
   public <T extends @Nullable Object> FluentIterable<T> transformAndConcat(
       Function<? super E, ? extends Iterable<? extends T>> function) {
-    return FluentIterable.concat(transform(function));
+    return concat(transform(function));
   }
 
   /**

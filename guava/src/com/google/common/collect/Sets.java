@@ -1394,7 +1394,7 @@ public final class Sets {
 
     @Override
     public NavigableSet<E> descendingSet() {
-      return Sets.filter(unfiltered().descendingSet(), predicate);
+      return filter(unfiltered().descendingSet(), predicate);
     }
 
     @Override

@@ -168,7 +168,7 @@ public final class CacheBuilderSpec {
   /** Returns a CacheBuilderSpec that will prevent caching. */
   public static CacheBuilderSpec disableCaching() {
     // Maximum size of zero is one way to block caching
-    return CacheBuilderSpec.parse("maximumSize=0");
+    return parse("maximumSize=0");
   }
 
   /** Returns a CacheBuilder configured according to this instance's specification. */

@@ -195,7 +195,7 @@ public class ImmutableGraph<N> extends ForwardingGraph<N> {
      * Returns a newly-created {@code ImmutableGraph} based on the contents of this {@code Builder}.
      */
     public ImmutableGraph<N> build() {
-      return ImmutableGraph.copyOf(mutableGraph);
+      return copyOf(mutableGraph);
     }
   }
 }

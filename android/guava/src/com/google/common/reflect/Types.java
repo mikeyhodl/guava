@@ -125,7 +125,7 @@ final class Types {
       // requireNonNull is safe because we're examining a type that's known to have a superclass.
       ParameterizedType parameterizedType =
           requireNonNull((ParameterizedType) subclass.getGenericSuperclass());
-      for (ClassOwnership behavior : ClassOwnership.values()) {
+      for (ClassOwnership behavior : values()) {
         if (behavior.getOwnerType(LocalClass.class) == parameterizedType.getOwnerType()) {
           return behavior;
         }

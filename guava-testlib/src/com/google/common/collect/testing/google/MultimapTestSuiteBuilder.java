@@ -113,8 +113,7 @@ public class MultimapTestSuiteBuilder<K, V, M extends Multimap<K, V>>
 
     if (parentBuilder.getFeatures().contains(CollectionFeature.SERIALIZABLE)) {
       derivedSuites.add(
-          MultimapTestSuiteBuilder.using(
-                  new ReserializedMultimapGenerator<K, V, M>(parentBuilder.getSubjectGenerator()))
+          using(new ReserializedMultimapGenerator<K, V, M>(parentBuilder.getSubjectGenerator()))
               .withFeatures(computeReserializedMultimapFeatures(parentBuilder.getFeatures()))
               .named(parentBuilder.getName() + " reserialized")
               .suppressing(parentBuilder.getSuppressedTests())

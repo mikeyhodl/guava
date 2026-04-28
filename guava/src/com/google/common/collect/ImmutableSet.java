@@ -679,7 +679,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
 
     @Override
     ImmutableSet<E> build() {
-      return ImmutableSet.of();
+      return of();
     }
   }
 

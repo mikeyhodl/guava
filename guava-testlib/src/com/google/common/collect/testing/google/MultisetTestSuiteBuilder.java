@@ -139,8 +139,7 @@ public class MultisetTestSuiteBuilder<E>
 
     if (parentBuilder.getFeatures().contains(CollectionFeature.SERIALIZABLE)) {
       derivedSuites.add(
-          MultisetTestSuiteBuilder.using(
-                  new ReserializedMultisetGenerator<E>(parentBuilder.getSubjectGenerator()))
+          using(new ReserializedMultisetGenerator<E>(parentBuilder.getSubjectGenerator()))
               .named(getName() + " reserialized")
               .withFeatures(computeReserializedMultisetFeatures(parentBuilder.getFeatures()))
               .suppressing(parentBuilder.getSuppressedTests())

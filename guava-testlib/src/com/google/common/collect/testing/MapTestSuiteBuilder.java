@@ -119,8 +119,7 @@ public class MapTestSuiteBuilder<K, V>
 
     if (parentBuilder.getFeatures().contains(CollectionFeature.SERIALIZABLE)) {
       derivedSuites.add(
-          MapTestSuiteBuilder.using(
-                  new ReserializedMapGenerator<K, V>(parentBuilder.getSubjectGenerator()))
+          using(new ReserializedMapGenerator<K, V>(parentBuilder.getSubjectGenerator()))
               .withFeatures(computeReserializedMapFeatures(parentBuilder.getFeatures()))
               .named(parentBuilder.getName() + " reserialized")
               .suppressing(parentBuilder.getSuppressedTests())

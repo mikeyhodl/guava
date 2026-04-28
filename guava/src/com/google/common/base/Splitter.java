@@ -165,7 +165,7 @@ public final class Splitter {
   public static Splitter on(String separator) {
     checkArgument(!separator.isEmpty(), "The separator may not be the empty string.");
     if (separator.length() == 1) {
-      return Splitter.on(separator.charAt(0));
+      return on(separator.charAt(0));
     }
     return new Splitter(
         (splitter, toSplit) ->

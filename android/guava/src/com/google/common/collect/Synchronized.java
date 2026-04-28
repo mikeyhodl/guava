@@ -1343,7 +1343,7 @@ final class Synchronized {
     public NavigableSet<E> descendingSet() {
       synchronized (mutex) {
         if (descendingSet == null) {
-          NavigableSet<E> dS = Synchronized.navigableSet(delegate().descendingSet(), mutex);
+          NavigableSet<E> dS = navigableSet(delegate().descendingSet(), mutex);
           descendingSet = dS;
           return dS;
         }
@@ -1361,7 +1361,7 @@ final class Synchronized {
     @Override
     public NavigableSet<E> headSet(E toElement, boolean inclusive) {
       synchronized (mutex) {
-        return Synchronized.navigableSet(delegate().headSet(toElement, inclusive), mutex);
+        return navigableSet(delegate().headSet(toElement, inclusive), mutex);
       }
     }
 
@@ -1402,7 +1402,7 @@ final class Synchronized {
     public NavigableSet<E> subSet(
         E fromElement, boolean fromInclusive, E toElement, boolean toInclusive) {
       synchronized (mutex) {
-        return Synchronized.navigableSet(
+        return navigableSet(
             delegate().subSet(fromElement, fromInclusive, toElement, toInclusive), mutex);
       }
     }
@@ -1415,7 +1415,7 @@ final class Synchronized {
     @Override
     public NavigableSet<E> tailSet(E fromElement, boolean inclusive) {
       synchronized (mutex) {
-        return Synchronized.navigableSet(delegate().tailSet(fromElement, inclusive), mutex);
+        return navigableSet(delegate().tailSet(fromElement, inclusive), mutex);
       }
     }
 
@@ -1485,7 +1485,7 @@ final class Synchronized {
     public NavigableSet<K> descendingKeySet() {
       synchronized (mutex) {
         if (descendingKeySet == null) {
-          return descendingKeySet = Synchronized.navigableSet(delegate().descendingKeySet(), mutex);
+          return descendingKeySet = navigableSet(delegate().descendingKeySet(), mutex);
         }
         return descendingKeySet;
       }
@@ -1582,7 +1582,7 @@ final class Synchronized {
     public NavigableSet<K> navigableKeySet() {
       synchronized (mutex) {
         if (navigableKeySet == null) {
-          return navigableKeySet = Synchronized.navigableSet(delegate().navigableKeySet(), mutex);
+          return navigableKeySet = navigableSet(delegate().navigableKeySet(), mutex);
         }
         return navigableKeySet;
       }

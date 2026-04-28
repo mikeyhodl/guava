@@ -326,11 +326,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
       V v8,
       K k9,
       V v9) {
-    /*
-     * This explicit type parameter works around what seems to be a javac bug in certain
-     * configurations: b/339186525#comment6
-     */
-    return ImmutableSortedMap.fromEntries(
+    return fromEntries(
         entryOf(k1, v1),
         entryOf(k2, v2),
         entryOf(k3, v3),

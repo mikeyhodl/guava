@@ -257,7 +257,7 @@ final class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<
     removalListener = builder.getRemovalListener();
     removalNotificationQueue =
         (removalListener == NullListener.INSTANCE)
-            ? LocalCache.discardingQueue()
+            ? discardingQueue()
             : new ConcurrentLinkedQueue<>();
 
     ticker = builder.getTicker(recordsTime());
@@ -1972,12 +1972,11 @@ final class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<
 
       valueReferenceQueue = map.usesValueReferences() ? new ReferenceQueue<>() : null;
 
-      recencyQueue =
-          map.usesAccessQueue() ? new ConcurrentLinkedQueue<>() : LocalCache.discardingQueue();
+      recencyQueue = map.usesAccessQueue() ? new ConcurrentLinkedQueue<>() : discardingQueue();
 
-      writeQueue = map.usesWriteQueue() ? new WriteQueue<>() : LocalCache.discardingQueue();
+      writeQueue = map.usesWriteQueue() ? new WriteQueue<>() : discardingQueue();
 
-      accessQueue = map.usesAccessQueue() ? new AccessQueue<>() : LocalCache.discardingQueue();
+      accessQueue = map.usesAccessQueue() ? new AccessQueue<>() : discardingQueue();
     }
 
     AtomicReferenceArray<ReferenceEntry<K, V>> newEntryArray(int size) {

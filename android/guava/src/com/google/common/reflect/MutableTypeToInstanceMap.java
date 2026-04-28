@@ -129,7 +129,7 @@ public final class MutableTypeToInstanceMap<B extends @Nullable Object>
 
         @Override
         public Iterator<Entry<K, V>> iterator() {
-          return UnmodifiableEntry.transformEntries(super.iterator());
+          return transformEntries(super.iterator());
         }
 
         @Override

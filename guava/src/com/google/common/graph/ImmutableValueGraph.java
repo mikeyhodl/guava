@@ -199,7 +199,7 @@ public final class ImmutableValueGraph<N, V> extends StandardValueGraph<N, V> {
      * Builder}.
      */
     public ImmutableValueGraph<N, V> build() {
-      return ImmutableValueGraph.copyOf(mutableValueGraph);
+      return copyOf(mutableValueGraph);
     }
   }
 }

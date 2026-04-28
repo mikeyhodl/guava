@@ -52,8 +52,7 @@ public class CollectionTestSuiteBuilder<E>
 
     if (parentBuilder.getFeatures().contains(SERIALIZABLE)) {
       derivedSuites.add(
-          CollectionTestSuiteBuilder.using(
-                  new ReserializedCollectionGenerator<E>(parentBuilder.getSubjectGenerator()))
+          using(new ReserializedCollectionGenerator<E>(parentBuilder.getSubjectGenerator()))
               .named(getName() + " reserialized")
               .withFeatures(computeReserializedCollectionFeatures(parentBuilder.getFeatures()))
               .suppressing(parentBuilder.getSuppressedTests())
