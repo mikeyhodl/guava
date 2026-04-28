@@ -18,6 +18,7 @@ package com.google.common.io;
 
 import static com.google.common.base.Strings.repeat;
 import static com.google.common.truth.Truth.assertThat;
+import static java.lang.Math.max;
 import static org.junit.Assert.assertThrows;
 
 import com.google.common.collect.ImmutableList;
@@ -295,7 +296,7 @@ public class CharStreamsTest extends IoTestCase {
         }
         // read fewer than the max number of chars to read
         // shouldn't be a problem unless the buffer is shrinking each call
-        return in.read(cbuf, off, Math.max(len - 1024, 0));
+        return in.read(cbuf, off, max(len - 1024, 0));
       }
     };
   }

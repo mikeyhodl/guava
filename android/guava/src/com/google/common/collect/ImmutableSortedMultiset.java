@@ -16,6 +16,7 @@ package com.google.common.collect;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.CollectPreconditions.checkNonnegative;
 import static com.google.common.collect.Lists.newArrayListWithCapacity;
 
 import com.google.common.annotations.GwtIncompatible;
@@ -595,7 +596,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableMultiset<E>
     @Override
     public Builder<E> addCopies(E element, int occurrences) {
       checkNotNull(element);
-      CollectPreconditions.checkNonnegative(occurrences, "occurrences");
+      checkNonnegative(occurrences, "occurrences");
       if (occurrences == 0) {
         return this;
       }
@@ -620,7 +621,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableMultiset<E>
     @Override
     public Builder<E> setCount(E element, int count) {
       checkNotNull(element);
-      CollectPreconditions.checkNonnegative(count, "count");
+      checkNonnegative(count, "count");
       maintenance();
       elements[length] = element;
       counts[length] = ~count;

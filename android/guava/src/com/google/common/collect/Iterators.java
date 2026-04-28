@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.collect.CollectPreconditions.checkNonnegativeIndex;
 import static com.google.common.collect.CollectPreconditions.checkRemove;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.NullnessCasts.uncheckedCastNullableTToT;
@@ -842,7 +843,7 @@ public final class Iterators {
    */
   @ParametricNullness
   public static <T extends @Nullable Object> T get(Iterator<T> iterator, int position) {
-    checkNonnegative(position);
+    checkNonnegativeIndex(position, "position");
     int skipped = advance(iterator, position);
     if (!iterator.hasNext()) {
       throw new IndexOutOfBoundsException(
@@ -870,15 +871,9 @@ public final class Iterators {
   @ParametricNullness
   public static <T extends @Nullable Object> T get(
       Iterator<? extends T> iterator, int position, @ParametricNullness T defaultValue) {
-    checkNonnegative(position);
+    checkNonnegativeIndex(position, "position");
     advance(iterator, position);
     return getNext(iterator, defaultValue);
-  }
-
-  static void checkNonnegative(int position) {
-    if (position < 0) {
-      throw new IndexOutOfBoundsException("position (" + position + ") must not be negative");
-    }
   }
 
   /**

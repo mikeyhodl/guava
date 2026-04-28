@@ -19,6 +19,7 @@ package com.google.common.io;
 import static com.google.common.io.ByteStreams.newDataInput;
 import static com.google.common.io.ByteStreams.newDataOutput;
 import static com.google.common.truth.Truth.assertThat;
+import static java.lang.Math.min;
 import static java.lang.System.arraycopy;
 import static java.nio.charset.StandardCharsets.US_ASCII;
 import static java.nio.charset.StandardCharsets.UTF_16;
@@ -469,7 +470,7 @@ public class ByteStreamsTest extends IoTestCase {
 
     @Override
     public long skip(long n) throws IOException {
-      return super.skip(Math.min(max, n));
+      return super.skip(min(max, n));
     }
   }
 

@@ -19,10 +19,10 @@ package com.google.common.collect;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.collect.CollectPreconditions.checkNonnegativeIndex;
 import static com.google.common.collect.CollectPreconditions.checkRemove;
 import static com.google.common.collect.Collections2.safeContains;
 import static com.google.common.collect.Iterators.advance;
-import static com.google.common.collect.Iterators.checkNonnegative;
 import static com.google.common.collect.Iterators.consumingIterator;
 import static com.google.common.collect.Iterators.getNext;
 import static com.google.common.collect.Iterators.unmodifiableIterator;
@@ -807,7 +807,7 @@ public final class Iterables {
   public static <T extends @Nullable Object> T get(
       Iterable<? extends T> iterable, int position, @ParametricNullness T defaultValue) {
     checkNotNull(iterable);
-    checkNonnegative(position);
+    checkNonnegativeIndex(position, "position");
     if (iterable instanceof List) {
       List<? extends T> list = (List<? extends T>) iterable;
       return (position < list.size()) ? list.get(position) : defaultValue;
