@@ -30,4 +30,4 @@ import org.jspecify.annotations.NullUnmarked;
 @NullUnmarked
 @J2ktIncompatible
 @GwtIncompatible
-public class PackageSanityTests extends AbstractPackageSanityTests {}
+public class PackageSanityTest extends AbstractPackageSanityTests {}
