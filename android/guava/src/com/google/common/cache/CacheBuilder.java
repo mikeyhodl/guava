@@ -328,7 +328,8 @@ public final class CacheBuilder<K, V> {
    *
    * @since 12.0
    */
-  @GwtIncompatible // To be supported
+  @GwtIncompatible
+  @J2ktIncompatible
   public static CacheBuilder<Object, Object> from(CacheBuilderSpec spec) {
     return spec.toCacheBuilder().lenientParsing();
   }
@@ -340,7 +341,8 @@ public final class CacheBuilder<K, V> {
    * @param spec a String in the format specified by {@link CacheBuilderSpec}
    * @since 12.0
    */
-  @GwtIncompatible // To be supported
+  @GwtIncompatible
+  @J2ktIncompatible
   public static CacheBuilder<Object, Object> from(String spec) {
     return from(CacheBuilderSpec.parse(spec));
   }
@@ -350,7 +352,8 @@ public final class CacheBuilder<K, V> {
    *
    * @return this {@code CacheBuilder} instance (for chaining)
    */
-  @GwtIncompatible // To be supported
+  @GwtIncompatible
+  @J2ktIncompatible
   @CanIgnoreReturnValue
   CacheBuilder<K, V> lenientParsing() {
     strictParsing = false;
@@ -365,7 +368,7 @@ public final class CacheBuilder<K, V> {
    *
    * @return this {@code CacheBuilder} instance (for chaining)
    */
-  @GwtIncompatible // To be supported
+  @GwtIncompatible
   @CanIgnoreReturnValue
   CacheBuilder<K, V> keyEquivalence(Equivalence<Object> equivalence) {
     checkState(keyEquivalence == null, "key equivalence was already set to %s", keyEquivalence);
@@ -386,7 +389,7 @@ public final class CacheBuilder<K, V> {
    *
    * @return this {@code CacheBuilder} instance (for chaining)
    */
-  @GwtIncompatible // To be supported
+  @GwtIncompatible
   @CanIgnoreReturnValue
   CacheBuilder<K, V> valueEquivalence(Equivalence<Object> equivalence) {
     checkState(
@@ -533,7 +536,8 @@ public final class CacheBuilder<K, V> {
    * @throws IllegalStateException if a maximum weight or size was already set
    * @since 11.0
    */
-  @GwtIncompatible // To be supported
+  @J2ktIncompatible
+  @GwtIncompatible
   @CanIgnoreReturnValue
   public CacheBuilder<K, V> maximumWeight(long maximumWeight) {
     checkState(
@@ -576,7 +580,8 @@ public final class CacheBuilder<K, V> {
    *     previously called
    * @since 11.0
    */
-  @GwtIncompatible // To be supported
+  @J2ktIncompatible
+  @GwtIncompatible
   @CanIgnoreReturnValue // TODO(b/27479612): consider removing this
   public <K1 extends K, V1 extends V> CacheBuilder<K1, V1> weigher(
       Weigher<? super K1, ? super V1> weigher) {
@@ -924,7 +929,7 @@ public final class CacheBuilder<K, V> {
    * @since 11.0
    * @deprecated Use {@link #refreshAfterWrite(Duration)} instead.
    */
-  @GwtIncompatible // To be supported (synchronously).
+  @GwtIncompatible
   @Deprecated // GoodTime
   @CanIgnoreReturnValue
   public CacheBuilder<K, V> refreshAfterWrite(long duration, TimeUnit unit) {
