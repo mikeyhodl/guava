@@ -21,6 +21,8 @@ import static com.google.common.collect.Sets.cartesianProduct;
 import static com.google.common.collect.Sets.newHashSet;
 import static com.google.common.collect.Sets.newLinkedHashSet;
 
+import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
@@ -40,6 +42,8 @@ import org.jspecify.annotations.Nullable;
  *
  * @author mike nonemacher
  */
+@GwtIncompatible
+@J2ktIncompatible
 @NullUnmarked
 class CacheBuilderFactory {
   // Default values contain only 'null', which means don't call the CacheBuilder method (just give

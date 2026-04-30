@@ -24,6 +24,8 @@ import static java.util.Arrays.asList;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
+import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.cache.TestingCacheLoaders.IdentityLoader;
 import com.google.common.cache.TestingRemovalListeners.CountingRemovalListener;
 import com.google.common.cache.TestingRemovalListeners.QueuingRemovalListener;
@@ -43,6 +45,8 @@ import org.jspecify.annotations.NullUnmarked;
  * @author mike nonemacher
  */
 @SuppressWarnings("deprecation") // tests of deprecated method
+@GwtIncompatible
+@J2ktIncompatible
 @NullUnmarked
 public class CacheExpirationTest extends TestCase {
 

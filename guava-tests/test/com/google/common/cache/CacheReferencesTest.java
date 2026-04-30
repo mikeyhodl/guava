@@ -19,6 +19,8 @@ import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Maps.immutableEntry;
 import static com.google.common.truth.Truth.assertThat;
 
+import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.cache.LocalCache.Strength;
 import com.google.common.collect.ImmutableSet;
 import java.lang.ref.WeakReference;
@@ -31,6 +33,8 @@ import org.jspecify.annotations.NullUnmarked;
  *
  * @author mike nonemacher
  */
+@GwtIncompatible
+@J2ktIncompatible
 @NullUnmarked
 public class CacheReferencesTest extends TestCase {
 

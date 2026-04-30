@@ -38,6 +38,8 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
+import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.base.Equivalence;
 import com.google.common.base.Ticker;
 import com.google.common.cache.LocalCache.EntryFactory;
@@ -92,6 +94,8 @@ import org.jspecify.annotations.Nullable;
 /**
  * @author Charles Fry
  */
+@GwtIncompatible
+@J2ktIncompatible
 @SuppressWarnings("GuardedBy") // TODO(b/35466881): Fix or suppress.
 @NullUnmarked
 public class LocalCacheTest extends TestCase {
