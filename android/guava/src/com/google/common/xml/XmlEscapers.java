@@ -102,8 +102,8 @@ public class XmlEscapers {
 
   static {
     Escapers.Builder builder = Escapers.builder();
-    // The char values \uFFFE and \uFFFF are explicitly not allowed in XML
-    // (Unicode code points above \uFFFF are represented via surrogate pairs
+    // The char values U+FFFE and U+FFFF are explicitly not allowed in XML
+    // (Unicode code points above U+FFFF are represented via surrogate pairs
     // which means they are treated as pairs of safe characters).
     builder.setSafeRange(Character.MIN_VALUE, '\uFFFD');
     // Unsafe characters are replaced with the Unicode replacement character.
