@@ -58,10 +58,11 @@ public abstract class AbstractNetwork<N, E> implements Network<N, E> {
 
   @Override
   public Graph<N> asGraph() {
+    Network<N, E> network = this;
     return new AbstractGraph<N>() {
       @Override
       public Set<N> nodes() {
-        return AbstractNetwork.this.nodes();
+        return network.nodes();
       }
 
       @Override
@@ -74,12 +75,12 @@ public abstract class AbstractNetwork<N, E> implements Network<N, E> {
         return new AbstractSet<EndpointPair<N>>() {
           @Override
           public Iterator<EndpointPair<N>> iterator() {
-            return transform(AbstractNetwork.this.edges().iterator(), edge -> incidentNodes(edge));
+            return transform(network.edges().iterator(), network::incidentNodes);
           }
 
           @Override
           public int size() {
-            return AbstractNetwork.this.edges().size();
+            return network.edges().size();
           }
 
           // Mostly safe: We check contains(u) before calling successors(u), so we perform unsafe
@@ -101,39 +102,38 @@ public abstract class AbstractNetwork<N, E> implements Network<N, E> {
 
       @Override
       public ElementOrder<N> nodeOrder() {
-        return AbstractNetwork.this.nodeOrder();
+        return network.nodeOrder();
       }
 
       @Override
       public ElementOrder<N> incidentEdgeOrder() {
-        // TODO(b/142723300): Return AbstractNetwork.this.incidentEdgeOrder() once Network has that
-        //   method.
+        // TODO(b/142723300): Return network.incidentEdgeOrder() once Network has that method.
         return ElementOrder.unordered();
       }
 
       @Override
       public boolean isDirected() {
-        return AbstractNetwork.this.isDirected();
+        return network.isDirected();
       }
 
       @Override
       public boolean allowsSelfLoops() {
-        return AbstractNetwork.this.allowsSelfLoops();
+        return network.allowsSelfLoops();
       }
 
       @Override
       public Set<N> adjacentNodes(N node) {
-        return AbstractNetwork.this.adjacentNodes(node);
+        return network.adjacentNodes(node);
       }
 
       @Override
       public Set<N> predecessors(N node) {
-        return AbstractNetwork.this.predecessors(node);
+        return network.predecessors(node);
       }
 
       @Override
       public Set<N> successors(N node) {
-        return AbstractNetwork.this.successors(node);
+        return network.successors(node);
       }
 
       // DO NOT override the AbstractGraph *degree() implementations.

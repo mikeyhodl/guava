@@ -30,6 +30,7 @@ import static com.google.common.graph.GraphConstants.NODE_REMOVED_FROM_GRAPH;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.UnmodifiableIterator;
+import com.google.common.graph.IncidentEdgeSet.EdgeType;
 import com.google.common.math.IntMath;
 import com.google.common.primitives.Ints;
 import java.util.AbstractSet;
@@ -111,7 +112,7 @@ abstract class AbstractBaseGraph<N> implements BaseGraph<N> {
     checkNotNull(node);
     checkArgument(nodes().contains(node), "Node %s is not an element of this graph.", node);
     IncidentEdgeSet<N> incident =
-        new IncidentEdgeSet<N>(this, node, IncidentEdgeSet.EdgeType.BOTH) {
+        new IncidentEdgeSet<N>(this, node, EdgeType.BOTH) {
           @Override
           public UnmodifiableIterator<EndpointPair<N>> iterator() {
             if (graph.isDirected()) {
@@ -249,7 +250,7 @@ abstract class AbstractBaseGraph<N> implements BaseGraph<N> {
         checkNotNull(node);
         checkArgument(nodes().contains(node));
         IncidentEdgeSet<N> incident =
-            new IncidentEdgeSet<N>(this, node, IncidentEdgeSet.EdgeType.INCOMING) {
+            new IncidentEdgeSet<N>(this, node, EdgeType.INCOMING) {
               @Override
               public UnmodifiableIterator<EndpointPair<N>> iterator() {
                 return unmodifiableIterator(
@@ -269,7 +270,7 @@ abstract class AbstractBaseGraph<N> implements BaseGraph<N> {
         checkNotNull(node);
         checkArgument(nodes().contains(node));
         IncidentEdgeSet<N> incident =
-            new IncidentEdgeSet<N>(this, node, IncidentEdgeSet.EdgeType.OUTGOING) {
+            new IncidentEdgeSet<N>(this, node, EdgeType.OUTGOING) {
               @Override
               public UnmodifiableIterator<EndpointPair<N>> iterator() {
                 return unmodifiableIterator(

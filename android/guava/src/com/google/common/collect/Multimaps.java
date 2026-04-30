@@ -45,6 +45,8 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Maps.EntryTransformer;
+import com.google.common.collect.Maps.UnmodifiableEntries;
+import com.google.common.collect.Sets.ImprovedAbstractSet;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.InlineMe;
 import com.google.errorprone.annotations.concurrent.LazyInit;
@@ -1067,7 +1069,7 @@ public final class Multimaps {
     if (entries instanceof Set) {
       return unmodifiableEntrySet((Set<Entry<K, V>>) entries);
     }
-    return new Maps.UnmodifiableEntries<>(unmodifiableCollection(entries));
+    return new UnmodifiableEntries<>(unmodifiableCollection(entries));
   }
 
   /**
@@ -1173,7 +1175,7 @@ public final class Multimaps {
 
     @Override
     public Set<V> get(@ParametricNullness K key) {
-      return new Sets.ImprovedAbstractSet<V>() {
+      return new ImprovedAbstractSet<V>() {
         @Override
         public Iterator<V> iterator() {
           return new Iterator<V>() {
@@ -1276,7 +1278,7 @@ public final class Multimaps {
 
     @Override
     Multiset<K> createKeys() {
-      return new Multimaps.Keys<K, V>(this);
+      return new Keys<>(this);
     }
 
     @Override
