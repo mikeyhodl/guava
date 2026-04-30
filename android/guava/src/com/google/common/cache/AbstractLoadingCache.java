@@ -40,6 +40,7 @@ import java.util.concurrent.ExecutionException;
  * @since 11.0
  */
 @GwtIncompatible
+@J2ktIncompatible // Compiles fine, but hidden for safety because the tests have not been ported
 public abstract class AbstractLoadingCache<K, V> extends AbstractCache<K, V>
     implements LoadingCache<K, V> {
 
@@ -73,8 +74,6 @@ public abstract class AbstractLoadingCache<K, V> extends AbstractCache<K, V>
   }
 
   @Override
-  @GwtIncompatible
-  @J2ktIncompatible
   public void refresh(K key) {
     throw new UnsupportedOperationException();
   }
