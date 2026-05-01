@@ -17,7 +17,9 @@ package com.google.common.reflect;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.reflect.Types.getArrayClass;
 import static com.google.common.reflect.Types.newArrayType;
+import static com.google.common.reflect.Types.newParameterizedTypeWithOwner;
 import static java.lang.Math.max;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
@@ -1057,7 +1059,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
     for (int i = 0; i < typeArgs.length; i++) {
       typeArgs[i] = canonicalizeTypeArg(typeVars[i], typeArgs[i]);
     }
-    return Types.newParameterizedTypeWithOwner(type.getOwnerType(), rawType, typeArgs);
+    return newParameterizedTypeWithOwner(type.getOwnerType(), rawType, typeArgs);
   }
 
   private static Bounds every(Type[] bounds) {
@@ -1124,7 +1126,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
 
       @Override
       void visitGenericArrayType(GenericArrayType t) {
-        builder.add(Types.getArrayClass(of(t.getGenericComponentType()).getRawType()));
+        builder.add(getArrayClass(of(t.getGenericComponentType()).getRawType()));
       }
     }.visit(runtimeType);
     // Cast from ImmutableSet<Class<?>> to ImmutableSet<Class<? super T>>
@@ -1184,8 +1186,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
     if ((typeParams.length > 0) || ((ownerType != null) && ownerType != cls.getEnclosingClass())) {
       @SuppressWarnings("unchecked") // Like, it's Iterable<T> for Iterable.class
       TypeToken<? extends T> type =
-          (TypeToken<? extends T>)
-              of(Types.newParameterizedTypeWithOwner(ownerType, cls, typeParams));
+          (TypeToken<? extends T>) of(newParameterizedTypeWithOwner(ownerType, cls, typeParams));
       return type;
     } else {
       return of(cls);

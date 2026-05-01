@@ -17,8 +17,10 @@ package com.google.common.reflect;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.reflect.Types.getComponentType;
 import static com.google.common.reflect.Types.newArrayType;
 import static com.google.common.reflect.Types.newArtificialTypeVariable;
+import static com.google.common.reflect.Types.newParameterizedTypeWithOwner;
 import static java.util.Arrays.asList;
 
 import com.google.common.base.Joiner;
@@ -190,7 +192,7 @@ public final class TypeResolver {
         if (to instanceof WildcardType) {
           return; // Okay to say A[] is <?>
         }
-        Type componentType = Types.getComponentType(to);
+        Type componentType = getComponentType(to);
         checkArgument(componentType != null, "%s is not an array type.", to);
         populateTypeMappings(mappings, fromArrayType.getGenericComponentType(), componentType);
       }
@@ -263,8 +265,7 @@ public final class TypeResolver {
 
     Type[] args = type.getActualTypeArguments();
     Type[] resolvedArgs = resolveTypes(args);
-    return Types.newParameterizedTypeWithOwner(
-        resolvedOwner, (Class<?>) resolvedRawType, resolvedArgs);
+    return newParameterizedTypeWithOwner(resolvedOwner, (Class<?>) resolvedRawType, resolvedArgs);
   }
 
   private static <T> T expectArgument(Class<T> type, Object arg) {
@@ -499,7 +500,7 @@ public final class TypeResolver {
         for (int i = 0; i < typeArgs.length; i++) {
           typeArgs[i] = forTypeVariable(typeVars[i]).capture(typeArgs[i]);
         }
-        return Types.newParameterizedTypeWithOwner(
+        return newParameterizedTypeWithOwner(
             notForTypeVariable().captureNullable(parameterizedType.getOwnerType()),
             rawType,
             typeArgs);
