@@ -19,7 +19,6 @@ package com.google.common.testing;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.throwIfUnchecked;
 import static com.google.common.collect.Lists.newArrayListWithCapacity;
-import static com.google.common.collect.Maps.newConcurrentMap;
 import static com.google.common.collect.Maps.newTreeMap;
 import static com.google.common.collect.Sets.newTreeSet;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -118,6 +117,7 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
@@ -781,12 +781,12 @@ class FreshValueGenerator {
 
   @Empty
   static <K, V> ConcurrentMap<K, V> generateConcurrentMap() {
-    return newConcurrentMap();
+    return new ConcurrentHashMap<>();
   }
 
   @Generates
   static <K, V> ConcurrentMap<K, V> generateConcurrentMap(K key, V value) {
-    ConcurrentMap<K, V> map = newConcurrentMap();
+    ConcurrentMap<K, V> map = new ConcurrentHashMap<>();
     map.put(key, value);
     return map;
   }

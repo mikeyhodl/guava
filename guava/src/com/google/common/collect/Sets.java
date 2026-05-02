@@ -29,7 +29,6 @@ import static com.google.common.collect.Iterators.unmodifiableIterator;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.capacity;
 import static com.google.common.collect.Maps.indexMap;
-import static com.google.common.collect.Maps.newIdentityHashMap;
 import static com.google.common.math.IntMath.saturatedAdd;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -55,6 +54,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -236,7 +236,7 @@ public final class Sets {
   @SuppressWarnings("NonApiType") // acts as a direct substitute for a constructor call
   public static <E extends @Nullable Object> HashSet<E> newHashSet(Iterable<? extends E> elements) {
     return (elements instanceof Collection)
-        ? new HashSet<E>((Collection<? extends E>) elements)
+        ? new HashSet<>((Collection<? extends E>) elements)
         : newHashSet(elements.iterator());
   }
 
@@ -462,7 +462,7 @@ public final class Sets {
    * @since 8.0
    */
   public static <E extends @Nullable Object> Set<E> newIdentityHashSet() {
-    return Collections.newSetFromMap(newIdentityHashMap());
+    return Collections.newSetFromMap(new IdentityHashMap<>());
   }
 
   /**
@@ -572,7 +572,7 @@ public final class Sets {
    * in the following code fragment:
    *
    * {@snippet :
-   * Set<Object> identityHashSet = Sets.newSetFromMap(new IdentityHashMap<Object, Boolean>());
+   * Set<Object> identityHashSet = Sets.newSetFromMap(new IdentityHashMap<>());
    * }
    *
    * <p>The returned set is serializable if the backing map is.
@@ -1581,7 +1581,7 @@ public final class Sets {
               return super.writeReplace();
             }
           };
-      return new CartesianSet<E>(axes, new CartesianList<E>(listAxes));
+      return new CartesianSet<>(axes, new CartesianList<>(listAxes));
     }
 
     private CartesianSet(ImmutableList<ImmutableSet<E>> axes, CartesianList<E> delegate) {
@@ -1676,7 +1676,7 @@ public final class Sets {
    * @since 4.0
    */
   public static <E> Set<Set<E>> powerSet(Set<E> set) {
-    return new PowerSet<E>(set);
+    return new PowerSet<>(set);
   }
 
   private static final class SubSet<E> extends AbstractSet<E> {
@@ -2077,7 +2077,7 @@ public final class Sets {
    * {@code tailSet} views.
    *
    * {@snippet :
-   * NavigableSet<E> set = synchronizedNavigableSet(new TreeSet<E>());
+   * NavigableSet<E> set = synchronizedNavigableSet(new TreeSet<>());
    *  ...
    * synchronized (set) {
    *   // Must be in the synchronized block
@@ -2091,7 +2091,7 @@ public final class Sets {
    * <p>or:
    *
    * {@snippet :
-   * NavigableSet<E> set = synchronizedNavigableSet(new TreeSet<E>());
+   * NavigableSet<E> set = synchronizedNavigableSet(new TreeSet<>());
    * NavigableSet<E> set2 = set.descendingSet().headSet(foo);
    * ...
    * synchronized (set) { // Note: set, not set2!!!
@@ -2241,7 +2241,7 @@ public final class Sets {
     public Comparator<? super E> comparator() {
       Comparator<? super E> forwardComparator = forward.comparator();
       if (forwardComparator == null) {
-        return (Comparator) Ordering.natural().reverse();
+        return (Comparator<? super E>) Ordering.natural().reverse();
       } else {
         return reverse(forwardComparator);
       }

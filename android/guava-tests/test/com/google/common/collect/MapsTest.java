@@ -17,6 +17,9 @@
 package com.google.common.collect;
 
 import static com.google.common.collect.Maps.immutableEntry;
+import static com.google.common.collect.Maps.newConcurrentMap;
+import static com.google.common.collect.Maps.newEnumMap;
+import static com.google.common.collect.Maps.newIdentityHashMap;
 import static com.google.common.collect.Maps.toMap;
 import static com.google.common.collect.Maps.transformEntries;
 import static com.google.common.collect.Maps.transformValues;
@@ -35,6 +38,7 @@ import static org.junit.Assert.assertThrows;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
+import com.google.common.base.Ascii;
 import com.google.common.base.Converter;
 import com.google.common.base.Equivalence;
 import com.google.common.base.Function;
@@ -277,15 +281,18 @@ public class MapsTest extends TestCase {
     assertEquals(original, map);
   }
 
-  // Intentionally using IdentityHashMap to test creation.
-  @SuppressWarnings("IdentityHashMapBoxing")
+  @SuppressWarnings({
+    "IdentityHashMapBoxing", // Intentionally using IdentityHashMap to test creation.
+    "UseCollectionConstructor", // We need to test our factory method.
+  })
   public void testIdentityHashMap() {
-    IdentityHashMap<Integer, Integer> map = Maps.newIdentityHashMap();
+    IdentityHashMap<Integer, Integer> map = newIdentityHashMap();
     assertEquals(emptyMap(), map);
   }
 
+  @SuppressWarnings("UseCollectionConstructor") // We need to test our factory method.
   public void testConcurrentMap() {
-    ConcurrentMap<Integer, Integer> map = Maps.newConcurrentMap();
+    ConcurrentMap<Integer, Integer> map = newConcurrentMap();
     assertEquals(emptyMap(), map);
   }
 
@@ -337,43 +344,47 @@ public class MapsTest extends TestCase {
     SOME_INSTANCE
   }
 
+  @SuppressWarnings("UseCollectionConstructor") // We need to test our factory method.
   public void testEnumMap() {
-    EnumMap<SomeEnum, Integer> map = Maps.newEnumMap(SomeEnum.class);
+    EnumMap<SomeEnum, Integer> map = newEnumMap(SomeEnum.class);
     assertEquals(emptyMap(), map);
     map.put(SomeEnum.SOME_INSTANCE, 0);
     assertEquals(singletonMap(SomeEnum.SOME_INSTANCE, 0), map);
   }
 
+  @SuppressWarnings("UseCollectionConstructor") // We need to test our factory method.
   public void testEnumMapNullClass() {
-    assertThrows(
-        NullPointerException.class,
-        () -> Maps.<SomeEnum, Long>newEnumMap((Class<MapsTest.SomeEnum>) null));
+    assertThrows(NullPointerException.class, () -> newEnumMap((Class<SomeEnum>) null));
   }
 
+  @SuppressWarnings("UseCollectionConstructor") // We need to test our factory method.
   public void testEnumMapWithInitialEnumMap() {
-    EnumMap<SomeEnum, Integer> original = Maps.newEnumMap(SomeEnum.class);
+    EnumMap<SomeEnum, Integer> original = newEnumMap(SomeEnum.class);
     original.put(SomeEnum.SOME_INSTANCE, 0);
-    EnumMap<SomeEnum, Integer> copy = Maps.newEnumMap(original);
+    EnumMap<SomeEnum, Integer> copy = newEnumMap(original);
     assertEquals(original, copy);
   }
 
+  @SuppressWarnings("UseCollectionConstructor") // We need to test our factory method.
   public void testEnumMapWithInitialEmptyEnumMap() {
-    EnumMap<SomeEnum, Integer> original = Maps.newEnumMap(SomeEnum.class);
-    EnumMap<SomeEnum, Integer> copy = Maps.newEnumMap(original);
+    EnumMap<SomeEnum, Integer> original = newEnumMap(SomeEnum.class);
+    EnumMap<SomeEnum, Integer> copy = newEnumMap(original);
     assertEquals(original, copy);
     assertThat(copy).isNotSameInstanceAs(original);
   }
 
+  @SuppressWarnings("UseCollectionConstructor") // We need to test our factory method.
   public void testEnumMapWithInitialMap() {
     HashMap<SomeEnum, Integer> original = new HashMap<>();
     original.put(SomeEnum.SOME_INSTANCE, 0);
-    EnumMap<SomeEnum, Integer> copy = Maps.newEnumMap(original);
+    EnumMap<SomeEnum, Integer> copy = newEnumMap(original);
     assertEquals(original, copy);
   }
 
+  @SuppressWarnings("UseCollectionConstructor") // We need to test our factory method.
   public void testEnumMapWithInitialEmptyMap() {
     Map<SomeEnum, Integer> original = new HashMap<>();
-    assertThrows(IllegalArgumentException.class, () -> Maps.newEnumMap(original));
+    assertThrows(IllegalArgumentException.class, () -> newEnumMap(original));
   }
 
   public void testToStringImplWithNullKeys() throws Exception {
@@ -484,17 +495,8 @@ public class MapsTest extends TestCase {
     Map<Integer, String> left = ImmutableMap.of(1, "a", 2, "b", 3, "c", 4, "d", 5, "e");
     Map<Integer, String> right = ImmutableMap.of(1, "A", 3, "F", 5, "G", 6, "Z");
 
-    // TODO(kevinb): replace with Ascii.caseInsensitiveEquivalence() when it
-    // exists
     Equivalence<String> caseInsensitiveEquivalence =
-        Equivalence.equals()
-            .onResultOf(
-                new Function<String, String>() {
-                  @Override
-                  public String apply(String input) {
-                    return input.toLowerCase();
-                  }
-                });
+        Equivalence.equals().onResultOf(Ascii::toLowerCase);
 
     MapDifference<Integer, String> diff1 = Maps.difference(left, right, caseInsensitiveEquivalence);
     assertFalse(diff1.areEqual());

@@ -21,8 +21,11 @@ import static com.google.common.collect.Iterables.elementsEqual;
 import static com.google.common.collect.Lists.cartesianProduct;
 import static com.google.common.collect.Lists.charactersOf;
 import static com.google.common.collect.Lists.computeArrayListCapacity;
+import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newArrayListWithCapacity;
 import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
+import static com.google.common.collect.Lists.newCopyOnWriteArrayList;
+import static com.google.common.collect.Lists.newLinkedList;
 import static com.google.common.collect.Lists.partition;
 import static com.google.common.collect.Lists.transform;
 import static com.google.common.collect.testing.IteratorFeature.UNMODIFIABLE;
@@ -95,7 +98,7 @@ public class ListsTest extends TestCase {
     @GwtIncompatible @J2ktIncompatible private static final long serialVersionUID = 0;
   }
 
-  private static final List<Integer> SOME_LIST = Lists.newArrayList(1, 2, 3, 4);
+  private static final ImmutableList<Integer> SOME_LIST = ImmutableList.of(1, 2, 3, 4);
 
   private static final List<Integer> SOME_SEQUENTIAL_LIST = new LinkedList<>(asList(1, 2, 3, 4));
 
@@ -201,7 +204,7 @@ public class ListsTest extends TestCase {
                 new TestStringListGenerator() {
                   @Override
                   protected List<String> create(String[] elements) {
-                    List<String> fromList = Lists.newArrayList(elements);
+                    List<String> fromList = newArrayList(elements);
                     return transform(fromList, Functions.identity());
                   }
                 })
@@ -331,7 +334,7 @@ public class ListsTest extends TestCase {
 
   public void testNewArrayListEmpty() {
     @SuppressWarnings("UseCollectionConstructor") // test of factory method
-    ArrayList<Integer> list = Lists.newArrayList();
+    ArrayList<Integer> list = newArrayList();
     assertEquals(emptyList(), list);
   }
 
@@ -360,8 +363,8 @@ public class ListsTest extends TestCase {
   }
 
   public void testNewArrayListVarArgs() {
-    ArrayList<Integer> list = Lists.newArrayList(0, 1, 1);
-    assertEquals(SOME_COLLECTION, list);
+    ArrayList<Integer> list = newArrayList(0, 1, 1);
+    assertThat(list).containsExactly(0, 1, 1).inOrder();
   }
 
   public void testComputeArrayListCapacity() {
@@ -374,49 +377,51 @@ public class ListsTest extends TestCase {
 
   public void testNewArrayListFromCollection() {
     @SuppressWarnings("UseCollectionConstructor") // test of factory method
-    ArrayList<Integer> list = Lists.newArrayList(SOME_COLLECTION);
-    assertEquals(SOME_COLLECTION, list);
+    ArrayList<Integer> list = newArrayList(SOME_COLLECTION);
+    assertThat(list).containsExactlyElementsIn(SOME_COLLECTION).inOrder();
   }
 
   public void testNewArrayListFromIterable() {
-    ArrayList<Integer> list = Lists.newArrayList(SOME_ITERABLE);
-    assertEquals(SOME_COLLECTION, list);
+    ArrayList<Integer> list = newArrayList(SOME_ITERABLE);
+    assertThat(list).containsExactlyElementsIn(SOME_COLLECTION).inOrder();
   }
 
   public void testNewArrayListFromIterator() {
-    ArrayList<Integer> list = Lists.newArrayList(SOME_COLLECTION.iterator());
-    assertEquals(SOME_COLLECTION, list);
+    ArrayList<Integer> list = newArrayList(SOME_COLLECTION.iterator());
+    assertThat(list).containsExactlyElementsIn(SOME_COLLECTION).inOrder();
   }
 
   public void testNewLinkedListEmpty() {
     @SuppressWarnings("UseCollectionConstructor") // test of factory method
-    LinkedList<Integer> list = Lists.newLinkedList();
+    LinkedList<Integer> list = newLinkedList();
     assertEquals(emptyList(), list);
   }
 
   public void testNewLinkedListFromCollection() {
     @SuppressWarnings("UseCollectionConstructor") // test of factory method
-    LinkedList<Integer> list = Lists.newLinkedList(SOME_COLLECTION);
-    assertEquals(SOME_COLLECTION, list);
+    LinkedList<Integer> list = newLinkedList(SOME_COLLECTION);
+    assertThat(list).containsExactlyElementsIn(SOME_COLLECTION).inOrder();
   }
 
   public void testNewLinkedListFromIterable() {
-    LinkedList<Integer> list = Lists.newLinkedList(SOME_ITERABLE);
-    assertEquals(SOME_COLLECTION, list);
+    LinkedList<Integer> list = newLinkedList(SOME_ITERABLE);
+    assertThat(list).containsExactlyElementsIn(SOME_COLLECTION).inOrder();
   }
 
+  // We need to test our factory method.
+  @SuppressWarnings({"UseCollectionConstructor", "InlineMeInliner"})
   @J2ktIncompatible
   @GwtIncompatible // CopyOnWriteArrayList
   public void testNewCOWALEmpty() {
-    CopyOnWriteArrayList<Integer> list = Lists.newCopyOnWriteArrayList();
+    CopyOnWriteArrayList<Integer> list = newCopyOnWriteArrayList();
     assertEquals(emptyList(), list);
   }
 
   @J2ktIncompatible
   @GwtIncompatible // CopyOnWriteArrayList
   public void testNewCOWALFromIterable() {
-    CopyOnWriteArrayList<Integer> list = Lists.newCopyOnWriteArrayList(SOME_ITERABLE);
-    assertEquals(SOME_COLLECTION, list);
+    CopyOnWriteArrayList<Integer> list = newCopyOnWriteArrayList(SOME_ITERABLE);
+    assertThat(list).containsExactlyElementsIn(SOME_COLLECTION).inOrder();
   }
 
   @J2ktIncompatible
@@ -431,7 +436,7 @@ public class ListsTest extends TestCase {
    * Lists#newArrayList}.
    */
   public void testArraysAsList() {
-    List<String> ourWay = Lists.newArrayList("foo", "bar", "baz");
+    List<String> ourWay = newArrayList("foo", "bar", "baz");
     List<String> otherWay = asList("foo", "bar", "baz");
 
     // They're logically equal

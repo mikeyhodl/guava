@@ -18,7 +18,6 @@ package com.google.common.testing;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.Maps.newConcurrentMap;
 import static java.util.Arrays.stream;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Stream.concat;
@@ -46,9 +45,10 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentMap;
 import junit.framework.Assert;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -313,8 +313,10 @@ public final class NullPointerTester {
       return builder.build();
     }
 
+    // TODO(cpovirk): Disable Animal Sniffer entirely for guava-testlib?
+    @IgnoreJRERequirement // see comment on other @IgnoreJRERequirement annotation above
     final Iterable<Method> getInstanceMethods(Class<?> cls) {
-      ConcurrentMap<Signature, Method> map = newConcurrentMap();
+      Map<Signature, Method> map = new HashMap<>();
       for (Method method : getVisibleMethods(cls)) {
         if (!Invokable.from(method).isStatic()) {
           map.putIfAbsent(new Signature(method), method);

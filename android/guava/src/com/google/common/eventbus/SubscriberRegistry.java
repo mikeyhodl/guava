@@ -18,7 +18,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterators.concat;
 import static com.google.common.collect.Lists.newArrayListWithCapacity;
-import static com.google.common.collect.Maps.newConcurrentMap;
 import static java.util.Arrays.asList;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -43,6 +42,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import org.jspecify.annotations.Nullable;
@@ -61,7 +61,7 @@ final class SubscriberRegistry {
    * immutable snapshot of all current subscribers to an event without any locking.
    */
   private final ConcurrentMap<Class<?>, CopyOnWriteArraySet<Subscriber>> subscribers =
-      newConcurrentMap();
+      new ConcurrentHashMap<>();
 
   /** The event bus this registry belongs to. */
   @Weak private final EventBus bus;

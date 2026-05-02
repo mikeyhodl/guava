@@ -20,7 +20,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Predicates.alwaysTrue;
 import static com.google.common.collect.Iterators.peekingIterator;
 import static com.google.common.collect.Maps.difference;
-import static com.google.common.collect.Maps.newConcurrentMap;
 import static com.google.common.collect.Maps.newTreeMap;
 import static com.google.common.collect.Maps.unmodifiableNavigableMap;
 import static com.google.common.collect.Sets.newTreeSet;
@@ -197,6 +196,7 @@ public final class ArbitraryInstances {
    * in Android) requires a successful match in order to generate a {@code MatchResult}:
    * https://cs.android.com/android/platform/superproject/+/android-2.3.7_r1:libcore/luni/src/main/java/java/util/regex/Matcher.java;l=550;drc=5850271b4ab93ebc27c1d49169a348c6be3c7f04
    */
+  @SuppressWarnings("BareDotMetacharacter") // A trivial match is fine for our purposes.
   private static MatchResult createMatchResult() {
     Matcher matcher = Pattern.compile(".").matcher("X");
     matcher.find();
@@ -310,7 +310,8 @@ public final class ArbitraryInstances {
    * type → implementation. Inherently mutable interfaces and abstract classes are mapped to their
    * default implementations and are "new"d upon get().
    */
-  private static final ConcurrentMap<Class<?>, Class<?>> implementations = newConcurrentMap();
+  private static final ConcurrentMap<Class<?>, Class<?>> implementations =
+      new ConcurrentHashMap<>();
 
   private static <T> void setImplementation(Class<T> type, Class<? extends T> implementation) {
     checkArgument(type != implementation, "Don't register %s to itself!", type);

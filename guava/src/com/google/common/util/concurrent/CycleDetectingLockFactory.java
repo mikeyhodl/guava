@@ -16,7 +16,6 @@ package com.google.common.util.concurrent;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.newArrayListWithCapacity;
-import static com.google.common.collect.Maps.newEnumMap;
 import static com.google.common.collect.Sets.newIdentityHashSet;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Objects.requireNonNull;
@@ -300,7 +299,7 @@ public class CycleDetectingLockFactory {
    */
   @VisibleForTesting
   static <E extends Enum<E>> Map<E, LockGraphNode> createNodes(Class<E> clazz) {
-    EnumMap<E, LockGraphNode> map = newEnumMap(clazz);
+    EnumMap<E, LockGraphNode> map = new EnumMap<>(clazz);
     E[] keys = clazz.getEnumConstants();
     int numKeys = keys.length;
     ArrayList<LockGraphNode> nodes = newArrayListWithCapacity(numKeys);

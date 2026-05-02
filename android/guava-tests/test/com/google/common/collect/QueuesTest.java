@@ -253,12 +253,14 @@ public class QueuesTest extends TestCase {
     assertEquals(100, buf.size());
   }
 
+  @SuppressWarnings("UseCollectionConstructor") // We need to test our factory method.
   public void testNewLinkedBlockingDequeCapacity() {
     assertThrows(IllegalArgumentException.class, () -> newLinkedBlockingDeque(0));
     assertEquals(1, newLinkedBlockingDeque(1).remainingCapacity());
     assertEquals(11, newLinkedBlockingDeque(11).remainingCapacity());
   }
 
+  @SuppressWarnings("UseCollectionConstructor") // We need to test our factory method.
   public void testNewLinkedBlockingQueueCapacity() {
     assertThrows(IllegalArgumentException.class, () -> newLinkedBlockingQueue(0));
     assertEquals(1, newLinkedBlockingQueue(1).remainingCapacity());

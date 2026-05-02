@@ -19,7 +19,6 @@ package com.google.common.collect;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Predicates.in;
 import static com.google.common.collect.Maps.immutableEntry;
-import static com.google.common.collect.Maps.newEnumMap;
 import static com.google.common.collect.Maps.newTreeMap;
 import static com.google.common.collect.Multimaps.filterKeys;
 import static com.google.common.collect.Multimaps.flatteningToMultimap;
@@ -61,6 +60,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -652,7 +652,7 @@ public class MultimapsTest extends TestCase {
           }
         };
 
-    Map<Color, Collection<Integer>> map = newEnumMap(Color.class);
+    Map<Color, Collection<Integer>> map = new EnumMap<>(Color.class);
     Multimap<Color, Integer> multimap = Multimaps.newMultimap(map, factory);
     assertThrows(IllegalArgumentException.class, () -> multimap.put(Color.BLUE, -1));
     multimap.put(Color.RED, 1);
@@ -666,7 +666,7 @@ public class MultimapsTest extends TestCase {
     // The ubiquitous EnumLinkedListMultimap
     CountingSupplier<Queue<Integer>> factory = new QueueSupplier();
 
-    Map<Color, Collection<Integer>> map = newEnumMap(Color.class);
+    Map<Color, Collection<Integer>> map = new EnumMap<>(Color.class);
     Multimap<Color, Integer> multimap = Multimaps.newMultimap(map, factory);
     assertEquals(0, factory.count);
     multimap.putAll(Color.BLUE, asList(3, 1, 4));
@@ -688,14 +688,14 @@ public class MultimapsTest extends TestCase {
 
   public void testNewMultimapValueCollectionMatchesNavigableSet() {
     Supplier<TreeSet<Integer>> factory = new SortedSetSupplier();
-    Map<Color, Collection<Integer>> map = newEnumMap(Color.class);
+    Map<Color, Collection<Integer>> map = new EnumMap<>(Color.class);
     Multimap<Color, Integer> multimap = Multimaps.newMultimap(map, factory);
     assertTrue(multimap.get(Color.BLUE) instanceof NavigableSet);
   }
 
   public void testNewMultimapValueCollectionMatchesList() {
     Supplier<LinkedList<Integer>> factory = new ListSupplier();
-    Map<Color, Collection<Integer>> map = newEnumMap(Color.class);
+    Map<Color, Collection<Integer>> map = new EnumMap<>(Color.class);
     Multimap<Color, Integer> multimap = Multimaps.newMultimap(map, factory);
     assertTrue(multimap.get(Color.BLUE) instanceof List);
   }
@@ -704,7 +704,7 @@ public class MultimapsTest extends TestCase {
   @GwtIncompatible // SerializableTester
   public void testNewMultimapSerialization() {
     CountingSupplier<Queue<Integer>> factory = new QueueSupplier();
-    Map<Color, Collection<Integer>> map = newEnumMap(Color.class);
+    Map<Color, Collection<Integer>> map = new EnumMap<>(Color.class);
     Multimap<Color, Integer> multimap = Multimaps.newMultimap(map, factory);
     multimap.putAll(Color.BLUE, asList(3, 1, 4));
     multimap.putAll(Color.RED, asList(2, 7, 1, 8));
@@ -790,7 +790,7 @@ public class MultimapsTest extends TestCase {
 
   public void testNewSortedSetMultimap() {
     CountingSupplier<TreeSet<Integer>> factory = new SortedSetSupplier();
-    Map<Color, Collection<Integer>> map = newEnumMap(Color.class);
+    Map<Color, Collection<Integer>> map = new EnumMap<>(Color.class);
     SortedSetMultimap<Color, Integer> multimap = Multimaps.newSortedSetMultimap(map, factory);
     // newSortedSetMultimap calls the factory once to determine the comparator.
     assertEquals(1, factory.count);
@@ -806,7 +806,7 @@ public class MultimapsTest extends TestCase {
   @GwtIncompatible // SerializableTester
   public void testNewSortedSetMultimapSerialization() {
     CountingSupplier<TreeSet<Integer>> factory = new SortedSetSupplier();
-    Map<Color, Collection<Integer>> map = newEnumMap(Color.class);
+    Map<Color, Collection<Integer>> map = new EnumMap<>(Color.class);
     SortedSetMultimap<Color, Integer> multimap = Multimaps.newSortedSetMultimap(map, factory);
     multimap.putAll(Color.BLUE, asList(3, 1, 4));
     multimap.putAll(Color.RED, asList(2, 7, 1, 8));

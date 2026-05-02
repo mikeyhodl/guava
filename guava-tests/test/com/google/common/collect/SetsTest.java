@@ -19,6 +19,7 @@ package com.google.common.collect;
 import static com.google.common.collect.Iterables.unmodifiableIterable;
 import static com.google.common.collect.Sets.cartesianProduct;
 import static com.google.common.collect.Sets.immutableEnumSet;
+import static com.google.common.collect.Sets.newCopyOnWriteArraySet;
 import static com.google.common.collect.Sets.newEnumSet;
 import static com.google.common.collect.Sets.newHashSet;
 import static com.google.common.collect.Sets.newIdentityHashSet;
@@ -562,17 +563,18 @@ public class SetsTest extends TestCase {
     assertEquals(2, set.size());
   }
 
+  @SuppressWarnings("UseCollectionConstructor") // We need to test our factory method.
   @J2ktIncompatible
   @GwtIncompatible // CopyOnWriteArraySet
   public void testNewCOWASEmpty() {
-    CopyOnWriteArraySet<Integer> set = Sets.newCopyOnWriteArraySet();
+    CopyOnWriteArraySet<Integer> set = newCopyOnWriteArraySet();
     verifySetContents(set, EMPTY_COLLECTION);
   }
 
   @J2ktIncompatible
   @GwtIncompatible // CopyOnWriteArraySet
   public void testNewCOWASFromIterable() {
-    CopyOnWriteArraySet<Integer> set = Sets.newCopyOnWriteArraySet(SOME_ITERABLE);
+    CopyOnWriteArraySet<Integer> set = newCopyOnWriteArraySet(SOME_ITERABLE);
     verifySetContents(set, SOME_COLLECTION);
   }
 
