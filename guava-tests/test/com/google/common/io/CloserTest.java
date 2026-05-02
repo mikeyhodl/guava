@@ -275,7 +275,7 @@ public class CloserTest extends TestCase {
         new Suppression(c1, c3Exception, c1Exception));
   }
 
-  public static void testSuppressingSuppressor() throws IOException {
+  public void testSuppressingSuppressor() throws IOException {
     Closer closer = Closer.create();
 
     IOException thrownException = new IOException();
