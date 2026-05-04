@@ -43,19 +43,24 @@ import org.jspecify.annotations.Nullable;
 @NullUnmarked
 @GwtIncompatible
 @J2ktIncompatible
-public class ListenableFutureTester {
-
+final class ListenableFutureTester {
   private final ExecutorService exec;
   private final ListenableFuture<?> future;
   private final CountDownLatch latch;
 
-  public ListenableFutureTester(ListenableFuture<?> future) {
+  static ListenableFutureTester register(ListenableFuture<?> future) {
+    ListenableFutureTester tester = new ListenableFutureTester(future);
+    tester.setUp();
+    return tester;
+  }
+
+  private ListenableFutureTester(ListenableFuture<?> future) {
     this.exec = newCachedThreadPool();
     this.future = checkNotNull(future);
     this.latch = new CountDownLatch(1);
   }
 
-  public void setUp() {
+  private void setUp() {
     future.addListener(latch::countDown, exec);
 
     assertEquals(1, latch.getCount());
@@ -63,11 +68,11 @@ public class ListenableFutureTester {
     assertFalse(future.isCancelled());
   }
 
-  public void tearDown() {
+  void tearDown() {
     exec.shutdown();
   }
 
-  public void testCompletedFuture(@Nullable Object expectedValue)
+  void testCompletedFuture(@Nullable Object expectedValue)
       throws InterruptedException, ExecutionException {
     assertTrue(future.isDone());
     assertFalse(future.isCancelled());
@@ -79,7 +84,7 @@ public class ListenableFutureTester {
     assertEquals(expectedValue, future.get());
   }
 
-  public void testCancelledFuture() throws InterruptedException, ExecutionException {
+  void testCancelledFuture() throws InterruptedException, ExecutionException {
     assertTrue(future.isDone());
     assertTrue(future.isCancelled());
 
@@ -90,7 +95,7 @@ public class ListenableFutureTester {
     assertThrows(CancellationException.class, future::get);
   }
 
-  public void testFailedFuture(@Nullable String message) throws InterruptedException {
+  void testFailedFuture(@Nullable String message) throws InterruptedException {
     assertTrue(future.isDone());
     assertFalse(future.isCancelled());
 

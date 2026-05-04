@@ -37,12 +37,16 @@ import org.jspecify.annotations.NullUnmarked;
  */
 @NullUnmarked
 @GwtIncompatible
-@J2ktIncompatible
 public class ExecutionListTest extends TestCase {
-
   private final ExecutionList list = new ExecutionList();
 
+  @J2ktIncompatible
   public void testRunOnPopulatedList() throws Exception {
+    doTestRunOnPopulatedList();
+  }
+
+  @J2ktIncompatible
+  private void doTestRunOnPopulatedList() throws Exception {
     Executor exec = newCachedThreadPool();
     CountDownLatch countDownLatch = new CountDownLatch(3);
     list.add(new MockRunnable(countDownLatch), exec);
@@ -65,6 +69,7 @@ public class ExecutionListTest extends TestCase {
     assertEquals(1, runCalled.get());
   }
 
+  @J2ktIncompatible
   public void testExecute_idempotentConcurrently() throws InterruptedException {
     CountDownLatch okayToRun = new CountDownLatch(1);
     AtomicInteger runCalled = new AtomicInteger();
@@ -91,9 +96,10 @@ public class ExecutionListTest extends TestCase {
     assertEquals(1, runCalled.get());
   }
 
+  @J2ktIncompatible
   public void testAddAfterRun() throws Exception {
-    // Run the previous test
-    testRunOnPopulatedList();
+    // Run the same logic as testRunOnPopulatedList().
+    doTestRunOnPopulatedList();
 
     // If it passed, then verify an Add will be executed without calling run
     CountDownLatch countDownLatch = new CountDownLatch(1);
@@ -130,6 +136,7 @@ public class ExecutionListTest extends TestCase {
     list.add(THROWING_RUNNABLE, directExecutor());
   }
 
+  @J2ktIncompatible
   public void testNulls() {
     new NullPointerTester().testAllPublicInstanceMethods(new ExecutionList());
   }

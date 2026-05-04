@@ -17,12 +17,10 @@ package com.google.common.util.concurrent;
 
 import static com.google.common.testing.SerializableTester.reserialize;
 import static com.google.common.truth.Truth.assertThat;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicReference;
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
@@ -41,8 +39,7 @@ import org.jspecify.annotations.NullUnmarked;
  *   <li>If you override {@link #tearDown}, make sure to invoke {@code super.tearDown} within it.
  *       This method is used to clear and check for thread assertion failures.
  *   <li>All threads generated must be joined inside each test case method (or {@code fail} to do
- *       so) before returning from the method. The {@code joinPool} method can be used to do this
- *       when using Executors.
+ *       so) before returning from the method.
  * </ol>
  *
  * <p><b>Other notes</b>
@@ -159,18 +156,6 @@ abstract class JSR166TestCase extends TestCase {
       } else {
         break;
       }
-    }
-  }
-
-  /** Waits out termination of a thread pool or fails doing so. */
-  final void joinPool(ExecutorService exec) throws InterruptedException {
-    try {
-      exec.shutdown();
-      assertTrue(
-          "ExecutorService did not terminate in a timely manner",
-          exec.awaitTermination(2 * LONG_DELAY_MS, MILLISECONDS));
-    } catch (SecurityException ok) {
-      // Allowed in case test doesn't have privs
     }
   }
 

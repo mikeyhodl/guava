@@ -31,7 +31,6 @@ import org.jspecify.annotations.NullUnmarked;
  *
  * @author Kurt Alfred Kluever
  */
-@J2ktIncompatible
 @GwtIncompatible
 @NullUnmarked
 public class StandardSystemPropertyTest extends TestCase {
@@ -56,6 +55,7 @@ public class StandardSystemPropertyTest extends TestCase {
     }
   }
 
+  @J2ktIncompatible // java.specification.version is null in J2KT
   public void testNoNullValues() {
     for (StandardSystemProperty property : StandardSystemProperty.values()) {
       // Even though the contract in System.getProperties() specifies that a value will exist for

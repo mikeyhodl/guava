@@ -33,7 +33,6 @@ import org.jspecify.annotations.NullUnmarked;
  */
 @NullUnmarked
 @GwtIncompatible
-@J2ktIncompatible
 public class AtomicsTest extends TestCase {
 
   private static final Object OBJECT = new Object();
@@ -56,6 +55,7 @@ public class AtomicsTest extends TestCase {
     assertThrows(IndexOutOfBoundsException.class, () -> refArray.get(length));
   }
 
+  @J2ktIncompatible // J2KT throws IllegalArgumentException instead of NegativeArraySizeException
   public void testNewReferenceArray_withNegativeLength() throws Exception {
     assertThrows(NegativeArraySizeException.class, () -> Atomics.newReferenceArray(-1));
   }
@@ -70,9 +70,10 @@ public class AtomicsTest extends TestCase {
   }
 
   public void testNewReferenceArray_withNullArray() throws Exception {
-    assertThrows(NullPointerException.class, () -> Atomics.newReferenceArray(null));
+    assertThrows(NullPointerException.class, () -> Atomics.newReferenceArray((String[]) null));
   }
 
+  @J2ktIncompatible
   public void testNullPointers() {
     NullPointerTester tester = new NullPointerTester();
     tester.testAllPublicConstructors(Atomics.class); // there aren't any

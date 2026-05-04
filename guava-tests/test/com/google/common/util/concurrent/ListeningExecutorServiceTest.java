@@ -36,6 +36,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import junit.framework.TestCase;
 import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 
 @NullUnmarked
 @GwtIncompatible
@@ -81,7 +82,8 @@ public final class ListeningExecutorServiceTest extends TestCase {
 
   private class FakeExecutorService extends AbstractListeningExecutorService {
     @Override
-    public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
+    public <T extends @Nullable Object> T invokeAny(
+        Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
         throws InterruptedException, ExecutionException, TimeoutException {
       recordedTasks = tasks;
       recordedTimeout = timeout;
@@ -94,7 +96,7 @@ public final class ListeningExecutorServiceTest extends TestCase {
     }
 
     @Override
-    public <T> List<Future<T>> invokeAll(
+    public <T extends @Nullable Object> List<Future<T>> invokeAll(
         Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
         throws InterruptedException {
       recordedTasks = tasks;

@@ -75,7 +75,6 @@ import org.jspecify.annotations.Nullable;
  */
 @NullUnmarked
 @GwtIncompatible
-@J2ktIncompatible
 public class AbstractFutureTest extends TestCase {
   public void testSuccess() throws ExecutionException, InterruptedException {
     Object value = new Object();
@@ -88,6 +87,7 @@ public class AbstractFutureTest extends TestCase {
         .isEqualTo(value);
   }
 
+  @J2ktIncompatible // J2KT ExecutionException differs in stack trace
   public void testException() throws InterruptedException {
     Throwable failure = new Throwable();
     AbstractFuture<String> future =
@@ -170,6 +170,7 @@ public class AbstractFutureTest extends TestCase {
     assertThat(e).hasCauseThat().isEqualTo(exception);
   }
 
+  @J2ktIncompatible
   public void testRemoveWaiter_interruption() throws Exception {
     AbstractFuture<String> future = new AbstractFuture<String>() {};
     WaiterThread waiter1 = new WaiterThread(future);
@@ -194,6 +195,7 @@ public class AbstractFutureTest extends TestCase {
     waiter2.join();
   }
 
+  @J2ktIncompatible
   public void testRemoveWaiter_polling() throws Exception {
     AbstractFuture<String> future = new AbstractFuture<String>() {};
     WaiterThread waiter = new WaiterThread(future);
@@ -261,6 +263,7 @@ public class AbstractFutureTest extends TestCase {
     unused = future.toString();
   }
 
+  @J2ktIncompatible // J2KT TimeoutException lacks message
   public void testToString_notDone() throws Exception {
     AbstractFuture<Object> testFuture =
         new AbstractFuture<Object>() {
@@ -277,6 +280,7 @@ public class AbstractFutureTest extends TestCase {
     assertThat(e).hasMessageThat().contains("Because this test isn't done");
   }
 
+  @J2ktIncompatible // J2KT Exception lacks message
   public void testToString_completesDuringToString() throws Exception {
     AbstractFuture<Object> testFuture =
         new AbstractFuture<Object>() {
@@ -298,6 +302,7 @@ public class AbstractFutureTest extends TestCase {
    */
   @SuppressWarnings("ThreadPriorityCheck")
   @AndroidIncompatible // Thread.suspend
+  @J2ktIncompatible
   public void testToString_delayedTimeout() throws Exception {
     Integer javaVersion = Ints.tryParse(JAVA_SPECIFICATION_VERSION.value());
     // Parsing to an integer might fail because Java 8 returns "1.8" instead of "8."
@@ -342,6 +347,7 @@ public class AbstractFutureTest extends TestCase {
                 + " nanoseconds delay\\).*");
   }
 
+  @J2ktIncompatible // J2KT Exception lacks message
   public void testToString_completed() throws Exception {
     AbstractFuture<Object> testFuture2 =
         new AbstractFuture<Object>() {
@@ -383,6 +389,7 @@ public class AbstractFutureTest extends TestCase {
                 + "class java.lang.RuntimeException\\]\\]");
   }
 
+  @J2ktIncompatible
   public void testCompletionFinishesWithDone() {
     ExecutorService executor = newFixedThreadPool(10);
     for (int i = 0; i < 50000; i++) {
@@ -425,6 +432,7 @@ public class AbstractFutureTest extends TestCase {
    * bash, it caught on in a flash He did the bash, he did the future bash
    */
 
+  @J2ktIncompatible
   public void testFutureBash() {
     if (isWindows()) {
       return; // TODO: b/136041958 - Running very slowly on Windows CI.
@@ -592,6 +600,7 @@ public class AbstractFutureTest extends TestCase {
   }
 
   // setFuture and cancel() interact in more complicated ways than the other setters.
+  @J2ktIncompatible
   public void testSetFutureCancelBash() {
     if (isWindows()) {
       return; // TODO: b/136041958 - Running very slowly on Windows CI.
@@ -711,6 +720,7 @@ public class AbstractFutureTest extends TestCase {
 
   // Test to ensure that when calling setFuture with a done future only setFuture or cancel can
   // return true.
+  @J2ktIncompatible
   public void testSetFutureCancelBash_withDoneFuture() {
     CyclicBarrier barrier =
         new CyclicBarrier(
@@ -947,6 +957,7 @@ public class AbstractFutureTest extends TestCase {
   }
 
   @AndroidIncompatible // b/391667564: crashes from stack overflows
+  @J2ktIncompatible // Causes segmentation fault in J2KT Native
   public void testSetIndirectSelf_toString() {
     SettableFuture<Object> orig = SettableFuture.create();
     // unlike the above this indirection defeats the trivial cycle detection and causes a SOE
@@ -978,6 +989,7 @@ public class AbstractFutureTest extends TestCase {
 
   // Regression test for a case where we would fail to execute listeners immediately on done futures
   // this would be observable from a waiter that was just unblocked.
+  @J2ktIncompatible
   public void testListenersExecuteImmediately_afterWaiterWakesUp() throws Exception {
     AbstractFuture<String> f =
         new AbstractFuture<String>() {
@@ -1118,6 +1130,7 @@ public class AbstractFutureTest extends TestCase {
     assertThat(e).hasCauseThat().isEqualTo(exception);
   }
 
+  @J2ktIncompatible
   private static void awaitUnchecked(CyclicBarrier barrier) {
     try {
       barrier.await();
@@ -1159,6 +1172,7 @@ public class AbstractFutureTest extends TestCase {
     }
   }
 
+  @J2ktIncompatible
   private static final class WaiterThread extends Thread {
     private final AbstractFuture<?> future;
 
@@ -1190,6 +1204,7 @@ public class AbstractFutureTest extends TestCase {
     }
   }
 
+  @J2ktIncompatible
   static final class TimedWaiterThread extends Thread {
     private final AbstractFuture<?> future;
     private final long timeout;
@@ -1232,6 +1247,7 @@ public class AbstractFutureTest extends TestCase {
     }
   }
 
+  @J2ktIncompatible
   private static final class PollingThread extends Thread {
     private final AbstractFuture<?> future;
     private final CountDownLatch completedIteration = new CountDownLatch(10);

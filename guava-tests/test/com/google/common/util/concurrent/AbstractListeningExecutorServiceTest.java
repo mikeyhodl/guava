@@ -19,7 +19,6 @@ package com.google.common.util.concurrent;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.annotations.GwtIncompatible;
-import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -34,7 +33,6 @@ import org.jspecify.annotations.NullUnmarked;
  */
 @NullUnmarked
 @GwtIncompatible
-@J2ktIncompatible
 public class AbstractListeningExecutorServiceTest extends TestCase {
 
   public void testSubmit() throws Exception {

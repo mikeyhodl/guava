@@ -35,45 +35,52 @@ import org.jspecify.annotations.NullUnmarked;
  */
 @NullUnmarked
 @GwtIncompatible
-@J2ktIncompatible
 public class SettableFutureTest extends TestCase {
 
-  private SettableFuture<String> future;
-  private ListenableFutureTester tester;
-
-  @Override
-  protected void setUp() throws Exception {
-    super.setUp();
-
-    future = SettableFuture.create();
-    tester = new ListenableFutureTester(future);
-    tester.setUp();
-  }
-
+  @J2ktIncompatible
   public void testDefaultState() throws Exception {
+    SettableFuture<String> future = SettableFuture.create();
+    ListenableFutureTester tester = ListenableFutureTester.register(future);
     assertThrows(TimeoutException.class, () -> future.get(5, MILLISECONDS));
+    tester.tearDown();
   }
 
+  @J2ktIncompatible
   public void testSetValue() throws Exception {
+    SettableFuture<String> future = SettableFuture.create();
+    ListenableFutureTester tester = ListenableFutureTester.register(future);
     assertTrue(future.set("value"));
     tester.testCompletedFuture("value");
+    tester.tearDown();
   }
 
+  @J2ktIncompatible
   public void testSetFailure() throws Exception {
+    SettableFuture<String> future = SettableFuture.create();
+    ListenableFutureTester tester = ListenableFutureTester.register(future);
     assertTrue(future.setException(new Exception("failure")));
     tester.testFailedFuture("failure");
+    tester.tearDown();
   }
 
+  @J2ktIncompatible
   public void testSetFailureNull() throws Exception {
+    SettableFuture<String> future = SettableFuture.create();
+    ListenableFutureTester tester = ListenableFutureTester.register(future);
     assertThrows(NullPointerException.class, () -> future.setException(null));
     assertFalse(future.isDone());
     assertTrue(future.setException(new Exception("failure")));
     tester.testFailedFuture("failure");
+    tester.tearDown();
   }
 
+  @J2ktIncompatible
   public void testCancel() throws Exception {
+    SettableFuture<String> future = SettableFuture.create();
+    ListenableFutureTester tester = ListenableFutureTester.register(future);
     assertTrue(future.cancel(true));
     tester.testCancelledFuture();
+    tester.tearDown();
   }
 
   /** Tests the initial state of the future. */
