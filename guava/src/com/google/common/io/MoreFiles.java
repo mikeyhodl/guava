@@ -524,32 +524,38 @@ public final class MoreFiles {
     }
 
     Collection<IOException> exceptions = null; // created lazily if needed
-    try {
-      boolean sdsSupported = false;
-      try (DirectoryStream<Path> parent = Files.newDirectoryStream(parentPath)) {
-        if (parent instanceof SecureDirectoryStream) {
-          sdsSupported = true;
-          exceptions =
-              deleteRecursivelySecure(
-                  (SecureDirectoryStream<Path>) parent,
-                  /*
-                   * requireNonNull is safe because paths have file names when they have parents,
-                   * and we checked for a parent at the beginning of the method.
-                   */
-                  requireNonNull(path.getFileName()));
-        }
+    /*
+     * If an `IOException` is thrown by any code below this comment but above `throwDeleteFailed`,
+     * then it must have come from `newDirectoryStream` or from the `!sdsSupported` case. In either
+     * case, `exceptions` is null, so we can just let the `IOException` propagate, rather than worry
+     * about having to mix it into `exceptions`.
+     *
+     * TODO(cpovirk): Simplify this code further if possible, along with the Google-internal copy of
+     * this method in TestDir.
+     */
+    boolean sdsSupported = false;
+    /*
+     * TODO: b/331925065 - Should we catch any exception from this `newDirectoryStream` call (i.e.,
+     * the one for `parentPath`), too? We should see what `rm -f` does, especially if we make
+     * "ignore errors" behavior available to users of `deleteRecursively`.
+     */
+    try (DirectoryStream<Path> parent = Files.newDirectoryStream(parentPath)) {
+      if (parent instanceof SecureDirectoryStream) {
+        sdsSupported = true;
+        exceptions =
+            deleteRecursivelySecure(
+                (SecureDirectoryStream<Path>) parent,
+                /*
+                 * requireNonNull is safe because paths have file names when they have parents,
+                 * and we checked for a parent at the beginning of the method.
+                 */
+                requireNonNull(path.getFileName()));
       }
+    }
 
-      if (!sdsSupported) {
-        checkAllowsInsecure(path, options);
-        exceptions = deleteRecursivelyInsecure(path);
-      }
-    } catch (IOException e) {
-      if (exceptions == null) {
-        throw e;
-      } else {
-        exceptions.add(e);
-      }
+    if (!sdsSupported) {
+      checkAllowsInsecure(path, options);
+      exceptions = deleteRecursivelyInsecure(path);
     }
 
     if (exceptions != null) {
